@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="HouseCam está preparando una nueva experiencia para cuidar tu hogar.">
+  <title>HouseCam | Muy pronto</title><link rel="stylesheet" href="/src.css">
+  <script src="/dev-gate.js"></script>
+</head>
+<body class="holding-page">
+  <main class="holding-main">
+    <div class="holding-content">
+      <div class="holding-logo-frame">
+        <img class="logo holding-logo" src="/logo-housecam.png" alt="HouseCam">
+      </div>
+      <p class="tagline">Tranquilidad para tu hogar.</p>
+      <p class="eyebrow">Una nueva experiencia está en camino</p>
+      <h1>Estamos trabajando para traerte algo nuevo.</h1>
+      <p class="holding-copy">Muy pronto vas a encontrar soluciones simples y confiables para sentir tu hogar siempre cerca.</p>
+    </div>
+  </main>
+  <footer class="holding-footer">
+    <button class="dev-access-trigger" type="button" data-dev-access-trigger aria-haspopup="dialog" aria-controls="dev-access-modal">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+      Acceso al sitio en desarrollo
+    </button>
+  </footer>
+  <div class="dev-modal-overlay" id="dev-access-modal" data-dev-modal hidden>
+    <section class="dev-modal" role="dialog" aria-modal="true" aria-labelledby="dev-modal-title">
+      <button class="dev-modal-close" type="button" data-dev-modal-close aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+      </button>
+      <h2 id="dev-modal-title">Acceso al sitio en desarrollo</h2>
+      <p class="dev-modal-description">Ingresá las credenciales temporales para continuar.</p>
+      <form data-dev-access-form novalidate>
+        <div class="dev-field">
+          <label for="dev-username">Usuario</label>
+          <input id="dev-username" name="username" type="text" autocomplete="username" required>
+        </div>
+        <div class="dev-field">
+          <label for="dev-password">Contraseña</label>
+          <input id="dev-password" name="password" type="password" autocomplete="current-password" required>
+        </div>
+        <p class="dev-auth-error" data-dev-auth-error aria-live="polite" hidden></p>
+        <button class="dev-submit" type="submit">Ingresar</button>
+      </form>
+    </section>
+  </div>
+</body></html>
