@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 170" role="img" aria-labelledby="title desc">
+  <title id="title">HouseCam</title><desc id="desc">Logotipo HouseCam en azul profundo y azul</desc>
+  <g font-family="Inter,Segoe UI,Arial,sans-serif" font-size="100" font-weight="800" letter-spacing="-7">
+    <text x="18" y="120" fill="#17232D">HOUSE</text>
+    <text x="352" y="120" fill="#1769AA">CAM</text>
+  </g>
+  <path d="M348 31h18L318 101h-18z" fill="#F7F9FA"/>
+  <path d="M351 64h15l-46 66h-20z" fill="#1769AA"/>
+</svg>
