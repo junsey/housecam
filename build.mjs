@@ -11,6 +11,6 @@ for (const file of ["index.html", "desarrollo.html", "src.css"]) {
   });
 }
 
-await cp(new URL("./logo-housecam.svg", import.meta.url), new URL("./dist/logo-housecam.svg", import.meta.url));
+await cp(new URL("./logo-housecam.png", import.meta.url), new URL("./dist/logo-housecam.png", import.meta.url));
 
 console.log("HouseCam static site built in dist/");
