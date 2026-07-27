@@ -883,22 +883,20 @@ No finaliza sin pruebas reales contra PostgreSQL.
 - Checklist Vercel, variables, backups y rollback.
 - README operativo completo.
 
-## 12. Decisiones pendientes para aprobación
+## 12. Decisiones aprobadas
 
-Estas decisiones deben cerrarse antes de implementar porque afectan dinero, stock, permisos o historial:
+1. **Anulación y solicitud vinculada:** la solicitud vuelve a `contacted`.
+2. **DNI/CUIT:** es opcional en perfiles y solicitudes.
+3. **Código legible:** se usan prefijos `HC`, `HP` y `MX` según HouseCam, HousePet o carrito mixto.
+4. **Rol administrativo:** solo el administrador inicial puede promover o degradar administradores.
+5. **Eliminación física:** la interfaz del MVP solo permite archivar; no expone borrado físico.
+6. **Venta vinculada a solicitud:** una solicitud permite una única venta confirmada.
+7. **Kits:** el precio de venta y el costo comercial se cargan manualmente. El costo real de materiales y el margen real se calculan desde los costos vigentes de los componentes al confirmar la venta.
+8. **Devoluciones:** los estados quedan preparados sin interfaz ni mutaciones hasta una fase posterior.
 
-1. **Anulación y solicitud vinculada:** se propone volver la solicitud a `contacted`. Confirmar si debe quedar `converted` o pasar a otro estado.
-2. **DNI/CUIT:** el brief lo exige en la solicitud. Confirmar si siempre es obligatorio también para retiro y ventas minoristas.
-3. **Código legible:** confirmar prefijo único `HC` para solicitudes mixtas y ambas marcas, o prefijos `HC`, `HP` y `MX`.
-4. **Rol administrativo:** confirmar si cualquier admin puede promover/degradar a otro admin o si esa operación se limita al administrador inicial.
-5. **Eliminación física:** confirmar si se permite desde UI cuando no hay referencias o si el MVP debe limitarse siempre a archivar.
-6. **Venta vinculada a solicitud:** confirmar si se permite más de una venta parcial por solicitud. La propuesta inicial permite solo una venta confirmada.
-7. **Costo de kit:** confirmar si se calcula exclusivamente desde componentes al confirmar o si el kit puede tener un costo comercial manual. Se propone calcular desde componentes.
-8. **Devoluciones:** mantener estados preparados sin interfaz ni mutaciones hasta una fase posterior.
-9. **Retención de PII y auditoría:** definir período de conservación y política de anonimización/borrado.
-10. **Migración del sitio temporal:** confirmar si la portada temporal seguirá desplegada hasta terminar Fase 4 o si habrá previews separadas.
+## 13. Decisiones operativas todavía pendientes
 
-## 13. Recomendación de aprobación
+Estas decisiones no bloquean el scaffold inicial, pero deben cerrarse antes de usar datos reales:
 
-Antes de iniciar Fase 1 deben aprobarse, como mínimo, las decisiones 1 a 7. Las decisiones 8 a 10 pueden cerrarse durante fundamentos, siempre antes de crear migraciones definitivas o desplegar datos reales.
-
+1. **Retención de PII y auditoría:** definir período de conservación y política de anonimización/borrado.
+2. **Migración del sitio temporal:** definir si seguirá en producción hasta terminar la tienda pública o si se reemplazará antes mediante previews.
