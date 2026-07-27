@@ -21,6 +21,7 @@ export function BrandHeader({ brand = "housecam" }: BrandHeaderProps) {
         />
       </Link>
       <nav aria-label="Navegación principal" className="flex items-center gap-5 text-sm font-semibold">
+        {!isHousePet && <Link href="/productos">Tienda</Link>}
         <Link href={isHousePet ? "/" : "/housepet"}>{isHousePet ? "HouseCam" : "HousePet"}</Link>
         <Link href="/admin" className="rounded-full border border-[var(--border)] px-4 py-2">
           Administración
