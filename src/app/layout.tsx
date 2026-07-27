@@ -3,6 +3,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { Analytics } from "@vercel/analytics/next";
 
 import "./globals.css";
+import "../../public/src.css";
 
 export const metadata: Metadata = {
   title: { default: "HouseCam", template: "%s | HouseCam" },
@@ -21,7 +22,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const content = (
-    <html lang="es">
+    <html lang="es" data-theme="dark" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var t=localStorage.getItem("housecam_theme");var v=t==="light"?"light":"dark";document.documentElement.dataset.theme=v;document.documentElement.style.colorScheme=v}catch(e){}`,
+          }}
+        />
+      </head>
       <body>
         {children}
         <Analytics />

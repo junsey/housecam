@@ -35,21 +35,19 @@ export function PublicHeader({ activePath, brand = "housecam", showPreviewBanner
     window.localStorage.setItem(themeStorageKey, next);
   }
 
-  const logo = isHousePet
-    ? (theme === "dark" ? "/housepet-white.svg" : "/housepet-black.svg")
-    : (theme === "dark" ? "/housecam-white.svg" : "/housecam-black.svg");
+  const darkLogo = isHousePet ? "/housepet-white.svg" : "/housecam-white.svg";
+  const lightLogo = isHousePet ? "/housepet-black.svg" : "/housecam-black.svg";
 
   return (
     <>
-      {/* eslint-disable-next-line @next/next/no-css-tags */}
-      <link rel="stylesheet" href="/src.css" />
       {showPreviewBanner && (
         <div className="preview-banner">Vista previa del sitio en desarrollo <Link href="/">Volver a la portada</Link></div>
       )}
       <header className="site-header">
         <nav className="container nav" aria-label="Navegación principal">
           <Link href={isHousePet ? "/housepet" : "/desarrollo"} aria-label={`${isHousePet ? "HousePet" : "HouseCam"}, inicio`}>
-            <Image className="logo" src={logo} alt={isHousePet ? "HousePet" : "HouseCam"} width={190} height={58} priority />
+            <Image className="logo logo-dark-theme" src={darkLogo} alt={isHousePet ? "HousePet" : "HouseCam"} width={190} height={58} priority />
+            <Image className="logo logo-light-theme" src={lightLogo} alt="" width={190} height={58} priority />
           </Link>
           <div className="nav-actions">
             <div className="nav-links">
@@ -67,6 +65,7 @@ export function PublicHeader({ activePath, brand = "housecam", showPreviewBanner
               <Link href={isHousePet ? "/desarrollo" : "/housepet"} aria-current={activePath === "/housepet" ? "page" : undefined}>
                 {isHousePet ? "HouseCam" : "HousePet"}
               </Link>
+              <Link className="admin-link button button-secondary" href="/admin">Admin</Link>
               <a className="button button-primary" href={`mailto:${publicContactEmail}`}>Hablar con nosotros</a>
             </div>
             <button
