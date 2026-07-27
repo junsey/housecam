@@ -356,6 +356,15 @@ h1 {
 .card-number { color: var(--hc-blue-500); font-size: .85rem; font-weight: 700; }
 .card h3 { color: var(--hc-navy-900); margin: 24px 0 10px; font-size: 1.22rem; }
 .card p { color: var(--hc-text-secondary); line-height: 1.65; margin: 0; }
+.store-card-link {
+  display: inline-flex;
+  margin-top: 20px;
+  color: var(--hc-blue-500);
+  font-size: .9rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+.store-card-link:hover { color: var(--hc-blue-700); text-decoration: underline; }
 @media (max-width: 800px) {
   .nav-links a:not(.button) { display: none; }
   .hero-grid { grid-template-columns: 1fr; }
