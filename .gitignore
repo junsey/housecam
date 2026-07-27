@@ -8,3 +8,5 @@ npm-debug.log*
 coverage/
 *.tsbuildinfo
 drizzle/meta/_journal.json.tmp
+
+.vercel
