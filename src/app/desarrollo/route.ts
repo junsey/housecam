@@ -6,8 +6,8 @@ import { injectPublicNavigation } from "@/lib/public-html";
 export const dynamic = "force-static";
 
 export async function GET() {
-  const source = await readFile(path.join(process.cwd(), "public", "productos.html"), "utf8");
-  const html = injectPublicNavigation(source, "/productos");
+  const source = await readFile(path.join(process.cwd(), "public", "desarrollo.html"), "utf8");
+  const html = injectPublicNavigation(source, "/desarrollo");
 
   return new Response(html, {
     headers: {

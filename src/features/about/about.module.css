@@ -85,6 +85,21 @@
   color: var(--about-brand);
 }
 
+.navLinks .navCta {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  padding-inline: 18px;
+  border-radius: 10px;
+  background: var(--about-brand);
+  color: #fff;
+}
+
+.navLinks .navCta:hover {
+  background: var(--about-brand-strong);
+  color: #fff;
+}
+
 .themeToggle {
   width: 74px;
   height: 40px;

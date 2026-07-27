@@ -4,6 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+import { publicContactEmail, publicNavigationItems } from "@/config/public-navigation";
+
 import styles from "./about.module.css";
 
 const themeStorageKey = "housecam_theme";
@@ -37,9 +39,21 @@ export function AboutHeader() {
         </a>
         <div className={styles.navActions}>
           <div className={styles.navLinks}>
-            <Link href="/productos#tienda">Tienda</Link>
-            <Link href="/nosotros" aria-current="page">Sobre nosotros</Link>
+            {publicNavigationItems.map((item) => (
+              item.matchPath === "/desarrollo" ? (
+                <a href={item.href} key={item.href}>{item.label}</a>
+              ) : (
+                <Link
+                  href={item.href as "/productos#tienda" | "/desarrollo#beneficios" | "/nosotros"}
+                  aria-current={item.matchPath === "/nosotros" ? "page" : undefined}
+                  key={item.href}
+                >
+                  {item.label}
+                </Link>
+              )
+            ))}
             <Link href="/housepet">HousePet</Link>
+            <a className={styles.navCta} href={`mailto:${publicContactEmail}`}>Hablar con nosotros</a>
           </div>
           <button
             className={styles.themeToggle}

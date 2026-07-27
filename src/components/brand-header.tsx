@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { publicContactEmail, publicNavigationItems } from "@/config/public-navigation";
+
 type BrandHeaderProps = {
   brand?: "housecam" | "housepet";
 };
@@ -20,12 +22,16 @@ export function BrandHeader({ brand = "housecam" }: BrandHeaderProps) {
           className="h-12 w-auto dark:invert"
         />
       </Link>
-      <nav aria-label="Navegación principal" className="flex items-center gap-5 text-sm font-semibold">
-        {!isHousePet && <Link href="/productos#tienda">Tienda</Link>}
-        <Link href={isHousePet ? "/" : "/housepet"}>{isHousePet ? "HouseCam" : "HousePet"}</Link>
-        <Link href="/admin" className="rounded-full border border-[var(--border)] px-4 py-2">
-          Administración
-        </Link>
+      <nav aria-label="Navegación principal" className="flex flex-wrap items-center justify-end gap-5 text-sm font-semibold">
+        {publicNavigationItems.map((item) => (
+          item.matchPath === "/desarrollo" ? (
+            <a href={item.href} key={item.href}>{item.label}</a>
+          ) : (
+            <Link href={item.href as "/productos#tienda" | "/desarrollo#beneficios" | "/nosotros"} key={item.href}>{item.label}</Link>
+          )
+        ))}
+        <Link href={isHousePet ? "/desarrollo" : "/housepet"}>{isHousePet ? "HouseCam" : "HousePet"}</Link>
+        <a className="rounded-xl bg-[var(--brand)] px-4 py-2 text-white" href={`mailto:${publicContactEmail}`}>Hablar con nosotros</a>
       </nav>
     </header>
   );

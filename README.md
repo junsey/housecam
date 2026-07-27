@@ -66,4 +66,7 @@ Vercel detecta Next.js desde el repositorio. Configurá las mismas variables de 
 
 ## Estado
 
-Fase 1 implementada: scaffold, modelos, migración, seed, autenticación base, roles, layouts y pruebas de invariantes. Las interfaces CRUD y los flujos transaccionales se desarrollan en las fases siguientes descritas en `docs/architecture-first-deliverable.md`.
+- Fase 1 completada: scaffold, modelos, migración, seed, autenticación base, roles, layouts y pruebas de invariantes.
+- Fase 2 iniciada: navegación administrativa, alta/listado/archivo de categorías y alta/listado/archivo de productos. Las imágenes Blob, edición, duplicación, kits y ajustes auditados de stock permanecen pendientes.
+
+El detalle de las fases está en `docs/architecture-first-deliverable.md`.
