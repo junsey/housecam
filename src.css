@@ -148,24 +148,30 @@ button, a { -webkit-tap-highlight-color: transparent; }
   width: 100%;
   height: auto;
 }
+.holding-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 .tagline {
-  margin: 14px 0 26px;
+  margin: 11px 0 0;
   color: var(--hc-text-secondary);
-  font-size: 1.0625rem;
-  line-height: 1.4;
-  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.35;
+  font-weight: 500;
   letter-spacing: .01em;
 }
+.holding-message { margin-top: 28px; }
 .holding-status {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  margin: 0 0 24px;
+  margin: 0 0 16px;
   color: var(--hc-blue-700);
   font-size: .75rem;
   font-weight: 700;
   line-height: 1;
-  letter-spacing: .1em;
+  letter-spacing: .08em;
   text-transform: uppercase;
 }
 .holding-status-dot {
@@ -203,20 +209,23 @@ h1 {
 }
 .holding-content h1 {
   max-width: 560px;
-  font-size: clamp(2.25rem, 4vw, 3rem);
-  line-height: 1.05;
-  letter-spacing: -.04em;
-  font-weight: 780;
+  font-size: clamp(2.5rem, 4vw, 3rem);
+  line-height: 1;
+  letter-spacing: -.035em;
+  font-weight: 700;
 }
 .holding-content h1 span { white-space: nowrap; }
 .holding-copy {
-  max-width: 530px;
-  margin: 17px auto 0;
+  max-width: 520px;
+  margin: 18px auto 0;
   color: var(--hc-text-secondary);
   font-size: 1.0625rem;
   line-height: 1.6;
   text-wrap: pretty;
 }
+[data-theme="light"] .tagline { color: #5d6f7f; }
+[data-theme="light"] .holding-content h1 { color: #12395a; }
+[data-theme="light"] .holding-copy { color: #5b6f80; }
 .dev-access-trigger {
   display: inline-flex;
   min-height: 44px;
@@ -379,10 +388,11 @@ h1 {
     border-radius: 20px;
   }
   .holding-logo-frame { width: min(180px, 70vw); }
-  .tagline { margin: 12px 0 24px; font-size: 1rem; }
-  .holding-status { margin-bottom: 22px; font-size: .6875rem; }
+  .tagline { margin-top: 10px; font-size: 1rem; }
+  .holding-message { margin-top: 28px; }
+  .holding-status { margin-bottom: 16px; font-size: .75rem; }
   h1 { font-size: clamp(2rem, 10vw, 2.5rem); letter-spacing: -.035em; }
-  .holding-content h1 { font-size: clamp(2rem, 9vw, 2.375rem); }
+  .holding-content h1 { font-size: clamp(2.5rem, 10vw, 3rem); }
   .holding-copy { font-size: 1rem; line-height: 1.6; }
   .dev-access-trigger { margin-top: 24px; }
 }
