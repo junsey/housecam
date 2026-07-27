@@ -10,7 +10,7 @@ export type TeamMember = {
 export const teamMembers: readonly TeamMember[] = [
   {
     name: "Miguel Lorea Tannfeld",
-    image: "/team/miguel-lorea-tannfeld.png",
+    image: "/team/rodrigo-s-salvay.png",
     alt: "Miguel Lorea Tannfeld, integrante de HouseCam",
     objectPosition: "50% 34%",
     linkedIn: "https://www.linkedin.com/in/miguel-lorea-tannfeld-194a5928a/",
@@ -18,7 +18,7 @@ export const teamMembers: readonly TeamMember[] = [
   },
   {
     name: "Rodrigo S. Salvay",
-    image: "/team/rodrigo-s-salvay.png",
+    image: "/team/miguel-lorea-tannfeld.png",
     alt: "Rodrigo S. Salvay, integrante de HouseCam",
     objectPosition: "50% 30%",
     linkedIn: "https://www.linkedin.com/in/rodrigo-sebastian-salvay/",
