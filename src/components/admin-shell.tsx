@@ -4,6 +4,7 @@ const adminNavigation = [
   { href: "/admin", label: "Resumen" },
   { href: "/admin/productos", label: "Productos" },
   { href: "/admin/categorias", label: "Categorías" },
+  { href: "/admin/configuracion/whatsapp", label: "WhatsApp" },
 ] as const;
 
 export function AdminShell({ children }: { children: React.ReactNode }) {

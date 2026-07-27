@@ -24,5 +24,29 @@ export const productInputSchema = z.object({
   isActive: z.boolean().default(false),
 });
 
+export const productSpecInputSchema = z.object({
+  productId: z.uuid(),
+  label: z.string().trim().min(1).max(80),
+  value: z.string().trim().min(1).max(240),
+});
+
+export const kitComponentInputSchema = z.object({
+  kitProductId: z.uuid(),
+  componentProductId: z.uuid(),
+  quantity: z.int().positive(),
+}).refine((value) => value.kitProductId !== value.componentProductId, {
+  message: "Un kit no puede contenerse a sí mismo.",
+});
+
+export const stockAdjustmentSchema = z.object({
+  productId: z.uuid(),
+  delta: z.int().refine((value) => value !== 0, "El ajuste no puede ser cero."),
+  note: z.string().trim().min(3).max(300),
+});
+
+export const whatsappSettingsSchema = z.object({
+  whatsappNumber: z.string().trim().min(8).max(30).regex(/^\+?[0-9 ()-]+$/),
+});
+
 export type CategoryInput = z.infer<typeof categoryInputSchema>;
 export type ProductInput = z.infer<typeof productInputSchema>;

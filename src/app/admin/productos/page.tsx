@@ -39,7 +39,7 @@ export default async function AdminProductsPage() {
             <tbody className="divide-y divide-[var(--border)]">
               {result.items.map((product) => (
                 <tr key={product.id}>
-                  <td className="p-4"><strong>{product.name}</strong><span className="mt-1 block text-xs text-[var(--muted)]">{product.sku} · {product.categoryName}</span></td>
+                  <td className="p-4"><Link className="font-bold hover:text-[var(--brand)]" href={`/admin/productos/${product.id}`}>{product.name}</Link><span className="mt-1 block text-xs text-[var(--muted)]">{product.sku} · {product.categoryName}</span></td>
                   <td className="p-4 capitalize">{product.storefront}</td>
                   <td className="p-4">{currency.format(product.unitPriceCents / 100)}</td>
                   <td className="p-4">{product.type === "kit" ? "Por componentes" : product.stockOnHand}</td>

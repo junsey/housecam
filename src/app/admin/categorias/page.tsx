@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { archiveCategoryAction, createCategoryAction } from "@/features/catalog/catalog-admin.actions";
 import { getAdminCategories } from "@/features/catalog/catalog-admin.data";
@@ -34,7 +35,7 @@ export default async function AdminCategoriesPage() {
               {result.items.map((category) => (
                 <article className="flex items-center justify-between gap-5 p-5" key={category.id}>
                   <div>
-                    <p className="font-bold">{category.name}</p>
+                    <Link className="font-bold hover:text-[var(--brand)]" href={`/admin/categorias/${category.id}`}>{category.name}</Link>
                     <p className="mt-1 text-sm text-[var(--muted)]">{category.storefront} · /{category.slug}</p>
                   </div>
                   <form action={archiveCategoryAction}>

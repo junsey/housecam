@@ -6,7 +6,7 @@ const DEV_USERNAME = "admin";
 const DEV_PASSWORD = "mikeyjun";
 const DEV_ACCESS_KEY = "housecam_dev_access";
 const DEV_ACCESS_VALUE = "granted";
-const DEV_PAGE_PATH = "/desarrollo.html";
+const DEV_PAGE_PATH = "/desarrollo";
 
 function hasDevAccess() {
   try {

@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 
 import { publicNavigationItems } from "@/config/public-navigation";
-import { injectPublicNavigation } from "@/lib/public-html";
 
-import { categoryInputSchema, productInputSchema } from "./catalog.schemas";
+import { categoryInputSchema, kitComponentInputSchema, productInputSchema } from "./catalog.schemas";
+import { validateCatalogImage } from "./catalog-image.domain";
 
 describe("catálogo administrativo", () => {
   it("valida categorías por marca y slugs estables", () => {
@@ -36,6 +36,23 @@ describe("catálogo administrativo", () => {
     expect(result.sku).toBe("HC-CAM-01");
     expect(result.unitPriceCents).toBe(120_000);
   });
+
+  it("acepta solo imágenes web seguras de hasta 5 MB", () => {
+    expect(validateCatalogImage({ type: "image/webp", size: 100_000, alt: "Cámara exterior" }).alt).toBe("Cámara exterior");
+    expect(() => validateCatalogImage({ type: "image/svg+xml", size: 100, alt: "SVG" })).toThrow("JPG");
+    expect(() => validateCatalogImage({ type: "image/png", size: 6 * 1024 * 1024, alt: "Imagen grande" })).toThrow("5 MB");
+  });
+
+  it("valida componentes de kit y rechaza autorreferencias", () => {
+    const kitProductId = "11111111-1111-4111-8111-111111111111";
+    const componentProductId = "22222222-2222-4222-8222-222222222222";
+    expect(kitComponentInputSchema.parse({ kitProductId, componentProductId, quantity: 2 }).quantity).toBe(2);
+    expect(() => kitComponentInputSchema.parse({
+      kitProductId,
+      componentProductId: kitProductId,
+      quantity: 1,
+    })).toThrow();
+  });
 });
 
 describe("navegación pública unificada", () => {
@@ -44,13 +61,5 @@ describe("navegación pública unificada", () => {
     const destinations = publicNavigationItems.map((item) => item.href);
     expect(new Set(labels).size).toBe(labels.length);
     expect(new Set(destinations).size).toBe(destinations.length);
-  });
-
-  it("inyecta el mismo menú y marca la ruta activa", () => {
-    const html = '<nav><!-- PUBLIC_NAV_START --><!-- PUBLIC_NAV_END --></nav>';
-    const rendered = injectPublicNavigation(html, "/productos");
-    expect(rendered).toContain('href="/productos#tienda" aria-current="page"');
-    expect(rendered.match(/>HousePet</g)).toHaveLength(1);
-    expect(rendered.match(/Hablar con nosotros/g)).toHaveLength(1);
   });
 });

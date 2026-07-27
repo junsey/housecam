@@ -1,55 +1,58 @@
 # HouseCam Platform
 
-Base unificada para las tiendas HouseCam y HousePet y su operación interna. La Fase 1 establece Next.js App Router, TypeScript estricto, Tailwind CSS, Clerk, Neon PostgreSQL, Drizzle ORM, Zod, Zustand, Vercel Blob y Analytics.
+Base unificada para HouseCam, HousePet y su operación interna. El proyecto usa Next.js App Router, TypeScript estricto, Tailwind CSS, Clerk, Neon PostgreSQL, Drizzle ORM, Zod, Zustand, Vercel Blob y Analytics.
 
 ## Requisitos
 
 - Node.js 20.9 o posterior.
 - Una base PostgreSQL en Neon.
 - Una aplicación de Clerk.
-- Un Blob Store de Vercel cuando se habilite la carga de imágenes.
+- Un Blob Store de Vercel para la carga de imágenes.
 
 ## Desarrollo local
 
-1. Instalá dependencias:
-
-   ```bash
-   npm install
-   ```
-
+1. Instalá dependencias con `npm install`.
 2. Copiá `.env.example` a `.env.local` y completá las variables.
+3. Ejecutá `npm run db:migrate` y `npm run db:seed`.
+4. Iniciá el entorno con `npm run dev`.
 
-3. Aplicá la migración y cargá los datos base:
+## Rutas
 
-   ```bash
-   npm run db:migrate
-   npm run db:seed
-   ```
+- `/`: portada temporal de HouseCam.
+- `/desarrollo`: vista previa del sitio.
+- `/productos`: tienda pública.
+- `/nosotros`: Sobre nosotros.
+- `/housepet`: portada HousePet.
+- `/admin`: administración protegida por Clerk.
 
-4. Iniciá el entorno:
+Las páginas públicas reutilizan un único header, navegación, selector de marca y toggle claro/oscuro.
 
-   ```bash
-   npm run dev
-   ```
+## Administrador
 
-Rutas iniciales:
+El seed crea el administrador inicial usando `INITIAL_ADMIN_CLERK_USER_ID` e `INITIAL_ADMIN_EMAIL`. La Fase 2 incluye:
 
-- `/`: HouseCam.
-- `/housepet`: HousePet.
-- `/admin`: base administrativa protegida por Clerk.
+- categorías separadas por marca;
+- productos con alta, edición, duplicación, publicación y archivo lógico;
+- precios unitarios y pack de 10, costos y stock;
+- especificaciones e imágenes en Vercel Blob;
+- kits con precio manual, componentes, costo material y disponibilidad calculados;
+- ajustes de stock transaccionales y auditados;
+- configuración del número de WhatsApp.
 
-## Administrador inicial
+No se permite publicar un kit sin componentes ni archivar una categoría que todavía tenga productos. Los importes se almacenan como centavos enteros.
 
-El seed crea el único administrador inicial a partir de `INITIAL_ADMIN_CLERK_USER_ID` e `INITIAL_ADMIN_EMAIL`. La regla de dominio reserva a esa identidad la promoción y degradación de otros administradores. Toda futura mutación de roles deberá registrar auditoría.
+## Variables de entorno
 
-## Base de datos
+Consultá `.env.example`. Para que el admin sea operativo se requieren, como mínimo:
 
-- Esquema Drizzle: `src/db/schema`.
-- Migraciones versionadas: `drizzle`.
-- Seed: `src/db/seed/index.ts`.
-- Cliente Neon con WebSockets y transacciones interactivas: `src/db/index.ts`.
+- `DATABASE_URL`
+- `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`
+- `CLERK_SECRET_KEY`
+- `INITIAL_ADMIN_CLERK_USER_ID`
+- `INITIAL_ADMIN_EMAIL`
+- `BLOB_READ_WRITE_TOKEN`
 
-Los importes se almacenan como centavos enteros. Los productos estándar guardan stock físico; los kits calculan disponibilidad y costo real desde sus componentes. El precio de venta y el costo comercial del kit son manuales.
+Sin esas variables las páginas públicas funcionan y el admin se muestra en modo de configuración, sin permitir mutaciones.
 
 ## Calidad
 
@@ -59,14 +62,5 @@ npm run typecheck
 npm test
 npm run build
 ```
-
-## Despliegue
-
-Vercel detecta Next.js desde el repositorio. Configurá las mismas variables de entorno para Preview y Production antes de aplicar la migración sobre cada base. El sitio temporal anterior permanece en el historial de Git; el runtime activo es App Router.
-
-## Estado
-
-- Fase 1 completada: scaffold, modelos, migración, seed, autenticación base, roles, layouts y pruebas de invariantes.
-- Fase 2 iniciada: navegación administrativa, alta/listado/archivo de categorías y alta/listado/archivo de productos. Las imágenes Blob, edición, duplicación, kits y ajustes auditados de stock permanecen pendientes.
 
 El detalle de las fases está en `docs/architecture-first-deliverable.md`.
