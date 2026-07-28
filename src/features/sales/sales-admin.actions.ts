@@ -52,8 +52,61 @@ export async function createSaleAction(formData: FormData) {
     channel: formData.get("channel"),
     notes: String(formData.get("notes") ?? "").trim() || undefined,
   });
-  const [created] = await getDb().insert(sales).values({ ...input, createdByClerkId: admin.clerkUserId }).returning({ id: sales.id });
-  await getDb().insert(auditLogs).values({ actorClerkId: admin.clerkUserId, action: "sale.created", entityType: "sale", entityId: created.id, after: input });
+  const productId = String(formData.get("productId") ?? "");
+  const purchaseMode = String(formData.get("purchaseMode") ?? "");
+  const quantity = integer(formData.get("quantity"));
+  const finalPrice = pesosToCents(formData.get("finalUnitPricePesos"));
+  const db = getDb();
+  const created = await db.transaction(async (tx) => {
+    const [product] = await tx.select().from(products).where(and(eq(products.id, productId), sql`${products.archivedAt} is null`)).limit(1);
+    if (!product) throw new Error("Seleccioná un producto válido antes de crear la venta.");
+    if (purchaseMode !== "unit" && purchaseMode !== "pack10") throw new Error("Seleccioná una modalidad válida.");
+    if (!Number.isInteger(quantity) || quantity < 1) throw new Error("La cantidad debe ser mayor a cero.");
+
+    const multiplier = purchaseMode === "pack10" ? 10 : 1;
+    const listedUnitPriceCents = purchaseMode === "pack10" ? product.pack10PriceCents : product.unitPriceCents;
+    if (listedUnitPriceCents === null) throw new Error("Este producto no tiene precio de pack de 10.");
+    const finalUnitPriceCents = finalPrice ?? listedUnitPriceCents;
+    let historicalUnitCostCents = product.commercialCostCents * multiplier;
+    const componentSnapshots: Array<{ componentProductId: string; componentNameSnapshot: string; componentSkuSnapshot: string; physicalUnits: number; historicalUnitCostCents: number; historicalCostSubtotalCents: number }> = [];
+    if (product.type === "kit") {
+      const components = await tx.select({
+        productId: products.id, name: products.name, sku: products.sku, cost: products.commercialCostCents, quantity: kitComponents.quantity,
+      }).from(kitComponents).innerJoin(products, eq(kitComponents.componentProductId, products.id)).where(eq(kitComponents.kitProductId, product.id));
+      if (!components.length) throw new Error("El kit no tiene componentes.");
+      historicalUnitCostCents = components.reduce((sum, component) => sum + component.cost * component.quantity * multiplier, 0);
+      componentSnapshots.push(...components.map((component) => ({
+        componentProductId: component.productId,
+        componentNameSnapshot: component.name,
+        componentSkuSnapshot: component.sku,
+        physicalUnits: component.quantity * multiplier * quantity,
+        historicalUnitCostCents: component.cost,
+        historicalCostSubtotalCents: component.cost * component.quantity * multiplier * quantity,
+      })));
+    }
+
+    const [sale] = await tx.insert(sales).values({ ...input, createdByClerkId: admin.clerkUserId }).returning({ id: sales.id });
+    const [item] = await tx.insert(saleItems).values({
+      saleId: sale.id,
+      productId: product.id,
+      productNameSnapshot: product.name,
+      skuSnapshot: product.sku,
+      storefrontSnapshot: product.storefront,
+      purchaseMode,
+      quantity,
+      physicalUnits: multiplier * quantity,
+      listedUnitPriceCents,
+      finalUnitPriceCents,
+      historicalUnitCostCents,
+      listedSubtotalCents: listedUnitPriceCents * quantity,
+      finalSubtotalCents: finalUnitPriceCents * quantity,
+      historicalCostSubtotalCents: historicalUnitCostCents * quantity,
+    }).returning({ id: saleItems.id });
+    if (componentSnapshots.length) await tx.insert(saleItemComponents).values(componentSnapshots.map((component) => ({ ...component, saleItemId: item.id })));
+    await refreshTotals(tx, sale.id);
+    await tx.insert(auditLogs).values({ actorClerkId: admin.clerkUserId, action: "sale.created", entityType: "sale", entityId: sale.id, after: { ...input, productId, purchaseMode, quantity } });
+    return sale;
+  });
   redirect(`/admin/ventas/${created.id}` as Route);
 }
 
