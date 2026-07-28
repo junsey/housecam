@@ -784,6 +784,21 @@ a {
   min-width: 0;
 }
 
+.admin-toolbar-actions > summary {
+  min-height: 46px;
+  border-radius: 12px;
+  padding: 0 16px;
+  font-size: .875rem;
+  line-height: 1.25rem;
+  transition: color 160ms ease, background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.admin-toolbar-actions > summary:hover {
+  border-color: var(--hc-blue-500);
+  background: var(--hc-blue-100);
+  color: var(--hc-blue-700);
+}
+
 .admin-toolbar-actions .admin-row-actions-menu {
   width: 190px;
 }
