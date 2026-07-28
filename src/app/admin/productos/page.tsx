@@ -19,7 +19,10 @@ export default async function AdminProductsPage() {
           <h1 className="mt-2 text-3xl font-bold tracking-[-0.03em]">Productos</h1>
           <p className="mt-3 text-[var(--muted)]">Precios, costos, publicación y archivo lógico.</p>
         </div>
-        <Link className="rounded-xl bg-[var(--brand)] px-5 py-3 text-sm font-bold text-white" href="/admin/productos/nuevo">Nuevo producto</Link>
+        <div className="flex flex-wrap gap-2">
+          <Link className="rounded-xl border border-[var(--border)] px-5 py-3 text-sm font-bold" href="/admin/categorias">Administrar categorías</Link>
+          <Link className="rounded-xl bg-[var(--brand)] px-5 py-3 text-sm font-bold text-white" href="/admin/productos/nuevo">Nuevo producto</Link>
+        </div>
       </div>
 
       {!result.configured && (

@@ -14,6 +14,7 @@ export default async function SalesPage({ searchParams }: { searchParams: Promis
       <div className="flex flex-wrap items-end justify-between gap-5">
         <div><p className="text-xs font-bold uppercase tracking-wider text-[var(--brand)]">Configuración</p><h1 className="mt-2 text-3xl font-bold">Ventas e inventario</h1><p className="mt-3 text-[var(--muted)]">Borradores, confirmación transaccional, gastos y margen real.</p></div>
         <div className="flex flex-wrap gap-2">
+          <Link className="rounded-xl border border-[var(--border)] px-4 py-3 text-sm font-bold" href={"/admin/pedidos" as Route}>Ver pedidos</Link>
           <Link className="rounded-xl border border-[var(--border)] px-4 py-3 text-sm font-bold" href={showCancelled ? "/admin/ventas" : "/admin/ventas?vista=canceladas"}>
             {showCancelled ? "Volver a ventas" : `Ver canceladas (${data.metrics?.cancelledCount ?? 0})`}
           </Link>

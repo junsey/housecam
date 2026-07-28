@@ -10,12 +10,10 @@ import { useEffect, useRef, useState } from "react";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 const adminNavigation = [
-  { href: "/admin", label: "Resumen", exact: true },
-  { href: "/admin/productos", label: "Productos" },
-  { href: "/admin/categorias", label: "Categorías" },
-  { href: "/admin/pedidos", label: "Pedidos" },
-  { href: "/admin/ventas", label: "Ventas" },
-  { href: "/admin/configuracion/whatsapp", label: "WhatsApp" },
+  { href: "/admin", label: "Resumen", matches: ["/admin"] },
+  { href: "/admin/productos", label: "Productos", matches: ["/admin/productos", "/admin/categorias"] },
+  { href: "/admin/ventas", label: "Ventas", matches: ["/admin/ventas", "/admin/pedidos"] },
+  { href: "/admin/configuracion/whatsapp", label: "WhatsApp", matches: ["/admin/configuracion/whatsapp"] },
 ] as const;
 
 export function AdminShell({ children, clerkConfigured }: { children: React.ReactNode; clerkConfigured: boolean }) {
@@ -57,7 +55,7 @@ export function AdminShell({ children, clerkConfigured }: { children: React.Reac
           <div className="admin-header-actions">
             <nav className="admin-navigation" aria-label="Navegación administrativa">
               {adminNavigation.map((item) => {
-                const active = "exact" in item && item.exact ? pathname === item.href : pathname.startsWith(item.href);
+                const active = item.matches.some((match) => match === "/admin" ? pathname === match : pathname.startsWith(match));
                 return <Link className={active ? "is-active" : ""} aria-current={active ? "page" : undefined} href={item.href as Route} key={item.href}>{item.label}</Link>;
               })}
             </nav>
@@ -77,7 +75,7 @@ export function AdminShell({ children, clerkConfigured }: { children: React.Reac
               <div className="admin-mobile-navigation-panel" id="admin-mobile-navigation-panel">
                 <nav aria-label="Navegación administrativa móvil">
                   {adminNavigation.map((item) => {
-                    const active = "exact" in item && item.exact ? pathname === item.href : pathname.startsWith(item.href);
+                    const active = item.matches.some((match) => match === "/admin" ? pathname === match : pathname.startsWith(match));
                     return <Link className={active ? "is-active" : ""} aria-current={active ? "page" : undefined} href={item.href as Route} key={item.href} onClick={() => setMobileMenuOpen(false)}>{item.label}</Link>;
                   })}
                 </nav>
