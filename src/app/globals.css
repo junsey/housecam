@@ -803,3 +803,19 @@ a {
     white-space: nowrap;
   }
 }
+
+/* Debe permanecer después de la regla tablet para conservar una sola fila en mobile. */
+@media (max-width: 800px) {
+  .admin-header-inner {
+    min-height: 72px;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 18px;
+    padding-block: 0;
+  }
+
+  .admin-mobile-navigation {
+    margin-left: auto;
+  }
+}
