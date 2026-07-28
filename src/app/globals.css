@@ -268,6 +268,39 @@ a {
   box-shadow: var(--hc-shadow-md);
 }
 
+.admin-root button,
+.admin-root a {
+  transition:
+    color 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    filter 160ms ease,
+    transform 160ms ease;
+}
+
+.admin-root button:disabled {
+  cursor: not-allowed;
+}
+
+@media (hover: hover) {
+  .admin-root button:not(:disabled):hover,
+  .admin-root a[class*="rounded"]:hover,
+  .admin-root .admin-view-site:hover,
+  .admin-root .admin-image-action:hover {
+    filter: brightness(.95);
+    transform: translateY(-1px);
+  }
+
+  .admin-root button:not(:disabled):active,
+  .admin-root a[class*="rounded"]:active,
+  .admin-root .admin-view-site:active,
+  .admin-root .admin-image-action:active {
+    filter: brightness(.91);
+    transform: translateY(0) scale(.98);
+  }
+}
+
 .admin-root form label {
   color: var(--hc-text-secondary);
 }
