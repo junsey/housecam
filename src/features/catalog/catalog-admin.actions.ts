@@ -137,6 +137,7 @@ export async function updateProductAction(formData: FormData) {
   await writeAudit(admin.clerkUserId, "product.updated", "product", id, before, input);
   revalidatePath("/admin/productos");
   revalidatePath(`/admin/productos/${id}`);
+  redirect(`/admin/productos/${id}`);
 }
 
 export async function toggleProductPublicationAction(formData: FormData) {

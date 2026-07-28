@@ -10,14 +10,24 @@ import {
 } from "@/features/catalog/catalog-admin.actions";
 import { getAdminCategories, getAdminProduct } from "@/features/catalog/catalog-admin.data";
 
-export const metadata: Metadata = { title: "Editar producto" };
+export const metadata: Metadata = { title: "Detalle de producto" };
 const fieldClass = "min-h-11 rounded-xl border border-[var(--border)] bg-[var(--background)] px-3";
+const currency = new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS" });
 
-export default async function EditProductPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function EditProductPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ edit?: string }>;
+}) {
   const { id } = await params;
+  const { edit } = await searchParams;
+  const editing = edit === "1";
   const [data, categoryResult] = await Promise.all([getAdminProduct(id), getAdminCategories()]);
   if (!data) notFound();
   const { product, specs, images, components, componentOptions, kitSummary } = data;
+  const category = categoryResult.items.find((item) => item.id === product.categoryId);
 
   return (
     <main className="shell py-10">
@@ -25,6 +35,9 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
       <div className="mt-6 flex flex-wrap items-start justify-between gap-5">
         <div><p className="text-xs font-bold uppercase tracking-wider text-[var(--brand)]">{product.sku}</p><h1 className="mt-2 text-3xl font-bold">{product.name}</h1></div>
         <div className="flex flex-wrap gap-2">
+          <Link className="rounded-xl border border-[var(--brand)] px-4 py-2 text-sm font-bold text-[var(--brand)]" href={editing ? `/admin/productos/${product.id}` : `/admin/productos/${product.id}?edit=1`}>
+            {editing ? "Cancelar edición" : "Editar"}
+          </Link>
           <form action={duplicateProductAction}><input name="id" type="hidden" value={product.id} /><button className="rounded-xl border border-[var(--border)] px-4 py-2 text-sm font-bold">Duplicar</button></form>
           <form action={toggleProductPublicationAction}>
             <input name="id" type="hidden" value={product.id} /><input name="isActive" type="hidden" value={String(!product.isActive)} />
@@ -33,6 +46,7 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
         </div>
       </div>
 
+      {editing ? (
       <form action={updateProductAction} className="card mt-8 grid gap-5 p-6 md:grid-cols-2">
         <input name="id" type="hidden" value={product.id} />
         <label className="grid gap-2 text-sm font-semibold">Marca<select className={fieldClass} name="storefront" defaultValue={product.storefront}><option value="housecam">HouseCam</option><option value="housepet">HousePet</option></select></label>
@@ -46,8 +60,46 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
         <label className="grid gap-2 text-sm font-semibold">Costo comercial (ARS)<input className={fieldClass} name="commercialCostPesos" type="number" min="0" step="0.01" defaultValue={product.commercialCostCents / 100} required /></label>
         <label className="flex items-center gap-2 self-end pb-3 text-sm"><input name="isActive" type="checkbox" defaultChecked={product.isActive} /> Publicado</label>
         <label className="grid gap-2 text-sm font-semibold md:col-span-2">Descripción breve<textarea className="min-h-28 rounded-xl border border-[var(--border)] bg-[var(--background)] p-3" name="shortDescription" defaultValue={product.shortDescription ?? ""} /></label>
-        <div className="flex justify-end md:col-span-2"><button className="rounded-xl bg-[var(--brand)] px-6 py-3 font-bold text-white">Guardar producto</button></div>
+        <div className="flex flex-wrap justify-end gap-3 md:col-span-2">
+          <Link className="rounded-xl border border-[var(--border)] px-6 py-3 font-bold" href={`/admin/productos/${product.id}`}>Cancelar</Link>
+          <button className="rounded-xl bg-[var(--brand)] px-6 py-3 font-bold text-white">Guardar cambios</button>
+        </div>
       </form>
+      ) : (
+        <section className="card mt-8 p-6" aria-labelledby="product-data-title">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.14em] text-[var(--brand)]">Información general</p>
+              <h2 className="mt-2 text-xl font-bold" id="product-data-title">Datos del producto</h2>
+            </div>
+            <span className={`rounded-full px-3 py-1 text-xs font-bold ${product.isActive ? "bg-[var(--hc-success-light)] text-[var(--hc-success)]" : "bg-[var(--background)] text-[var(--muted)]"}`}>
+              {product.isActive ? "Publicado" : "Borrador"}
+            </span>
+          </div>
+          <dl className="mt-6 grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
+            {[
+              ["Marca", product.storefront === "housepet" ? "HousePet" : "HouseCam"],
+              ["Categoría", category?.name ?? "Sin categoría"],
+              ["Tipo", product.type === "kit" ? "Kit" : "Estándar"],
+              ["SKU", product.sku],
+              ["Slug", `/${product.slug}`],
+              ["Precio unitario", currency.format(product.unitPriceCents / 100)],
+              ["Precio pack de 10", product.pack10PriceCents === null ? "No definido" : currency.format(product.pack10PriceCents / 100)],
+              ["Costo comercial", currency.format(product.commercialCostCents / 100)],
+              ["Stock", product.type === "kit" ? "Calculado por componentes" : String(product.stockOnHand)],
+            ].map(([label, value]) => (
+              <div className="border-b border-[var(--border)] pb-4" key={label}>
+                <dt className="text-xs font-bold uppercase tracking-wider text-[var(--muted)]">{label}</dt>
+                <dd className="mt-2 font-semibold text-[var(--foreground)]">{value}</dd>
+              </div>
+            ))}
+            <div className="sm:col-span-2 lg:col-span-3">
+              <dt className="text-xs font-bold uppercase tracking-wider text-[var(--muted)]">Descripción breve</dt>
+              <dd className="mt-2 leading-7 text-[var(--foreground)]">{product.shortDescription || "Sin descripción."}</dd>
+            </div>
+          </dl>
+        </section>
+      )}
 
       <div className="mt-8 grid gap-6 lg:grid-cols-2">
         <section className="card p-6">
