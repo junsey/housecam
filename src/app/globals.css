@@ -2,25 +2,13 @@
 
 :root {
   color-scheme: light dark;
-  --background: #f3f6f8;
-  --surface: #ffffff;
-  --foreground: #12395a;
-  --muted: #5b6f80;
-  --border: #dce5eb;
-  --brand: #075da5;
-  --accent: #2aa9e0;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #07131d;
-    --surface: #0d1f2d;
-    --foreground: #edf7ff;
-    --muted: #a9bac7;
-    --border: #223746;
-    --brand: #41a9ef;
-    --accent: #69caf2;
-  }
+  --background: var(--hc-background);
+  --surface: var(--hc-surface);
+  --foreground: var(--hc-text-primary);
+  --muted: var(--hc-text-secondary);
+  --border: var(--hc-border);
+  --brand: var(--hc-blue-500);
+  --accent: var(--hc-blue-300);
 }
 
 * {
@@ -56,4 +44,208 @@ a {
   border-radius: 24px;
   background: color-mix(in srgb, var(--surface) 94%, transparent);
   box-shadow: 0 18px 60px rgb(0 30 55 / 10%);
+}
+
+/* Administración */
+.admin-root {
+  min-height: 100svh;
+  background:
+    radial-gradient(circle at 8% 0%, color-mix(in srgb, var(--hc-blue-500) 9%, transparent), transparent 28rem),
+    var(--hc-background);
+  color: var(--hc-text-primary);
+}
+
+.admin-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  border-bottom: 1px solid var(--hc-border);
+  background: var(--hc-header);
+  backdrop-filter: blur(16px);
+}
+
+.admin-header-inner {
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+}
+
+.admin-brand,
+.admin-header-actions,
+.admin-navigation {
+  display: flex;
+  align-items: center;
+}
+
+.admin-brand {
+  flex: 0 0 auto;
+  gap: 14px;
+}
+
+.admin-logo-pair {
+  display: block;
+  width: 154px;
+}
+
+.admin-logo {
+  width: 154px;
+  height: auto;
+}
+
+.admin-brand-divider {
+  width: 1px;
+  height: 28px;
+  background: var(--hc-border-strong);
+}
+
+.admin-brand-label {
+  color: var(--hc-text-secondary);
+  font-size: .92rem;
+  font-weight: 650;
+}
+
+.admin-header-actions {
+  min-width: 0;
+  gap: 12px;
+}
+
+.admin-navigation {
+  gap: 4px;
+}
+
+.admin-navigation a,
+.admin-view-site {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0 13px;
+  color: var(--hc-text-secondary);
+  font-size: .86rem;
+  font-weight: 650;
+  transition: color 160ms ease, background-color 160ms ease, border-color 160ms ease;
+}
+
+.admin-navigation a:hover,
+.admin-navigation a.is-active {
+  color: var(--hc-text-primary);
+  background: var(--hc-blue-100);
+}
+
+.admin-navigation a.is-active {
+  color: var(--hc-blue-700);
+}
+
+.admin-view-site {
+  border: 1px solid var(--hc-border-strong);
+  color: var(--hc-text-primary);
+}
+
+.admin-view-site:hover {
+  border-color: var(--hc-blue-500);
+  color: var(--hc-blue-500);
+}
+
+.admin-user {
+  min-width: 34px;
+  display: flex;
+  align-items: center;
+}
+
+.admin-user .cl-userButtonTrigger {
+  color: var(--hc-text-primary);
+}
+
+.admin-root main {
+  padding-top: 46px;
+  padding-bottom: 72px;
+}
+
+.admin-root h1,
+.admin-root h2,
+.admin-root h3 {
+  color: var(--hc-text-primary);
+}
+
+.admin-root .card {
+  border-color: var(--hc-border);
+  background: color-mix(in srgb, var(--hc-surface) 96%, transparent);
+  box-shadow: var(--hc-shadow-md);
+}
+
+.admin-root form label {
+  color: var(--hc-text-secondary);
+}
+
+.admin-root input:not([type="checkbox"]):not([type="radio"]),
+.admin-root select,
+.admin-root textarea {
+  width: 100%;
+  border: 1px solid var(--hc-border-strong);
+  background: var(--hc-surface-raised);
+  color: var(--hc-text-primary);
+  caret-color: var(--hc-blue-500);
+  box-shadow: inset 0 1px 2px rgb(0 0 0 / 5%);
+  transition: border-color 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+}
+
+.admin-root input:not([type="checkbox"]):not([type="radio"]):focus,
+.admin-root select:focus,
+.admin-root textarea:focus {
+  border-color: var(--hc-blue-500);
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--hc-blue-500) 20%, transparent);
+}
+
+.admin-root input::placeholder,
+.admin-root textarea::placeholder {
+  color: var(--hc-text-muted);
+}
+
+.admin-root input:disabled,
+.admin-root select:disabled,
+.admin-root textarea:disabled {
+  cursor: not-allowed;
+  opacity: .55;
+}
+
+.admin-root input[type="checkbox"],
+.admin-root input[type="radio"] {
+  accent-color: var(--hc-blue-500);
+}
+
+@media (max-width: 1100px) {
+  .admin-header-inner {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+    padding-block: 14px;
+  }
+
+  .admin-header-actions {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 2px;
+  }
+}
+
+@media (max-width: 680px) {
+  .admin-brand-divider,
+  .admin-brand-label,
+  .admin-user .cl-userButtonOuterIdentifier {
+    display: none;
+  }
+
+  .admin-logo-pair,
+  .admin-logo {
+    width: 138px;
+  }
+
+  .admin-navigation a,
+  .admin-view-site {
+    padding-inline: 11px;
+    white-space: nowrap;
+  }
 }

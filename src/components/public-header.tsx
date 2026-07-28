@@ -3,9 +3,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Route } from "next";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { publicContactEmail, publicNavigationItems } from "@/config/public-navigation";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 type PublicHeaderProps = {
   activePath: "/desarrollo" | "/productos" | "/nosotros" | "/housepet" | "/housepet/productos";
@@ -13,29 +14,9 @@ type PublicHeaderProps = {
   showPreviewBanner?: boolean;
 };
 
-const themeStorageKey = "housecam_theme";
-
 export function PublicHeader({ activePath, brand = "housecam", showPreviewBanner = false }: PublicHeaderProps) {
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
   const [brandMenuOpen, setBrandMenuOpen] = useState(false);
   const isHousePet = brand === "housepet";
-
-  useEffect(() => {
-    const stored = window.localStorage.getItem(themeStorageKey);
-    const initial = stored === "light" ? "light" : "dark";
-    document.documentElement.dataset.theme = initial;
-    document.documentElement.style.colorScheme = initial;
-    const frame = window.requestAnimationFrame(() => setTheme(initial));
-    return () => window.cancelAnimationFrame(frame);
-  }, []);
-
-  function toggleTheme() {
-    const next = theme === "dark" ? "light" : "dark";
-    setTheme(next);
-    document.documentElement.dataset.theme = next;
-    document.documentElement.style.colorScheme = next;
-    window.localStorage.setItem(themeStorageKey, next);
-  }
 
   const darkLogo = isHousePet ? "/housepet-white.svg" : "/housecam-white.svg";
   const lightLogo = isHousePet ? "/housepet-black.svg" : "/housecam-black.svg";
@@ -80,18 +61,7 @@ export function PublicHeader({ activePath, brand = "housecam", showPreviewBanner
               {navigation.map((item) => <Link href={item.href as Route} aria-current={activePath === item.path ? "page" : undefined} key={item.href}>{item.label}</Link>)}
               <a className="button button-primary" href={`mailto:${publicContactEmail}`}>Hablar con nosotros</a>
             </div>
-            <button
-              className="theme-toggle"
-              type="button"
-              role="switch"
-              aria-checked={theme === "light"}
-              aria-label={theme === "dark" ? "Activar tema claro" : "Activar tema oscuro"}
-              title={theme === "dark" ? "Activar tema claro" : "Activar tema oscuro"}
-              onClick={toggleTheme}
-            >
-              <svg className="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d="M20.2 15.6A8.5 8.5 0 0 1 8.4 3.8 8.5 8.5 0 1 0 20.2 15.6Z" /></svg>
-              <svg className="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><circle cx="12" cy="12" r="3.5" /><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42" /></svg>
-            </button>
+            <ThemeToggle />
           </div>
         </nav>
       </header>

@@ -1,32 +1,51 @@
+"use client";
+
+import { UserButton } from "@clerk/nextjs";
+import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const adminNavigation = [
-  { href: "/admin", label: "Resumen" },
+  { href: "/admin", label: "Resumen", exact: true },
   { href: "/admin/productos", label: "Productos" },
   { href: "/admin/categorias", label: "Categorías" },
   { href: "/admin/ventas", label: "Ventas" },
   { href: "/admin/configuracion/whatsapp", label: "WhatsApp" },
 ] as const;
 
-export function AdminShell({ children }: { children: React.ReactNode }) {
+export function AdminShell({ children, clerkConfigured }: { children: React.ReactNode; clerkConfigured: boolean }) {
+  const pathname = usePathname();
+
   return (
-    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
-      <header className="border-b border-[var(--border)] bg-[var(--surface)]">
-        <div className="shell flex min-h-20 flex-wrap items-center justify-between gap-5 py-4">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-[0.14em] text-[var(--brand)]">HouseCam</p>
-            <p className="mt-1 font-bold">Administración</p>
+    <div className="admin-root">
+      <header className="admin-header">
+        <div className="shell admin-header-inner">
+          <Link className="admin-brand" href="/admin" aria-label="Administración HouseCam">
+            <span className="admin-logo-pair">
+              <Image className="admin-logo logo-dark-theme" src="/housecam-white.svg" alt="HouseCam" width={190} height={58} priority />
+              <Image className="admin-logo logo-light-theme" src="/housecam-black.svg" alt="HouseCam" width={190} height={58} priority />
+            </span>
+            <span className="admin-brand-divider" aria-hidden="true" />
+            <span className="admin-brand-label">Administración</span>
+          </Link>
+
+          <div className="admin-header-actions">
+            <nav className="admin-navigation" aria-label="Navegación administrativa">
+              {adminNavigation.map((item) => {
+                const active = "exact" in item && item.exact ? pathname === item.href : pathname.startsWith(item.href);
+                return <Link className={active ? "is-active" : ""} aria-current={active ? "page" : undefined} href={item.href} key={item.href}>{item.label}</Link>;
+              })}
+            </nav>
+            <Link className="admin-view-site" href="/desarrollo">Ver sitio</Link>
+            <ThemeToggle />
+            {clerkConfigured && (
+              <div className="admin-user" aria-label="Cuenta">
+                <UserButton showName />
+              </div>
+            )}
           </div>
-          <nav className="flex flex-wrap items-center gap-2" aria-label="Navegación administrativa">
-            {adminNavigation.map((item) => (
-              <Link className="rounded-full px-4 py-2 text-sm font-semibold hover:bg-[var(--background)]" href={item.href} key={item.href}>
-                {item.label}
-              </Link>
-            ))}
-            <a className="rounded-full border border-[var(--border)] px-4 py-2 text-sm font-semibold" href="/desarrollo">
-              Ver sitio
-            </a>
-          </nav>
         </div>
       </header>
       {children}
