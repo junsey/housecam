@@ -70,7 +70,7 @@ export function PublicCart({ whatsappNumber }: { whatsappNumber: string }) {
             <div className="public-cart-summary">
               <div><span>Total estimado</span><strong>{money.format(total / 100)}</strong></div>
               {checkoutHref
-                ? <a className="button button-primary" href={checkoutHref} target="_blank" rel="noopener noreferrer">Consultar pedido</a>
+                ? <a className="button button-primary" href={checkoutHref} target="_blank" rel="noopener noreferrer">Realizar pedido</a>
                 : <button className="button button-primary" type="button" disabled>Contacto no disponible</button>}
               <button className="public-cart-clear" type="button" onClick={clear}>Vaciar carrito</button>
             </div>
