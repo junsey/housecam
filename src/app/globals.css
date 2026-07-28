@@ -163,6 +163,90 @@ a {
   padding-bottom: 72px;
 }
 
+.admin-root main.admin-dashboard {
+  padding-top: 0;
+}
+
+.admin-dashboard-hero {
+  min-height: 310px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  border-bottom: 1px solid rgb(91 181 238 / 24%);
+  background: #062d50;
+  color: #fff;
+  isolation: isolate;
+}
+
+.admin-dashboard-hero::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: linear-gradient(90deg, rgb(2 25 45 / 18%), rgb(0 34 67 / 5%) 54%, rgb(0 13 29 / 40%));
+}
+
+.admin-dashboard-hero-texture {
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+  background: url("/textures/fondo-azul.png") center / cover;
+  opacity: .76;
+}
+
+.admin-dashboard-hero-content {
+  padding-block: 64px;
+}
+
+.admin-dashboard-eyebrow {
+  margin: 0 0 14px;
+  color: #a9ddff;
+  font-size: .75rem;
+  font-weight: 750;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+
+.admin-root .admin-dashboard-hero h1 {
+  max-width: none;
+  margin: 0;
+  color: #fff;
+  font-size: clamp(2.75rem, 5vw, 4.25rem);
+  line-height: .98;
+  letter-spacing: -.05em;
+  text-shadow: 0 8px 32px rgb(0 10 25 / 28%);
+}
+
+.admin-dashboard-lead {
+  max-width: 650px;
+  margin: 22px 0 0;
+  color: #d9efff;
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+.admin-dashboard-card {
+  position: relative;
+  overflow: hidden;
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.admin-dashboard-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  background: linear-gradient(90deg, var(--hc-blue-500), var(--hc-blue-300));
+  opacity: .78;
+}
+
+.admin-dashboard-card:hover {
+  border-color: color-mix(in srgb, var(--hc-blue-500) 45%, var(--hc-border));
+  box-shadow: 0 22px 64px rgb(0 40 75 / 15%);
+  transform: translateY(-3px);
+}
+
 .admin-root h1,
 .admin-root h2,
 .admin-root h3 {

@@ -23,13 +23,13 @@ export default async function AdminPage() {
   ] as const;
 
   return (
-    <main className="pb-12">
-      <section className="relative overflow-hidden bg-[#07345c] text-white">
-        <div className="absolute inset-0 bg-[url('/textures/fondo-azul.png')] bg-cover bg-center opacity-55" />
-        <div className="shell relative py-12 md:py-16">
-          <p className="text-xs font-bold uppercase tracking-[0.16em] text-sky-200">Panel administrativo</p>
-          <h1 className="mt-3 text-4xl font-bold tracking-[-0.035em] md:text-5xl">Operación HouseCam</h1>
-          <p className="mt-4 max-w-2xl leading-7 text-blue-100">
+    <main className="admin-dashboard">
+      <section className="admin-dashboard-hero">
+        <div className="admin-dashboard-hero-texture" />
+        <div className="shell admin-dashboard-hero-content">
+          <p className="admin-dashboard-eyebrow">Panel administrativo</p>
+          <h1>Operación HouseCam</h1>
+          <p className="admin-dashboard-lead">
             Catálogo, stock y ventas comparten una operación centralizada y auditada.
           </p>
         </div>
@@ -37,7 +37,7 @@ export default async function AdminPage() {
 
       <section className="shell mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {modules.map((module) => (
-          <article key={module.name} className="card p-6">
+          <article key={module.name} className="card admin-dashboard-card p-6">
             <span className="text-xs font-bold uppercase tracking-wider text-[var(--accent)]">{module.detail}</span>
             <p className="mt-3 text-4xl font-bold tracking-[-0.04em] text-[var(--brand)]">{module.value}</p>
             <h2 className="mt-3 text-xl font-bold">{module.name}</h2>
