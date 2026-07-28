@@ -3,7 +3,7 @@ import "server-only";
 import { asc, desc, eq, isNull, ne, sql } from "drizzle-orm";
 
 import { getDb } from "@/db";
-import { products, saleExpenses, saleItemComponents, saleItems, sales } from "@/db/schema";
+import { products, saleCharges, saleExpenses, saleItemComponents, saleItems, sales } from "@/db/schema";
 
 export async function getSalesDashboard(showCancelled = false) {
   if (!process.env.DATABASE_URL) return { configured: false as const, sales: [], metrics: null };
@@ -29,14 +29,15 @@ export async function getAdminSale(id: string) {
   const db = getDb();
   const [sale] = await db.select().from(sales).where(eq(sales.id, id)).limit(1);
   if (!sale) return null;
-  const [items, expenses] = await Promise.all([
+  const [items, expenses, charges] = await Promise.all([
     db.select().from(saleItems).where(eq(saleItems.saleId, id)).orderBy(asc(saleItems.productNameSnapshot)),
     db.select().from(saleExpenses).where(eq(saleExpenses.saleId, id)).orderBy(asc(saleExpenses.type)),
+    db.select().from(saleCharges).where(eq(saleCharges.saleId, id)).orderBy(asc(saleCharges.type)),
   ]);
   const components = items.length
     ? await db.select().from(saleItemComponents).where(sql`${saleItemComponents.saleItemId} in (${sql.join(items.map((item) => sql`${item.id}`), sql`, `)})`)
     : [];
-  return { sale, items, expenses, components };
+  return { sale, items, expenses, charges, components };
 }
 
 export async function getSaleProductOptions() {

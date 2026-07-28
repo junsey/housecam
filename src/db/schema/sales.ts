@@ -85,3 +85,14 @@ export const saleExpenses = pgTable("sale_expenses", {
   index("sale_expenses_sale_idx").on(table.saleId),
   check("sale_expenses_amount_non_negative", sql`${table.amountCents} >= 0`),
 ]);
+
+export const saleCharges = pgTable("sale_charges", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  saleId: uuid("sale_id").notNull().references(() => sales.id),
+  type: text("type").notNull(),
+  description: text("description").notNull(),
+  amountCents: integer("amount_cents").notNull(),
+}, (table) => [
+  index("sale_charges_sale_idx").on(table.saleId),
+  check("sale_charges_amount_non_negative", sql`${table.amountCents} >= 0`),
+]);

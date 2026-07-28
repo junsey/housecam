@@ -12,7 +12,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 const adminNavigation = [
   { href: "/admin", label: "Resumen", matches: ["/admin"] },
   { href: "/admin/productos", label: "Productos", matches: ["/admin/productos", "/admin/categorias"] },
-  { href: "/admin/ventas", label: "Ventas", matches: ["/admin/ventas", "/admin/pedidos"] },
+  { href: "/admin/ventas", label: "Ventas", matches: ["/admin/ventas", "/admin/pedidos", "/admin/presupuestos"] },
   { href: "/admin/configuracion/whatsapp", label: "WhatsApp", matches: ["/admin/configuracion/whatsapp"] },
 ] as const;
 

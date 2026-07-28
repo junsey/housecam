@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 
 import { getDb } from "@/db";
 import {
-  auditLogs, kitComponents, products, purchaseRequests, saleExpenses, saleItemComponents, saleItems, sales, stockMovements,
+  auditLogs, kitComponents, products, purchaseRequests, saleCharges, saleExpenses, saleItemComponents, saleItems, sales, stockMovements,
 } from "@/db/schema";
 import { requireAdmin } from "@/features/auth/require-admin";
 
@@ -34,15 +34,16 @@ async function authorize() {
 }
 
 async function refreshTotals(tx: Parameters<Parameters<ReturnType<typeof getDb>["transaction"]>[0]>[0], saleId: string) {
-  const [items, expenses] = await Promise.all([
+  const [items, expenses, charges] = await Promise.all([
     tx.select({
       listedSubtotalCents: saleItems.listedSubtotalCents,
       finalSubtotalCents: saleItems.finalSubtotalCents,
       historicalCostSubtotalCents: saleItems.historicalCostSubtotalCents,
     }).from(saleItems).where(eq(saleItems.saleId, saleId)),
     tx.select({ amountCents: saleExpenses.amountCents }).from(saleExpenses).where(eq(saleExpenses.saleId, saleId)),
+    tx.select({ amountCents: saleCharges.amountCents }).from(saleCharges).where(eq(saleCharges.saleId, saleId)),
   ]);
-  const totals = calculateSaleTotals(items, expenses);
+  const totals = calculateSaleTotals(items, expenses, charges);
   await tx.update(sales).set({ ...totals, updatedAt: new Date() }).where(eq(sales.id, saleId));
   return totals;
 }

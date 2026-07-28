@@ -26,9 +26,11 @@
     "bufferutil": "^4.0.9",
     "drizzle-orm": "0.45.2",
     "next": "16.2.12",
+    "pdf-lib": "^1.17.1",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "server-only": "^0.0.1",
+    "sharp": "^0.35.3",
     "ws": "^8.18.3",
     "zod": "4.4.3",
     "zustand": "5.0.14"

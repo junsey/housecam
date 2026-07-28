@@ -26,15 +26,17 @@ export const cancelSaleSchema = z.object({
   reason: z.string().trim().min(3).max(500),
 });
 
-export function calculateSaleTotals(items: readonly { listedSubtotalCents: number; finalSubtotalCents: number; historicalCostSubtotalCents: number }[], expenses: readonly { amountCents: number }[]) {
+export function calculateSaleTotals(items: readonly { listedSubtotalCents: number; finalSubtotalCents: number; historicalCostSubtotalCents: number }[], expenses: readonly { amountCents: number }[], charges: readonly { amountCents: number }[] = []) {
   const listedTotalCents = items.reduce((sum, item) => sum + item.listedSubtotalCents, 0);
-  const finalTotalCents = items.reduce((sum, item) => sum + item.finalSubtotalCents, 0);
+  const chargeTotalCents = charges.reduce((sum, charge) => sum + charge.amountCents, 0);
+  const productTotalCents = items.reduce((sum, item) => sum + item.finalSubtotalCents, 0);
+  const finalTotalCents = productTotalCents + chargeTotalCents;
   const productCostTotalCents = items.reduce((sum, item) => sum + item.historicalCostSubtotalCents, 0);
   const expenseTotalCents = expenses.reduce((sum, expense) => sum + expense.amountCents, 0);
   return {
     listedTotalCents,
     finalTotalCents,
-    discountTotalCents: Math.max(0, listedTotalCents - finalTotalCents),
+    discountTotalCents: Math.max(0, listedTotalCents - productTotalCents),
     productCostTotalCents,
     expenseTotalCents,
     profitCents: finalTotalCents - productCostTotalCents - expenseTotalCents,

@@ -13,13 +13,19 @@ export default async function SalesPage({ searchParams }: { searchParams: Promis
     <main className="shell py-10">
       <div className="flex flex-wrap items-end justify-between gap-5">
         <div><p className="text-xs font-bold uppercase tracking-wider text-[var(--brand)]">Configuración</p><h1 className="mt-2 text-3xl font-bold">Ventas e inventario</h1><p className="mt-3 text-[var(--muted)]">Borradores, confirmación transaccional, gastos y margen real.</p></div>
-        <div className="flex flex-wrap gap-2">
+        <div className="admin-sales-toolbar">
           <Link className="rounded-xl border border-[var(--border)] px-4 py-3 text-sm font-bold" href={"/admin/pedidos" as Route}>Ver pedidos</Link>
-          <Link className="rounded-xl border border-[var(--border)] px-4 py-3 text-sm font-bold" href={showCancelled ? "/admin/ventas" : "/admin/ventas?vista=canceladas"}>
-            {showCancelled ? "Volver a ventas" : `Ver canceladas (${data.metrics?.cancelledCount ?? 0})`}
-          </Link>
-          {!showCancelled && <Link className="rounded-xl border border-[var(--border)] px-4 py-3 text-sm font-bold" href="/admin/ventas/exportar">Exportar CSV</Link>}
           {!showCancelled && <Link className="rounded-xl bg-[var(--brand)] px-5 py-3 font-bold text-white" href="/admin/ventas/nueva">Nueva venta</Link>}
+          <details className="admin-row-actions admin-toolbar-actions">
+            <summary aria-label="Abrir otras acciones">Más opciones</summary>
+            <div className="admin-row-actions-menu">
+              <Link href={showCancelled ? "/admin/ventas" : "/admin/ventas?vista=canceladas"}>
+                {showCancelled ? "Volver a ventas" : `Ver canceladas (${data.metrics?.cancelledCount ?? 0})`}
+              </Link>
+              <Link href={"/admin/presupuestos" as Route}>Presupuestos</Link>
+              {!showCancelled && <Link href="/admin/ventas/exportar">Exportar CSV</Link>}
+            </div>
+          </details>
         </div>
       </div>
       {!data.configured ? <p className="card mt-8 p-6 text-[var(--muted)]">Configurá Neon y Clerk para operar ventas reales.</p> : (

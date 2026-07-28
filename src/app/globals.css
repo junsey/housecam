@@ -636,6 +636,73 @@ a {
   color: #c2413b;
 }
 
+.admin-sales-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.admin-toolbar-actions {
+  min-width: 0;
+}
+
+.admin-toolbar-actions .admin-row-actions-menu {
+  width: 190px;
+}
+
+.quote-line {
+  display: grid;
+  grid-template-columns: minmax(210px, 2fr) minmax(140px, 1fr) 110px minmax(150px, 1fr) 130px auto;
+  align-items: end;
+  gap: 12px;
+  border: 1px solid var(--hc-border);
+  border-radius: 16px;
+  padding: 16px;
+  background: var(--hc-surface-soft);
+}
+
+.quote-line-total {
+  display: grid;
+  gap: 8px;
+  min-height: 65px;
+  align-content: center;
+}
+
+.quote-line-total span {
+  color: var(--hc-text-muted);
+  font-size: .75rem;
+  font-weight: 700;
+}
+
+.quote-line-remove {
+  min-height: 44px;
+  border: 0;
+  background: transparent;
+  color: #c2413b;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.quote-line-remove:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 1050px) {
+  .quote-line {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .quote-line {
+    grid-template-columns: 1fr;
+  }
+  .admin-sales-toolbar {
+    width: 100%;
+  }
+}
+
 .admin-products-table {
   overflow: visible;
 }
