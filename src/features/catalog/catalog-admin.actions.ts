@@ -43,20 +43,39 @@ function categoryFormData(formData: FormData) {
   });
 }
 
-function productFormData(formData: FormData) {
+function readMoneyCents(value: FormDataEntryValue | null) {
+  const normalized = String(value ?? "").trim().replace(",", ".");
+  if (!normalized) return undefined;
+  const pesos = Number(normalized);
+  return Number.isFinite(pesos) ? Math.round(pesos * 100) : undefined;
+}
+
+function productFormData(formData: FormData, sku: string) {
   return productInputSchema.parse({
     categoryId: formData.get("categoryId"),
     storefront: formData.get("storefront"),
-    sku: formData.get("sku"),
+    sku,
     slug: formData.get("slug"),
     type: formData.get("type"),
     name: formData.get("name"),
     shortDescription: String(formData.get("shortDescription") ?? "").trim() || undefined,
-    unitPriceCents: readOptionalInteger(formData.get("unitPriceCents")),
-    pack10PriceCents: readOptionalInteger(formData.get("pack10PriceCents")),
-    commercialCostCents: readOptionalInteger(formData.get("commercialCostCents")),
+    unitPriceCents: readMoneyCents(formData.get("unitPricePesos")),
+    pack10PriceCents: readMoneyCents(formData.get("pack10PricePesos")),
+    commercialCostCents: readMoneyCents(formData.get("commercialCostPesos")),
     isActive: readBoolean(formData.get("isActive")),
   });
+}
+
+async function generateUniqueSku(storefront: "housecam" | "housepet", name: string) {
+  const prefix = storefront === "housepet" ? "HP" : "HC";
+  const nameCode = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9]/g, "").toUpperCase().slice(0, 5) || "ITEM";
+  for (let attempt = 0; attempt < 5; attempt += 1) {
+    const suffix = crypto.randomUUID().replaceAll("-", "").slice(0, 6).toUpperCase();
+    const candidate = `${prefix}-${nameCode}-${suffix}`;
+    const [existing] = await getDb().select({ id: products.id }).from(products).where(eq(products.sku, candidate)).limit(1);
+    if (!existing) return candidate;
+  }
+  throw new Error("No se pudo generar un SKU único. Intentá nuevamente.");
 }
 
 async function writeAudit(actorClerkId: string, action: string, entityType: string, entityId: string, before?: Record<string, unknown>, after?: Record<string, unknown>) {
@@ -95,7 +114,10 @@ export async function archiveCategoryAction(formData: FormData) {
 
 export async function createProductAction(formData: FormData) {
   const admin = await authorizeMutation();
-  const input = productFormData(formData);
+  const storefront = String(formData.get("storefront"));
+  const name = String(formData.get("name"));
+  if (storefront !== "housecam" && storefront !== "housepet") throw new Error("Marca inválida.");
+  const input = productFormData(formData, await generateUniqueSku(storefront, name));
   const [created] = await getDb().insert(products).values({
     ...input, stockOnHand: 0, createdByClerkId: admin.clerkUserId, updatedByClerkId: admin.clerkUserId,
   }).returning({ id: products.id });
@@ -107,8 +129,9 @@ export async function createProductAction(formData: FormData) {
 export async function updateProductAction(formData: FormData) {
   const admin = await authorizeMutation();
   const id = String(formData.get("id") ?? "");
-  const input = productFormData(formData);
   const [before] = await getDb().select().from(products).where(eq(products.id, id)).limit(1);
+  if (!before) throw new Error("Producto inexistente.");
+  const input = productFormData(formData, before.sku);
   await getDb().update(products).set({ ...input, updatedAt: new Date(), updatedByClerkId: admin.clerkUserId }).where(eq(products.id, id));
   if (input.type === "standard") await getDb().delete(kitComponents).where(eq(kitComponents.kitProductId, id));
   await writeAudit(admin.clerkUserId, "product.updated", "product", id, before, input);

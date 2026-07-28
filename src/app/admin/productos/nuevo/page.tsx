@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { createProductAction } from "@/features/catalog/catalog-admin.actions";
 import { getAdminCategories } from "@/features/catalog/catalog-admin.data";
+import { ProductIdentityFields } from "@/components/product-identity-fields";
 
 export const metadata: Metadata = { title: "Nuevo producto" };
 
@@ -38,15 +39,13 @@ export default async function NewProductPage() {
             {categories.items.map((category) => <option value={category.id} key={category.id}>{category.name} · {category.storefront}</option>)}
           </select>
         </label>
-        <label className="grid gap-2 text-sm font-semibold">Nombre<input className={inputClass} name="name" required disabled={!enabled} /></label>
-        <label className="grid gap-2 text-sm font-semibold">SKU<input className={inputClass} name="sku" required disabled={!enabled} /></label>
-        <label className="grid gap-2 text-sm font-semibold">Slug<input className={inputClass} name="slug" pattern="[a-z0-9]+(?:-[a-z0-9]+)*" required disabled={!enabled} /></label>
+        <ProductIdentityFields className={inputClass} disabled={!enabled} />
         <label className="grid gap-2 text-sm font-semibold">Tipo
           <select className={inputClass} name="type" disabled={!enabled}><option value="standard">Estándar</option><option value="kit">Kit</option></select>
         </label>
-        <label className="grid gap-2 text-sm font-semibold">Precio unitario (centavos)<input className={inputClass} min="0" name="unitPriceCents" type="number" required disabled={!enabled} /></label>
-        <label className="grid gap-2 text-sm font-semibold">Precio pack de 10 (centavos)<input className={inputClass} min="0" name="pack10PriceCents" type="number" disabled={!enabled} /></label>
-        <label className="grid gap-2 text-sm font-semibold">Costo comercial (centavos)<input className={inputClass} min="0" name="commercialCostCents" type="number" required disabled={!enabled} /></label>
+        <label className="grid gap-2 text-sm font-semibold">Precio unitario (ARS)<input className={inputClass} min="0" step="0.01" name="unitPricePesos" placeholder="25000,00" type="number" required disabled={!enabled} /></label>
+        <label className="grid gap-2 text-sm font-semibold">Precio pack de 10 (ARS)<input className={inputClass} min="0" step="0.01" name="pack10PricePesos" placeholder="Opcional" type="number" disabled={!enabled} /></label>
+        <label className="grid gap-2 text-sm font-semibold">Costo comercial (ARS)<input className={inputClass} min="0" step="0.01" name="commercialCostPesos" placeholder="10000,00" type="number" required disabled={!enabled} /></label>
         <label className="flex items-center gap-2 self-end pb-3 text-sm"><input name="isActive" type="checkbox" disabled={!enabled} /> Publicar al crear</label>
         <label className="grid gap-2 text-sm font-semibold md:col-span-2">Descripción breve<textarea className="min-h-28 rounded-xl border border-[var(--border)] bg-[var(--background)] p-3" name="shortDescription" disabled={!enabled} /></label>
         <div className="flex justify-end md:col-span-2">
