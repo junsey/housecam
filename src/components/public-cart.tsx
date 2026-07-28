@@ -3,27 +3,37 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Route } from "next";
-import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { useActionState, useEffect, useRef, useState, useSyncExternalStore } from "react";
 
-import { getWhatsappHref } from "@/lib/whatsapp";
+import { createPurchaseRequestAction, type PurchaseRequestState } from "@/features/requests/purchase-request.actions";
 import { useCartStore } from "@/stores/cart-store";
 
 const money = new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", maximumFractionDigits: 0 });
 
-export function PublicCart({ whatsappNumber }: { whatsappNumber: string }) {
+export function PublicCart() {
   const [open, setOpen] = useState(false);
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
   const hydrated = useSyncExternalStore(() => () => undefined, () => true, () => false);
   const panelRef = useRef<HTMLDivElement>(null);
   const items = useCartStore((state) => state.items);
   const setQuantity = useCartStore((state) => state.setQuantity);
   const removeItem = useCartStore((state) => state.removeItem);
   const clear = useCartStore((state) => state.clear);
+  async function submitRequest(previousState: PurchaseRequestState, formData: FormData) {
+    const result = await createPurchaseRequestAction(previousState, formData);
+    if (result.ok) {
+      clear();
+      setCheckoutOpen(false);
+      if (result.whatsappHref) window.location.assign(result.whatsappHref);
+    }
+    return result;
+  }
+  const [requestState, requestAction, requestPending] = useActionState<PurchaseRequestState, FormData>(
+    submitRequest,
+    { ok: false },
+  );
   const itemCount = hydrated ? items.reduce((total, item) => total + item.quantity, 0) : 0;
   const total = items.reduce((sum, item) => sum + item.unitPriceCents * item.quantity, 0);
-  const message = `Hola, quiero consultar por este pedido:\n${items.map((item) =>
-    `• ${item.quantity} ${item.purchaseMode === "pack10" ? "pack(s) de 10" : "unidad(es)"} de ${item.name}`).join("\n")}\nTotal de referencia: ${money.format(total / 100)}.`;
-  const checkoutHref = useMemo(() => getWhatsappHref(whatsappNumber, message), [message, whatsappNumber]);
-
   useEffect(() => {
     function closeOnEscape(event: KeyboardEvent) {
       if (event.key === "Escape") setOpen(false);
@@ -69,12 +79,23 @@ export function PublicCart({ whatsappNumber }: { whatsappNumber: string }) {
             </div>
             <div className="public-cart-summary">
               <div><span>Total estimado</span><strong>{money.format(total / 100)}</strong></div>
-              {checkoutHref
-                ? <a className="button button-primary" href={checkoutHref} target="_blank" rel="noopener noreferrer">Realizar pedido</a>
-                : <button className="button button-primary" type="button" disabled>Contacto no disponible</button>}
+              <button className="button button-primary" type="button" onClick={() => setCheckoutOpen(true)}>Realizar pedido</button>
               <button className="public-cart-clear" type="button" onClick={clear}>Vaciar carrito</button>
             </div>
-          </> : <div className="public-cart-empty"><span>Tu carrito está vacío</span><p>Agregá productos desde su página de detalle.</p></div>}
+          </> : <div className="public-cart-empty"><span>{requestState.ok ? `Pedido ${requestState.code} registrado` : "Tu carrito está vacío"}</span><p>{requestState.ok ? "Recibimos tus datos y continuaremos la coordinación por WhatsApp." : "Agregá productos desde su página de detalle."}</p></div>}
+          {checkoutOpen && items.length > 0 && <div className="public-checkout">
+            <div className="public-checkout-heading"><div><strong>Datos del pedido</strong><span>Total estimado: {money.format(total / 100)}</span></div><button type="button" aria-label="Cerrar formulario" onClick={() => setCheckoutOpen(false)}>×</button></div>
+            <form action={requestAction}>
+              <input name="items" type="hidden" value={JSON.stringify(items.map(({ productId, purchaseMode, quantity }) => ({ productId, purchaseMode, quantity })))} />
+              <label>Nombre y apellido<input name="customerName" autoComplete="name" required /></label>
+              <label>Correo electrónico<input name="customerEmail" type="email" autoComplete="email" required /></label>
+              <label>Teléfono<input name="customerPhone" type="tel" autoComplete="tel" placeholder="Ej.: 351 555 0000" required /></label>
+              <label>Entrega<select name="deliveryMethod" defaultValue="shipping_to_coordinate"><option value="shipping_to_coordinate">Envío a coordinar</option><option value="pickup_cordoba">Retiro en Córdoba</option></select></label>
+              <label>Notas para la entrega<textarea name="deliveryNotes" placeholder="Dirección, localidad o indicaciones (opcional)" /></label>
+              {requestState.error && <p className="public-checkout-error" role="alert">{requestState.error}</p>}
+              <button className="button button-primary" type="submit" disabled={requestPending}>{requestPending ? "Registrando pedido…" : "Confirmar pedido"}</button>
+            </form>
+          </div>}
         </aside>
       </>}
     </div>

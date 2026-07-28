@@ -3,6 +3,7 @@
 import { UserButton } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
+import type { Route } from "next";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
@@ -12,6 +13,7 @@ const adminNavigation = [
   { href: "/admin", label: "Resumen", exact: true },
   { href: "/admin/productos", label: "Productos" },
   { href: "/admin/categorias", label: "Categorías" },
+  { href: "/admin/pedidos", label: "Pedidos" },
   { href: "/admin/ventas", label: "Ventas" },
   { href: "/admin/configuracion/whatsapp", label: "WhatsApp" },
 ] as const;
@@ -56,7 +58,7 @@ export function AdminShell({ children, clerkConfigured }: { children: React.Reac
             <nav className="admin-navigation" aria-label="Navegación administrativa">
               {adminNavigation.map((item) => {
                 const active = "exact" in item && item.exact ? pathname === item.href : pathname.startsWith(item.href);
-                return <Link className={active ? "is-active" : ""} aria-current={active ? "page" : undefined} href={item.href} key={item.href}>{item.label}</Link>;
+                return <Link className={active ? "is-active" : ""} aria-current={active ? "page" : undefined} href={item.href as Route} key={item.href}>{item.label}</Link>;
               })}
             </nav>
             <Link className="admin-view-site" href="/desarrollo">Ver sitio</Link>
@@ -76,7 +78,7 @@ export function AdminShell({ children, clerkConfigured }: { children: React.Reac
                 <nav aria-label="Navegación administrativa móvil">
                   {adminNavigation.map((item) => {
                     const active = "exact" in item && item.exact ? pathname === item.href : pathname.startsWith(item.href);
-                    return <Link className={active ? "is-active" : ""} aria-current={active ? "page" : undefined} href={item.href} key={item.href} onClick={() => setMobileMenuOpen(false)}>{item.label}</Link>;
+                    return <Link className={active ? "is-active" : ""} aria-current={active ? "page" : undefined} href={item.href as Route} key={item.href} onClick={() => setMobileMenuOpen(false)}>{item.label}</Link>;
                   })}
                 </nav>
                 <Link className="admin-mobile-view-site" href="/desarrollo" onClick={() => setMobileMenuOpen(false)}>Ver sitio</Link>
