@@ -13,6 +13,8 @@ import { requireAdmin } from "@/features/auth/require-admin";
 
 import { calculateSaleTotals, cancelSaleSchema, createSaleSchema, saleExpenseInputSchema, saleItemInputSchema } from "./sales.schemas";
 
+export type CreateSaleState = { ok: boolean; error?: string };
+
 function integer(value: FormDataEntryValue | null) {
   return Number.parseInt(String(value ?? ""), 10);
 }
@@ -45,19 +47,24 @@ async function refreshTotals(tx: Parameters<Parameters<ReturnType<typeof getDb>[
   return totals;
 }
 
-export async function createSaleAction(formData: FormData) {
-  const admin = await authorize();
-  const input = createSaleSchema.parse({
-    customerLabel: formData.get("customerLabel"),
-    channel: formData.get("channel"),
-    notes: String(formData.get("notes") ?? "").trim() || undefined,
-  });
-  const productId = String(formData.get("productId") ?? "");
-  const purchaseMode = String(formData.get("purchaseMode") ?? "");
-  const quantity = integer(formData.get("quantity"));
-  const finalPrice = pesosToCents(formData.get("finalUnitPricePesos"));
-  const db = getDb();
-  const created = await db.transaction(async (tx) => {
+export async function createSaleAction(_previousState: CreateSaleState, formData: FormData): Promise<CreateSaleState> {
+  let createdId: string;
+  try {
+    const admin = await authorize();
+    const parsed = createSaleSchema.safeParse({
+      customerLabel: formData.get("customerLabel"),
+      channel: formData.get("channel"),
+      notes: String(formData.get("notes") ?? "").trim() || undefined,
+    });
+    if (!parsed.success) return { ok: false, error: "Revisá el cliente y el canal de la venta." };
+    const input = parsed.data;
+    const productId = String(formData.get("productId") ?? "");
+    const purchaseMode = String(formData.get("purchaseMode") ?? "");
+    const quantity = integer(formData.get("quantity"));
+    const finalPrice = pesosToCents(formData.get("finalUnitPricePesos"));
+    if (formData.get("finalUnitPricePesos") && finalPrice === undefined) return { ok: false, error: "El precio final ingresado no es válido." };
+    const db = getDb();
+    const created = await db.transaction(async (tx) => {
     const [product] = await tx.select().from(products).where(and(eq(products.id, productId), sql`${products.archivedAt} is null`)).limit(1);
     if (!product) throw new Error("Seleccioná un producto válido antes de crear la venta.");
     if (purchaseMode !== "unit" && purchaseMode !== "pack10") throw new Error("Seleccioná una modalidad válida.");
@@ -106,8 +113,12 @@ export async function createSaleAction(formData: FormData) {
     await refreshTotals(tx, sale.id);
     await tx.insert(auditLogs).values({ actorClerkId: admin.clerkUserId, action: "sale.created", entityType: "sale", entityId: sale.id, after: { ...input, productId, purchaseMode, quantity } });
     return sale;
-  });
-  redirect(`/admin/ventas/${created.id}` as Route);
+    });
+    createdId = created.id;
+  } catch (error) {
+    return { ok: false, error: error instanceof Error ? error.message : "No pudimos crear la venta." };
+  }
+  redirect(`/admin/ventas/${createdId}` as Route);
 }
 
 export async function addSaleItemAction(formData: FormData) {
