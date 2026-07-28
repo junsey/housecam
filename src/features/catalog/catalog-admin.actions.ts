@@ -17,6 +17,11 @@ import {
 } from "./catalog.schemas";
 import { validateCatalogImage } from "./catalog-image.domain";
 
+export type ImageUploadState = {
+  success: boolean;
+  error: string | null;
+};
+
 function readBoolean(value: FormDataEntryValue | null) {
   return value === "on" || value === "true";
 }
@@ -273,24 +278,33 @@ export async function deleteKitComponentAction(formData: FormData) {
   revalidatePath(`/admin/productos/${kitProductId}`);
 }
 
-export async function uploadProductImageAction(formData: FormData) {
-  const admin = await authorizeMutation();
-  if (!process.env.BLOB_READ_WRITE_TOKEN) throw new Error("Configurá BLOB_READ_WRITE_TOKEN para subir imágenes.");
-  const productId = String(formData.get("productId") ?? "");
-  const alt = String(formData.get("alt") ?? "").trim();
-  const file = formData.get("file");
-  if (!(file instanceof File) || file.size === 0) throw new Error("Seleccioná una imagen.");
-  const validImage = validateCatalogImage({ type: file.type, size: file.size, alt });
+export async function uploadProductImageAction(_previousState: ImageUploadState, formData: FormData): Promise<ImageUploadState> {
+  let productId = "";
+  try {
+    const admin = await authorizeMutation();
+    if (!process.env.BLOB_READ_WRITE_TOKEN) throw new Error("El almacenamiento de imágenes no está configurado.");
+    productId = String(formData.get("productId") ?? "");
+    const alt = String(formData.get("alt") ?? "").trim();
+    const file = formData.get("file");
+    if (!(file instanceof File) || file.size === 0) throw new Error("Seleccioná una imagen.");
+    const validImage = validateCatalogImage({ type: file.type, size: file.size, alt });
 
-  const [{ value: maxOrder }] = await getDb().select({ value: max(productImages.sortOrder) }).from(productImages).where(eq(productImages.productId, productId));
-  const isFirst = maxOrder === null;
-  const blob = await put(`products/${productId}/${file.name}`, file, { access: "public", addRandomSuffix: true });
-  const [created] = await getDb().insert(productImages).values({
-    productId, url: blob.url, pathname: blob.pathname, alt: validImage.alt, sortOrder: (maxOrder ?? -1) + 1, isCover: isFirst,
-  }).returning({ id: productImages.id });
-  await writeAudit(admin.clerkUserId, "product_image.created", "product_image", created.id);
-  revalidatePath(`/admin/productos/${productId}`);
-  revalidatePublicCatalogs();
+    const [{ value: maxOrder }] = await getDb().select({ value: max(productImages.sortOrder) }).from(productImages).where(eq(productImages.productId, productId));
+    const isFirst = maxOrder === null;
+    const blob = await put(`products/${productId}/${file.name}`, file, { access: "public", addRandomSuffix: true });
+    const [created] = await getDb().insert(productImages).values({
+      productId, url: blob.url, pathname: blob.pathname, alt: validImage.alt, sortOrder: (maxOrder ?? -1) + 1, isCover: isFirst,
+    }).returning({ id: productImages.id });
+    await writeAudit(admin.clerkUserId, "product_image.created", "product_image", created.id);
+    revalidatePath(`/admin/productos/${productId}`);
+    revalidatePublicCatalogs();
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "";
+    const safeMessage = /imagen|JPG|PNG|WebP|almacenamiento|texto alternativo/i.test(message)
+      ? message
+      : "No pudimos subir la imagen. Revisá el archivo e intentá nuevamente.";
+    return { success: false, error: safeMessage };
+  }
   redirect(`/admin/productos/${productId}`);
 }
 

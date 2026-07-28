@@ -6,10 +6,11 @@ import { notFound } from "next/navigation";
 import {
   addProductSpecAction, adjustStockAction, deleteProductImageAction, deleteProductSpecAction,
   deleteKitComponentAction, duplicateProductAction, setProductCoverAction, toggleProductPublicationAction,
-  updateProductAction, uploadProductImageAction, upsertKitComponentAction,
+  updateProductAction, upsertKitComponentAction,
 } from "@/features/catalog/catalog-admin.actions";
 import { getAdminCategories, getAdminProduct } from "@/features/catalog/catalog-admin.data";
 import { AdminFlipCard } from "@/components/admin-flip-card";
+import { ProductImageUploader } from "@/components/product-image-uploader";
 
 export const metadata: Metadata = { title: "Detalle de producto" };
 const fieldClass = "min-h-11 rounded-xl border border-[var(--border)] bg-[var(--background)] px-3";
@@ -228,20 +229,7 @@ export default async function EditProductPage({
           ))}
         </div>
         {!images.length && <p className="mt-4 text-sm text-[var(--muted)]">Todavía no hay imágenes cargadas.</p>}
-        <details className="admin-disclosure mt-6">
-          <summary>Subir imagen</summary>
-          <form action={uploadProductImageAction} className="mt-5 grid gap-3 md:grid-cols-[1fr_1fr_auto]">
-            <input name="productId" type="hidden" value={product.id} />
-            <label className="grid gap-2 text-sm font-semibold">Archivo
-              <input className={fieldClass} name="file" type="file" accept="image/png,image/jpeg,image/webp" required />
-              <small className="font-normal text-[var(--muted)]">JPG, PNG o WebP de hasta 4 MB.</small>
-            </label>
-            <label className="grid gap-2 text-sm font-semibold">Descripción de la imagen
-              <input className={fieldClass} name="alt" placeholder="Ej.: Cámara instalada en una entrada" required />
-            </label>
-            <button className="self-start rounded-xl bg-[var(--brand)] px-5 py-3 font-bold text-white md:mt-7">Subir imagen</button>
-          </form>
-        </details>
+        <ProductImageUploader productId={product.id} fieldClass={fieldClass} />
       </section>
     </main>
   );
