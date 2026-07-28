@@ -100,3 +100,26 @@ export async function getWhatsappSettings() {
   const [settings] = await getDb().select({ whatsappNumber: siteSettings.whatsappNumber }).from(siteSettings).where(eq(siteSettings.id, "global")).limit(1);
   return { configured: true as const, value: settings?.whatsappNumber ?? "" };
 }
+
+export async function getGeneralSiteSettings() {
+  if (!process.env.DATABASE_URL) {
+    return { configured: false as const, whatsappNumber: "", developmentModeEnabled: true };
+  }
+  const [settings] = await getDb().select({
+    whatsappNumber: siteSettings.whatsappNumber,
+    developmentModeEnabled: siteSettings.developmentModeEnabled,
+  }).from(siteSettings).where(eq(siteSettings.id, "global")).limit(1);
+  return {
+    configured: true as const,
+    whatsappNumber: settings?.whatsappNumber ?? "",
+    developmentModeEnabled: settings?.developmentModeEnabled ?? true,
+  };
+}
+
+export async function getDevelopmentMode() {
+  if (!process.env.DATABASE_URL) return true;
+  const [settings] = await getDb().select({
+    enabled: siteSettings.developmentModeEnabled,
+  }).from(siteSettings).where(eq(siteSettings.id, "global")).limit(1);
+  return settings?.enabled ?? true;
+}

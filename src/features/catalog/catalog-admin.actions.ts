@@ -2,6 +2,7 @@
 
 import { del, put } from "@vercel/blob";
 import { and, asc, eq, max, sql } from "drizzle-orm";
+import type { Route } from "next";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -382,8 +383,34 @@ export async function updateWhatsappSettingsAction(formData: FormData) {
   await getDb().insert(siteSettings).values({ id: "global", whatsappNumber: input.whatsappNumber })
     .onConflictDoUpdate({ target: siteSettings.id, set: { whatsappNumber: input.whatsappNumber, updatedAt: new Date() } });
   await writeAudit(admin.clerkUserId, "settings.whatsapp_updated", "site_settings", "global", undefined, input);
+  revalidatePath("/admin/configuracion");
   revalidatePath("/admin/configuracion/whatsapp");
   revalidatePublicCatalogs();
   revalidatePath("/nosotros");
-  redirect("/admin/configuracion/whatsapp?guardado=1");
+  redirect("/admin/configuracion?guardado=whatsapp" as Route);
+}
+
+export async function updateDevelopmentModeAction(formData: FormData) {
+  const admin = await authorizeMutation();
+  const enabled = String(formData.get("enabled") ?? "") === "true";
+  await getDb().insert(siteSettings).values({
+    id: "global",
+    whatsappNumber: "",
+    developmentModeEnabled: enabled,
+  }).onConflictDoUpdate({
+    target: siteSettings.id,
+    set: { developmentModeEnabled: enabled, updatedAt: new Date() },
+  });
+  await writeAudit(
+    admin.clerkUserId,
+    "settings.development_mode_updated",
+    "site_settings",
+    "global",
+    undefined,
+    { developmentModeEnabled: enabled },
+  );
+  revalidatePath("/");
+  revalidatePath("/desarrollo");
+  revalidatePath("/admin/configuracion");
+  redirect(`/admin/configuracion?guardado=desarrollo&estado=${enabled ? "activo" : "inactivo"}` as Route);
 }

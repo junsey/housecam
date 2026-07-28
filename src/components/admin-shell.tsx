@@ -13,7 +13,7 @@ const adminNavigation = [
   { href: "/admin", label: "Resumen", matches: ["/admin"] },
   { href: "/admin/productos", label: "Productos", matches: ["/admin/productos", "/admin/categorias"] },
   { href: "/admin/ventas", label: "Ventas", matches: ["/admin/ventas", "/admin/pedidos", "/admin/presupuestos"] },
-  { href: "/admin/configuracion/whatsapp", label: "WhatsApp", matches: ["/admin/configuracion/whatsapp"] },
+  { href: "/admin/configuracion", label: "Configuración", matches: ["/admin/configuracion"] },
 ] as const;
 
 export function AdminShell({ children, clerkConfigured }: { children: React.ReactNode; clerkConfigured: boolean }) {

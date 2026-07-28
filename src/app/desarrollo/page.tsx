@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { PublicFooter } from "@/components/public-footer";
 import { PublicHeader } from "@/components/public-header";
 import { RecommendedProductsCarousel } from "@/components/recommended-products-carousel";
-import { getWhatsappSettings } from "@/features/catalog/catalog-admin.data";
+import { getDevelopmentMode, getWhatsappSettings } from "@/features/catalog/catalog-admin.data";
 import { getStoreProducts } from "@/features/catalog/catalog-store.data";
 import { getWhatsappHref } from "@/lib/whatsapp";
 
@@ -14,11 +14,11 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function DevelopmentPage() {
-  const [whatsapp, catalog] = await Promise.all([getWhatsappSettings(), getStoreProducts("housecam")]);
+  const [whatsapp, catalog, developmentModeEnabled] = await Promise.all([getWhatsappSettings(), getStoreProducts("housecam"), getDevelopmentMode()]);
   const whatsappHref = getWhatsappHref(whatsapp.value, "Hola, quiero recibir asesoramiento sobre las soluciones HouseCam.");
   return (
     <div className="brand-housecam brand-page-enter">
-      <PublicHeader activePath="/desarrollo" showPreviewBanner whatsappNumber={whatsapp.value} />
+      <PublicHeader activePath="/desarrollo" showPreviewBanner={developmentModeEnabled} whatsappNumber={whatsapp.value} />
       <main id="inicio">
         <section className="hero">
           <div className="container hero-grid">
