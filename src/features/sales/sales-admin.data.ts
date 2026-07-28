@@ -68,7 +68,7 @@ export async function getMonthlySalesHistory(requestedMonth?: string) {
   }
 
   const db = getDb();
-  const monthExpression = sql<string>`to_char(${sales.confirmedAt} at time zone ${buenosAiresTimezone}, 'YYYY-MM')`;
+  const monthExpression = sql<string>`to_char(${sales.confirmedAt} at time zone 'America/Argentina/Buenos_Aires', 'YYYY-MM')`;
   const months = await db.select({
     month: monthExpression,
     saleCount: sql<number>`count(*)::int`,
