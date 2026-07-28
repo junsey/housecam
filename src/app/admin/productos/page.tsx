@@ -28,7 +28,7 @@ export default async function AdminProductsPage() {
         </p>
       )}
 
-      <section className="card mt-8 overflow-x-auto">
+      <section className="card admin-products-table mt-8">
         {result.items.length === 0 ? (
           <p className="p-6 text-sm text-[var(--muted)]">Todavía no hay productos cargados.</p>
         ) : (

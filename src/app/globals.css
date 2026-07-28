@@ -318,6 +318,7 @@ a {
 
 .admin-row-actions {
   min-width: 124px;
+  position: relative;
 }
 
 .admin-row-actions > summary {
@@ -358,9 +359,12 @@ a {
 
 .admin-row-actions-menu {
   width: 150px;
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 8px);
+  right: 0;
   display: grid;
   gap: 4px;
-  margin-top: 8px;
   border: 1px solid var(--hc-border);
   border-radius: 14px;
   padding: 6px;
@@ -392,6 +396,22 @@ a {
 
 .admin-row-actions-menu .is-danger {
   color: #c2413b;
+}
+
+.admin-products-table {
+  overflow: visible;
+}
+
+@media (max-width: 800px) {
+  .admin-products-table {
+    overflow-x: auto;
+    overflow-y: visible;
+  }
+
+  .admin-row-actions-menu {
+    position: static;
+    margin-top: 8px;
+  }
 }
 
 @media (max-width: 1100px) {
