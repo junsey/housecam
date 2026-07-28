@@ -217,6 +217,32 @@ export async function confirmSaleAction(formData: FormData) {
   revalidatePath(`/admin/ventas/${saleId}`);
 }
 
+export async function discardDraftSaleAction(formData: FormData) {
+  const admin = await authorize();
+  const saleId = String(formData.get("saleId") ?? "");
+  await getDb().transaction(async (tx) => {
+    const lockedSale = await tx.execute(sql`select id, status from sales where id = ${saleId} for update`);
+    const sale = lockedSale.rows[0] as { id: string; status: string } | undefined;
+    if (!sale || sale.status !== "draft") throw new Error("Solo se puede descartar una venta en borrador.");
+    await tx.update(sales).set({
+      status: "cancelled",
+      cancelledAt: new Date(),
+      cancelledByClerkId: admin.clerkUserId,
+      cancellationReason: "Borrador descartado antes de confirmar",
+      updatedAt: new Date(),
+    }).where(eq(sales.id, saleId));
+    await tx.insert(auditLogs).values({
+      actorClerkId: admin.clerkUserId,
+      action: "sale.draft_discarded",
+      entityType: "sale",
+      entityId: saleId,
+    });
+  });
+  revalidatePath("/admin/ventas");
+  revalidatePath(`/admin/ventas/${saleId}`);
+  redirect("/admin/ventas");
+}
+
 export async function cancelSaleAction(formData: FormData) {
   const admin = await authorize();
   const input = cancelSaleSchema.parse({ saleId: formData.get("saleId"), reason: formData.get("reason") });

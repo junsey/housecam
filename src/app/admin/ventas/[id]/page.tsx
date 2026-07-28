@@ -3,9 +3,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import {
-  addSaleExpenseAction, addSaleItemAction, cancelSaleAction, confirmSaleAction, removeSaleExpenseAction, removeSaleItemAction,
+  addSaleExpenseAction, addSaleItemAction, cancelSaleAction, confirmSaleAction, discardDraftSaleAction, removeSaleExpenseAction, removeSaleItemAction,
 } from "@/features/sales/sales-admin.actions";
 import { getAdminSale, getSaleProductOptions } from "@/features/sales/sales-admin.data";
+import { ConfirmSubmitButton } from "@/components/confirm-submit-button";
 
 export const metadata: Metadata = { title: "Detalle de venta" };
 const field = "min-h-11 rounded-xl border border-[var(--border)] bg-[var(--background)] px-3";
@@ -20,7 +21,13 @@ export default async function SaleDetailPage({ params }: { params: Promise<{ id:
   return <main className="shell py-10">
     <Link className="text-sm font-bold text-[var(--brand)]" href="/admin/ventas">← Ventas</Link>
     <div className="mt-6 flex flex-wrap items-start justify-between gap-5"><div><p className="text-xs font-bold uppercase tracking-wider text-[var(--brand)]">{sale.status}</p><h1 className="mt-2 text-3xl font-bold">{sale.code ?? `Venta #${sale.saleNumber}`}</h1><p className="mt-2 text-[var(--muted)]">{sale.customerLabel} · {sale.channel}</p></div>
-      {editable && <form action={confirmSaleAction}><input name="saleId" type="hidden" value={sale.id} /><button className="rounded-xl bg-emerald-600 px-5 py-3 font-bold text-white">Confirmar y descontar stock</button></form>}
+      {editable && <div className="flex flex-wrap gap-3">
+        <form action={discardDraftSaleAction}>
+          <input name="saleId" type="hidden" value={sale.id} />
+          <ConfirmSubmitButton className="rounded-xl border border-red-500/50 px-5 py-3 font-bold text-red-700" message="¿Querés descartar este borrador? La venta quedará cancelada y no se descontará stock.">Descartar borrador</ConfirmSubmitButton>
+        </form>
+        <form action={confirmSaleAction}><input name="saleId" type="hidden" value={sale.id} /><button className="rounded-xl bg-emerald-600 px-5 py-3 font-bold text-white">Confirmar y descontar stock</button></form>
+      </div>}
     </div>
 
     <section className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
