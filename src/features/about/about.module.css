@@ -26,6 +26,16 @@
   --about-brand-strong: #58afe7;
 }
 
+.housepet {
+  --about-brand: #e36f16;
+  --about-brand-strong: #bc4d0b;
+}
+
+:global(html[data-theme="dark"]) .housepet {
+  --about-brand: #ff963f;
+  --about-brand-strong: #ffb16f;
+}
+
 .container,
 .footerInner {
   width: min(1200px, calc(100% - 40px));
@@ -282,7 +292,7 @@
 }
 
 .primaryButton {
-  background: #2795dc;
+  background: var(--about-brand);
   color: #fff;
 }
 
@@ -291,7 +301,7 @@
   color: #fff;
 }
 
-.primaryButton:hover { background: #58afe7; }
+.primaryButton:hover { background: var(--about-brand-strong); }
 .secondaryButton:hover { border-color: #fff; }
 
 .footer {

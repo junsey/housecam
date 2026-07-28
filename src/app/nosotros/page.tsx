@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 
+import { PublicFooter } from "@/components/public-footer";
 import { PublicHeader } from "@/components/public-header";
 import { AboutContactCTA } from "@/features/about/about-contact-cta";
 import { AboutHero } from "@/features/about/about-hero";
@@ -35,7 +35,9 @@ function getWhatsappHref(value: string) {
   return `https://wa.me/${number}?text=${message}`;
 }
 
-export default async function AboutPage() {
+export default async function AboutPage({ searchParams }: { searchParams: Promise<{ brand?: string }> }) {
+  const { brand: requestedBrand } = await searchParams;
+  const brand = requestedBrand === "housepet" ? "housepet" : "housecam";
   const whatsapp = await getWhatsappSettings();
   const organizationSchema = {
     "@context": "https://schema.org",
@@ -46,8 +48,8 @@ export default async function AboutPage() {
   };
 
   return (
-    <div className={styles.page}>
-      <PublicHeader activePath="/nosotros" />
+    <div className={`${styles.page} ${brand === "housepet" ? styles.housepet : ""} brand-${brand} brand-page-enter`}>
+      <PublicHeader activePath="/nosotros" brand={brand} />
       <main className={styles.container}>
         <AboutHero />
         <AboutStory />
@@ -55,15 +57,7 @@ export default async function AboutPage() {
         <TeamSection />
         <AboutContactCTA whatsappHref={getWhatsappHref(whatsapp.value)} />
       </main>
-      <footer className={styles.footer}>
-        <div className={styles.footerInner}>
-          <span>© HouseCam. Tecnología para vivir con más tranquilidad.</span>
-          <nav aria-label="Navegación del pie">
-            <Link href="/productos#tienda">Productos</Link>
-            <Link href="/nosotros">Sobre nosotros</Link>
-          </nav>
-        </div>
-      </footer>
+      <PublicFooter brand={brand} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema).replace(/</g, "\\u003c") }}

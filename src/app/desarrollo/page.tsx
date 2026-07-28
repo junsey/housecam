@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { PublicFooter } from "@/components/public-footer";
 import { PublicHeader } from "@/components/public-header";
 
 export const metadata: Metadata = {
@@ -9,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function DevelopmentPage() {
   return (
-    <>
+    <div className="brand-housecam brand-page-enter">
       <PublicHeader activePath="/desarrollo" showPreviewBanner />
       <main id="inicio">
         <section className="hero">
@@ -47,6 +48,7 @@ export default function DevelopmentPage() {
           </div>
         </section>
       </main>
-    </>
+      <PublicFooter />
+    </div>
   );
 }

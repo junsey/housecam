@@ -2,12 +2,13 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import type { Route } from "next";
 import { useEffect, useState } from "react";
 
 import { publicContactEmail, publicNavigationItems } from "@/config/public-navigation";
 
 type PublicHeaderProps = {
-  activePath: "/desarrollo" | "/productos" | "/nosotros" | "/housepet";
+  activePath: "/desarrollo" | "/productos" | "/nosotros" | "/housepet" | "/housepet/productos";
   brand?: "housecam" | "housepet";
   showPreviewBanner?: boolean;
 };
@@ -16,6 +17,7 @@ const themeStorageKey = "housecam_theme";
 
 export function PublicHeader({ activePath, brand = "housecam", showPreviewBanner = false }: PublicHeaderProps) {
   const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [brandMenuOpen, setBrandMenuOpen] = useState(false);
   const isHousePet = brand === "housepet";
 
   useEffect(() => {
@@ -37,6 +39,15 @@ export function PublicHeader({ activePath, brand = "housecam", showPreviewBanner
 
   const darkLogo = isHousePet ? "/housepet-white.svg" : "/housecam-white.svg";
   const lightLogo = isHousePet ? "/housepet-black.svg" : "/housecam-black.svg";
+  const navigation = isHousePet ? [
+    { label: "Inicio", href: "/housepet", path: "/housepet" },
+    { label: "Tienda", href: "/housepet/productos#tienda", path: "/housepet/productos" },
+    { label: "Sobre nosotros", href: "/nosotros?brand=housepet", path: "/nosotros" },
+  ] : publicNavigationItems.map((item) => ({
+    label: item.label,
+    href: item.href,
+    path: item.matchPath,
+  }));
 
   return (
     <>
@@ -45,27 +56,28 @@ export function PublicHeader({ activePath, brand = "housecam", showPreviewBanner
       )}
       <header className="site-header">
         <nav className="container nav" aria-label="Navegación principal">
-          <Link href={isHousePet ? "/housepet" : "/desarrollo"} aria-label={`${isHousePet ? "HousePet" : "HouseCam"}, inicio`}>
-            <Image className="logo logo-dark-theme" src={darkLogo} alt={isHousePet ? "HousePet" : "HouseCam"} width={190} height={58} priority />
-            <Image className="logo logo-light-theme" src={lightLogo} alt="" width={190} height={58} priority />
-          </Link>
+          <div className="brand-switcher">
+            <button className="brand-switcher-trigger" type="button" aria-expanded={brandMenuOpen} aria-label="Cambiar entre HouseCam y HousePet" onClick={() => setBrandMenuOpen((value) => !value)}>
+              <Image className="logo logo-dark-theme" src={darkLogo} alt={isHousePet ? "HousePet" : "HouseCam"} width={190} height={58} priority />
+              <Image className="logo logo-light-theme" src={lightLogo} alt="" width={190} height={58} priority />
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 7 5 5 5-5" /></svg>
+            </button>
+            {brandMenuOpen && (
+              <div className="brand-switcher-menu">
+                <Link className={!isHousePet ? "is-current" : ""} href="/desarrollo" onClick={() => setBrandMenuOpen(false)}>
+                  <Image src="/housecam-black.svg" alt="HouseCam" width={150} height={45} />
+                  <span>Seguridad para tu hogar</span>
+                </Link>
+                <Link className={isHousePet ? "is-current" : ""} href="/housepet" onClick={() => setBrandMenuOpen(false)}>
+                  <Image src="/housepet-black.svg" alt="HousePet" width={150} height={45} />
+                  <span>Tecnología para tus mascotas</span>
+                </Link>
+              </div>
+            )}
+          </div>
           <div className="nav-actions">
             <div className="nav-links">
-              {publicNavigationItems.map((item) => (
-                item.matchPath === "/desarrollo" ? (
-                  <Link href="/desarrollo" aria-current={activePath === "/desarrollo" ? "page" : undefined} key={item.href}>{item.label}</Link>
-                ) : item.matchPath === "/productos" ? (
-                  <Link href="/productos#tienda" aria-current={activePath === "/productos" ? "page" : undefined} key={item.href}>{item.label}</Link>
-                ) : item.matchPath === "/nosotros" ? (
-                  <Link href="/nosotros" aria-current={activePath === "/nosotros" ? "page" : undefined} key={item.href}>{item.label}</Link>
-                ) : (
-                  <Link href="/desarrollo#beneficios" key={item.href}>{item.label}</Link>
-                )
-              ))}
-              <Link href={isHousePet ? "/desarrollo" : "/housepet"} aria-current={activePath === "/housepet" ? "page" : undefined}>
-                {isHousePet ? "HouseCam" : "HousePet"}
-              </Link>
-              <Link className="admin-link button button-secondary" href="/admin">Admin</Link>
+              {navigation.map((item) => <Link href={item.href as Route} aria-current={activePath === item.path ? "page" : undefined} key={item.href}>{item.label}</Link>)}
               <a className="button button-primary" href={`mailto:${publicContactEmail}`}>Hablar con nosotros</a>
             </div>
             <button

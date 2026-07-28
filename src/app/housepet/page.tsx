@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 
+import { PublicFooter } from "@/components/public-footer";
 import { PublicHeader } from "@/components/public-header";
 
 export const metadata: Metadata = { title: "HousePet" };
 
 export default function HousePetPage() {
   return (
-    <div className="store-page">
+    <div className="store-page brand-housepet brand-page-enter">
       <PublicHeader activePath="/housepet" brand="housepet" />
       <main>
         <section className="hero">
@@ -16,8 +17,8 @@ export default function HousePetPage() {
               <h1>Tecnología para quienes son familia.</h1>
               <p className="lead">HousePet comparte la misma experiencia clara y cercana de HouseCam, con soluciones pensadas para acompañar el cuidado cotidiano de tus mascotas.</p>
               <div className="actions">
-                <a className="button button-primary" href="mailto:hola@housecam.com?subject=Consulta%20HousePet">Hablar con nosotros</a>
-                <a className="button button-secondary" href="/desarrollo">Conocer HouseCam</a>
+                <a className="button button-primary" href="/housepet/productos">Explorar la tienda</a>
+                <a className="button button-secondary" href="mailto:hola@housecam.com?subject=Consulta%20HousePet">Hablar con nosotros</a>
               </div>
             </div>
             <div className="hero-visual" aria-label="HousePet en preparación">
@@ -33,6 +34,7 @@ export default function HousePetPage() {
           </div>
         </section>
       </main>
+      <PublicFooter brand="housepet" />
     </div>
   );
 }
