@@ -82,6 +82,13 @@ async function writeAudit(actorClerkId: string, action: string, entityType: stri
   await getDb().insert(auditLogs).values({ actorClerkId, action, entityType, entityId, before, after });
 }
 
+function revalidatePublicCatalogs() {
+  revalidatePath("/productos");
+  revalidatePath("/housepet/productos");
+  revalidatePath("/desarrollo");
+  revalidatePath("/housepet");
+}
+
 export async function createCategoryAction(formData: FormData) {
   const admin = await authorizeMutation();
   const input = categoryFormData(formData);
@@ -283,6 +290,8 @@ export async function uploadProductImageAction(formData: FormData) {
   }).returning({ id: productImages.id });
   await writeAudit(admin.clerkUserId, "product_image.created", "product_image", created.id);
   revalidatePath(`/admin/productos/${productId}`);
+  revalidatePublicCatalogs();
+  redirect(`/admin/productos/${productId}`);
 }
 
 export async function setProductCoverAction(formData: FormData) {
@@ -295,6 +304,8 @@ export async function setProductCoverAction(formData: FormData) {
   });
   await writeAudit(admin.clerkUserId, "product_image.cover_set", "product_image", id);
   revalidatePath(`/admin/productos/${productId}`);
+  revalidatePublicCatalogs();
+  redirect(`/admin/productos/${productId}`);
 }
 
 export async function deleteProductImageAction(formData: FormData) {
@@ -307,6 +318,8 @@ export async function deleteProductImageAction(formData: FormData) {
   await getDb().delete(productImages).where(eq(productImages.id, id));
   await writeAudit(admin.clerkUserId, "product_image.deleted", "product_image", id);
   revalidatePath(`/admin/productos/${productId}`);
+  revalidatePublicCatalogs();
+  redirect(`/admin/productos/${productId}`);
 }
 
 export async function adjustStockAction(formData: FormData) {
