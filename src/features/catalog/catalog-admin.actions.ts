@@ -383,4 +383,7 @@ export async function updateWhatsappSettingsAction(formData: FormData) {
     .onConflictDoUpdate({ target: siteSettings.id, set: { whatsappNumber: input.whatsappNumber, updatedAt: new Date() } });
   await writeAudit(admin.clerkUserId, "settings.whatsapp_updated", "site_settings", "global", undefined, input);
   revalidatePath("/admin/configuracion/whatsapp");
+  revalidatePublicCatalogs();
+  revalidatePath("/nosotros");
+  redirect("/admin/configuracion/whatsapp?guardado=1");
 }

@@ -5,18 +5,21 @@ import Link from "next/link";
 import type { Route } from "next";
 import { useState } from "react";
 
-import { publicContactEmail, publicNavigationItems } from "@/config/public-navigation";
+import { publicNavigationItems } from "@/config/public-navigation";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { getWhatsappHref } from "@/lib/whatsapp";
 
 type PublicHeaderProps = {
   activePath: "/desarrollo" | "/productos" | "/nosotros" | "/housepet" | "/housepet/productos";
   brand?: "housecam" | "housepet";
   showPreviewBanner?: boolean;
+  whatsappNumber?: string;
 };
 
-export function PublicHeader({ activePath, brand = "housecam", showPreviewBanner = false }: PublicHeaderProps) {
+export function PublicHeader({ activePath, brand = "housecam", showPreviewBanner = false, whatsappNumber = "" }: PublicHeaderProps) {
   const [brandMenuOpen, setBrandMenuOpen] = useState(false);
   const isHousePet = brand === "housepet";
+  const whatsappHref = getWhatsappHref(whatsappNumber, `Hola, quiero recibir asesoramiento sobre ${isHousePet ? "HousePet" : "HouseCam"}.`);
 
   const darkLogo = isHousePet ? "/housepet-white.svg" : "/housecam-white.svg";
   const lightLogo = isHousePet ? "/housepet-black.svg" : "/housecam-black.svg";
@@ -59,7 +62,7 @@ export function PublicHeader({ activePath, brand = "housecam", showPreviewBanner
           <div className="nav-actions">
             <div className="nav-links">
               {navigation.map((item) => <Link href={item.href as Route} aria-current={activePath === item.path ? "page" : undefined} key={item.href}>{item.label}</Link>)}
-              <a className="button button-primary" href={`mailto:${publicContactEmail}`}>Hablar con nosotros</a>
+              {whatsappHref ? <a className="button button-primary" href={whatsappHref} target="_blank" rel="noopener noreferrer">Hablar con nosotros</a> : <button className="button button-primary contact-disabled" type="button" disabled title="La función de contacto está temporalmente deshabilitada. Probá más tarde.">Contacto no disponible</button>}
             </div>
             <ThemeToggle />
           </div>

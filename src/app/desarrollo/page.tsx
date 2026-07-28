@@ -2,16 +2,20 @@ import type { Metadata } from "next";
 
 import { PublicFooter } from "@/components/public-footer";
 import { PublicHeader } from "@/components/public-header";
+import { getWhatsappSettings } from "@/features/catalog/catalog-admin.data";
+import { getWhatsappHref } from "@/lib/whatsapp";
 
 export const metadata: Metadata = {
   title: "Sitio en desarrollo",
   description: "HouseCam: seguridad simple para todos los días.",
 };
 
-export default function DevelopmentPage() {
+export default async function DevelopmentPage() {
+  const whatsapp = await getWhatsappSettings();
+  const whatsappHref = getWhatsappHref(whatsapp.value, "Hola, quiero recibir asesoramiento sobre las soluciones HouseCam.");
   return (
     <div className="brand-housecam brand-page-enter">
-      <PublicHeader activePath="/desarrollo" showPreviewBanner />
+      <PublicHeader activePath="/desarrollo" showPreviewBanner whatsappNumber={whatsapp.value} />
       <main id="inicio">
         <section className="hero">
           <div className="container hero-grid">
@@ -21,7 +25,7 @@ export default function DevelopmentPage() {
               <p className="lead">Cámaras y soluciones inteligentes para que puedas saber que todo está bien, estés donde estés.</p>
               <div className="actions">
                 <a className="button button-primary" href="#beneficios">Encontrar mi solución</a>
-                <a className="button button-secondary" href="mailto:hola@housecam.com">Hablar con un asesor</a>
+                {whatsappHref ? <a className="button button-secondary" href={whatsappHref} target="_blank" rel="noopener noreferrer">Hablar con un asesor</a> : <button className="button button-secondary contact-disabled" type="button" disabled title="La función de contacto está temporalmente deshabilitada. Probá más tarde.">Contacto no disponible. Probá más tarde.</button>}
               </div>
               <ul className="trust-list"><li>Instalación sencilla</li><li>Asistencia local</li><li>Acceso desde tu celular</li></ul>
             </div>

@@ -45,7 +45,10 @@ export const stockAdjustmentSchema = z.object({
 });
 
 export const whatsappSettingsSchema = z.object({
-  whatsappNumber: z.string().trim().min(8).max(30).regex(/^\+?[0-9 ()-]+$/),
+  whatsappNumber: z.string().trim().max(30).refine(
+    (value) => value === "" || (/^\+?[0-9 ()-]+$/.test(value) && value.replace(/\D/g, "").length >= 8),
+    "Ingresá un número internacional válido o dejá el campo vacío.",
+  ),
 });
 
 export type CategoryInput = z.infer<typeof categoryInputSchema>;

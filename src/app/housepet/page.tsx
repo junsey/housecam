@@ -2,13 +2,17 @@ import type { Metadata } from "next";
 
 import { PublicFooter } from "@/components/public-footer";
 import { PublicHeader } from "@/components/public-header";
+import { getWhatsappSettings } from "@/features/catalog/catalog-admin.data";
+import { getWhatsappHref } from "@/lib/whatsapp";
 
 export const metadata: Metadata = { title: "HousePet" };
 
-export default function HousePetPage() {
+export default async function HousePetPage() {
+  const whatsapp = await getWhatsappSettings();
+  const whatsappHref = getWhatsappHref(whatsapp.value, "Hola, quiero recibir asesoramiento sobre HousePet.");
   return (
     <div className="store-page brand-housepet brand-page-enter">
-      <PublicHeader activePath="/housepet" brand="housepet" />
+      <PublicHeader activePath="/housepet" brand="housepet" whatsappNumber={whatsapp.value} />
       <main>
         <section className="hero">
           <div className="container hero-grid">
@@ -18,7 +22,7 @@ export default function HousePetPage() {
               <p className="lead">HousePet comparte la misma experiencia clara y cercana de HouseCam, con soluciones pensadas para acompañar el cuidado cotidiano de tus mascotas.</p>
               <div className="actions">
                 <a className="button button-primary" href="/housepet/productos">Explorar la tienda</a>
-                <a className="button button-secondary" href="mailto:hola@housecam.com?subject=Consulta%20HousePet">Hablar con nosotros</a>
+                {whatsappHref ? <a className="button button-secondary" href={whatsappHref} target="_blank" rel="noopener noreferrer">Hablar con nosotros</a> : <button className="button button-secondary contact-disabled" type="button" disabled title="La función de contacto está temporalmente deshabilitada. Probá más tarde.">Contacto no disponible. Probá más tarde.</button>}
               </div>
             </div>
             <div className="hero-visual" aria-label="HousePet en preparación">

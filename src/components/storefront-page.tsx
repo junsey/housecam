@@ -3,6 +3,8 @@ import Image from "next/image";
 import { PublicFooter } from "@/components/public-footer";
 import { PublicHeader } from "@/components/public-header";
 import { getStoreProducts } from "@/features/catalog/catalog-store.data";
+import { getWhatsappSettings } from "@/features/catalog/catalog-admin.data";
+import { getWhatsappHref } from "@/lib/whatsapp";
 
 const money = new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", maximumFractionDigits: 0 });
 
@@ -21,12 +23,13 @@ function ProductVisual({ imageUrl, name, type }: { imageUrl: string | null; name
 
 export async function StorefrontPage({ brand }: { brand: "housecam" | "housepet" }) {
   const isPet = brand === "housepet";
-  const catalog = await getStoreProducts(brand);
+  const [catalog, whatsapp] = await Promise.all([getStoreProducts(brand), getWhatsappSettings()]);
   const categories = [...new Set(catalog.items.map((product) => product.categoryName))];
+  const adviceHref = getWhatsappHref(whatsapp.value, `Hola, necesito asesoramiento para elegir una solución ${isPet ? "HousePet" : "HouseCam"}.`);
 
   return (
     <div className={`store-page brand-page-enter ${isPet ? "brand-housepet" : "brand-housecam"}`}>
-      <PublicHeader activePath={isPet ? "/housepet/productos" : "/productos"} brand={brand} />
+      <PublicHeader activePath={isPet ? "/housepet/productos" : "/productos"} brand={brand} whatsappNumber={whatsapp.value} />
       <main id="tienda">
         <section className="store-intro">
           <div className="container">
@@ -36,7 +39,7 @@ export async function StorefrontPage({ brand }: { brand: "housecam" | "housepet"
                 <h1>{isPet ? "Tecnología para cuidar a quienes son familia." : "Elegí tranquilidad para tu hogar."}</h1>
                 <p className="lead">{isPet ? "Monitoreo, alimentación y bienestar conectado para acompañar a tus mascotas todos los días." : "Cámaras, kits y accesorios seleccionados para instalar fácil y acompañarte todos los días."}</p>
               </div>
-              <a className="button button-secondary" href={`mailto:hola@housecam.com?subject=Asesoramiento%20${isPet ? "HousePet" : "HouseCam"}`}>¿No sabés cuál elegir? Te asesoramos</a>
+              {adviceHref ? <a className="button button-secondary" href={adviceHref} target="_blank" rel="noopener noreferrer">¿No sabés cuál elegir? Te asesoramos</a> : <button className="button button-secondary contact-disabled" type="button" disabled title="La función de contacto está temporalmente deshabilitada. Probá más tarde.">Contacto no disponible. Probá más tarde.</button>}
             </div>
             <div className="store-benefits"><span>✓ Asistencia local</span><span>✓ Productos seleccionados</span><span>✓ Acompañamiento real</span></div>
           </div>
@@ -63,7 +66,7 @@ export async function StorefrontPage({ brand }: { brand: "housecam" | "housepet"
                     <h3>{product.name}</h3><p>{product.shortDescription}</p>
                     <div className="store-product-footer">
                       <div><span>Desde</span><strong>{money.format(product.unitPriceCents / 100)}</strong></div>
-                      <a className="button button-primary" href={`mailto:hola@housecam.com?subject=${encodeURIComponent(`Consulta por ${product.name}`)}`}>Consultar</a>
+                      {getWhatsappHref(whatsapp.value, `Hola, quiero consultar por ${product.name}.`) ? <a className="button button-primary" href={getWhatsappHref(whatsapp.value, `Hola, quiero consultar por ${product.name}.`)!} target="_blank" rel="noopener noreferrer">Consultar</a> : <button className="button button-primary contact-disabled" type="button" disabled title="La función de contacto está temporalmente deshabilitada. Probá más tarde.">No disponible</button>}
                     </div>
                     {product.pack10PriceCents && <small>Pack de 10: {money.format(product.pack10PriceCents / 100)}</small>}
                   </div>

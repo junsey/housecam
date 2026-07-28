@@ -9,6 +9,7 @@ import { AboutStory } from "@/features/about/about-story";
 import { MissionSection } from "@/features/about/mission-section";
 import { TeamSection } from "@/features/about/team-section";
 import { getWhatsappSettings } from "@/features/catalog/catalog-admin.data";
+import { getWhatsappHref } from "@/lib/whatsapp";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.housecam.ar";
 const socialImage = new URL("/android-icon-192x192.png", siteUrl).toString();
@@ -28,13 +29,6 @@ export const metadata: Metadata = {
   },
 };
 
-function getWhatsappHref(value: string) {
-  const number = value.replace(/\D/g, "");
-  if (!number) return null;
-  const message = encodeURIComponent("Hola, quiero conocer más sobre las soluciones HouseCam para mi hogar.");
-  return `https://wa.me/${number}?text=${message}`;
-}
-
 export default async function AboutPage({ searchParams }: { searchParams: Promise<{ brand?: string }> }) {
   const { brand: requestedBrand } = await searchParams;
   const brand = requestedBrand === "housepet" ? "housepet" : "housecam";
@@ -49,13 +43,13 @@ export default async function AboutPage({ searchParams }: { searchParams: Promis
 
   return (
     <div className={`${styles.page} ${brand === "housepet" ? styles.housepet : ""} brand-${brand} brand-page-enter`}>
-      <PublicHeader activePath="/nosotros" brand={brand} />
+      <PublicHeader activePath="/nosotros" brand={brand} whatsappNumber={whatsapp.value} />
       <main className={styles.container}>
         <AboutHero />
         <AboutStory />
         <MissionSection />
         <TeamSection />
-        <AboutContactCTA whatsappHref={getWhatsappHref(whatsapp.value)} />
+        <AboutContactCTA whatsappHref={getWhatsappHref(whatsapp.value, `Hola, quiero conocer más sobre las soluciones ${brand === "housepet" ? "HousePet" : "HouseCam"}.`)} />
       </main>
       <PublicFooter brand={brand} />
       <script

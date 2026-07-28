@@ -15,7 +15,7 @@ export function AboutContactCTA({ whatsappHref }: { whatsappHref: string | null 
             Hablar con nosotros
           </a>
         ) : (
-          <a className={styles.primaryButton} href="mailto:hola@housecam.com">Hablar con nosotros</a>
+          <button className={`${styles.primaryButton} contact-disabled`} type="button" disabled title="La función de contacto está temporalmente deshabilitada. Probá más tarde.">Contacto no disponible. Probá más tarde.</button>
         )}
         <Link className={styles.secondaryButton} href="/productos#tienda">Conocer nuestros productos</Link>
       </div>

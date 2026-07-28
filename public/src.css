@@ -323,6 +323,7 @@ h1 {
 .button-primary { background: var(--hc-blue-500); color: white; box-shadow: var(--hc-shadow-sm); }
 .button-primary:hover { background: var(--hc-blue-700); transform: translateY(-2px); }
 .button-secondary { background: var(--hc-surface); color: var(--hc-navy-900); border-color: var(--hc-border-strong); }
+.contact-disabled, .contact-disabled:hover { cursor: not-allowed; opacity: .62; transform: none; box-shadow: none; }
 .preview-banner { background: var(--hc-preview); color: var(--hc-text-primary); text-align: center; padding: 9px 20px; font-size: .875rem; border-bottom: 1px solid var(--hc-border); }
 [data-theme="light"] .preview-banner { color: #fff; }
 .preview-banner a { margin-left: 12px; color: var(--hc-blue-300); font-weight: 600; }
