@@ -75,7 +75,7 @@ export function ProductBuyPanel({ product, whatsappNumber }: ProductBuyPanelProp
         <div><button type="button" aria-label="Restar uno" onClick={() => setQuantity((value) => Math.max(1, value - 1))}>−</button><input type="number" min="1" value={quantity} onChange={(event) => setQuantity(Math.max(1, Number.parseInt(event.target.value || "1", 10)))} /><button type="button" aria-label="Sumar uno" onClick={() => setQuantity((value) => value + 1)}>+</button></div>
       </label>
 
-      <button className="product-buy-primary" type="button" disabled={product.availableUnits === 0} onClick={buyNow}>Comprar por WhatsApp</button>
+      <button className="product-buy-primary" type="button" disabled={product.availableUnits === 0} onClick={buyNow}>Comprar ahora</button>
       <button className="product-buy-secondary" type="button" disabled={product.availableUnits === 0} onClick={addToCart}>Agregar al carrito</button>
       {feedback && <p className="product-buy-feedback" role="status">{feedback}</p>}
       <small>Coordinamos pago, retiro o envío personalmente.</small>
