@@ -215,6 +215,7 @@ export async function addProductSpecAction(formData: FormData) {
   const [created] = await getDb().insert(productSpecs).values({ ...input, sortOrder: (maxOrder ?? -1) + 1 }).returning({ id: productSpecs.id });
   await writeAudit(admin.clerkUserId, "product_spec.created", "product_spec", created.id);
   revalidatePath(`/admin/productos/${input.productId}`);
+  redirect(`/admin/productos/${input.productId}`);
 }
 
 export async function deleteProductSpecAction(formData: FormData) {
@@ -224,6 +225,7 @@ export async function deleteProductSpecAction(formData: FormData) {
   await getDb().delete(productSpecs).where(and(eq(productSpecs.id, id), eq(productSpecs.productId, productId)));
   await writeAudit(admin.clerkUserId, "product_spec.deleted", "product_spec", id);
   revalidatePath(`/admin/productos/${productId}`);
+  redirect(`/admin/productos/${productId}`);
 }
 
 export async function upsertKitComponentAction(formData: FormData) {
@@ -334,6 +336,7 @@ export async function adjustStockAction(formData: FormData) {
   });
   revalidatePath(`/admin/productos/${input.productId}`);
   revalidatePath("/admin/productos");
+  redirect(`/admin/productos/${input.productId}`);
 }
 
 export async function updateWhatsappSettingsAction(formData: FormData) {

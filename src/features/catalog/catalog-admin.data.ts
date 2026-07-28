@@ -3,7 +3,7 @@ import "server-only";
 import { and, asc, desc, eq, isNull } from "drizzle-orm";
 
 import { getDb } from "@/db";
-import { categories, kitComponents, productImages, productSpecs, products, siteSettings } from "@/db/schema";
+import { categories, kitComponents, productImages, productSpecs, products, siteSettings, stockMovements } from "@/db/schema";
 
 import { getKitAvailability, getKitMaterialCostCents } from "./kit.domain";
 
@@ -48,7 +48,7 @@ export async function getAdminProduct(id: string) {
   const db = getDb();
   const [product] = await db.select().from(products).where(eq(products.id, id)).limit(1);
   if (!product) return null;
-  const [specs, images, componentRows, componentOptions] = await Promise.all([
+  const [specs, images, componentRows, componentOptions, movements] = await Promise.all([
     db.select().from(productSpecs).where(eq(productSpecs.productId, id)).orderBy(asc(productSpecs.sortOrder)),
     db.select().from(productImages).where(eq(productImages.productId, id)).orderBy(asc(productImages.sortOrder)),
     db.select().from(kitComponents).where(eq(kitComponents.kitProductId, id)),
@@ -63,6 +63,7 @@ export async function getAdminProduct(id: string) {
       eq(products.type, "standard"),
       isNull(products.archivedAt),
     )).orderBy(asc(products.name)),
+    db.select().from(stockMovements).where(eq(stockMovements.productId, id)).orderBy(desc(stockMovements.createdAt)).limit(100),
   ]);
   const componentById = new Map(componentOptions.map((item) => [item.id, item]));
   const components = componentRows.flatMap((row) => {
@@ -79,7 +80,7 @@ export async function getAdminProduct(id: string) {
     availability: getKitAvailability(domainComponents),
     materialCostCents: getKitMaterialCostCents(domainComponents),
   } : null;
-  return { product, specs, images, components, componentOptions, kitSummary };
+  return { product, specs, images, components, componentOptions, kitSummary, movements };
 }
 
 export async function getWhatsappSettings() {

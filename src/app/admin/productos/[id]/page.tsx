@@ -26,7 +26,7 @@ export default async function EditProductPage({
   const editing = edit === "1";
   const [data, categoryResult] = await Promise.all([getAdminProduct(id), getAdminCategories()]);
   if (!data) notFound();
-  const { product, specs, images, components, componentOptions, kitSummary } = data;
+  const { product, specs, images, components, componentOptions, kitSummary, movements } = data;
   const category = categoryResult.items.find((item) => item.id === product.categoryId);
 
   return (
@@ -129,15 +129,39 @@ export default async function EditProductPage({
           <h2 className="text-xl font-bold">Stock físico</h2>
           <p className="mt-2 text-sm text-[var(--muted)]">{product.type === "kit" ? "Los kits calculan stock desde componentes." : `Stock actual: ${product.stockOnHand}`}</p>
           {product.type !== "kit" && (
-            <details className="admin-disclosure mt-5">
-              <summary>Ajustar stock</summary>
-              <form action={adjustStockAction} className="mt-5 grid gap-3">
-                <input name="productId" type="hidden" value={product.id} />
-                <input className={fieldClass} name="delta" type="number" placeholder="Ajuste: 10 o -2" required />
-                <input className={fieldClass} name="note" placeholder="Motivo del ajuste" required />
-                <button className="rounded-xl border border-[var(--border)] px-4 py-2 font-bold">Registrar ajuste auditado</button>
-              </form>
-            </details>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <details className="admin-disclosure">
+                <summary>Ajustar stock</summary>
+                <form action={adjustStockAction} className="mt-5 grid min-w-[280px] gap-3">
+                  <input name="productId" type="hidden" value={product.id} />
+                  <input className={fieldClass} name="delta" type="number" placeholder="Ajuste: 10 o -2" required />
+                  <input className={fieldClass} name="note" placeholder="Motivo del ajuste" required />
+                  <button className="rounded-xl border border-[var(--border)] px-4 py-2 font-bold">Registrar ajuste auditado</button>
+                </form>
+              </details>
+              <details className="admin-disclosure">
+                <summary>Ver histórico</summary>
+                <div className="mt-5 min-w-[min(540px,80vw)] overflow-x-auto">
+                  {movements.length ? (
+                    <table className="w-full text-left text-sm">
+                      <thead className="text-xs uppercase tracking-wider text-[var(--muted)]">
+                        <tr><th className="pb-3 pr-4">Fecha</th><th className="pb-3 pr-4">Variación</th><th className="pb-3 pr-4">Stock</th><th className="pb-3">Causa</th></tr>
+                      </thead>
+                      <tbody className="divide-y divide-[var(--border)]">
+                        {movements.map((movement) => (
+                          <tr key={movement.id}>
+                            <td className="py-3 pr-4 whitespace-nowrap">{movement.createdAt.toLocaleString("es-AR")}</td>
+                            <td className={`py-3 pr-4 font-bold ${movement.delta > 0 ? "text-[var(--hc-success)]" : "text-[var(--brand)]"}`}>{movement.delta > 0 ? "+" : ""}{movement.delta}</td>
+                            <td className="py-3 pr-4 whitespace-nowrap">{movement.stockBefore} → {movement.stockAfter}</td>
+                            <td className="py-3">{movement.note || (movement.type === "sale_out" ? "Salida por venta" : movement.type === "sale_cancelled_return" ? "Devolución por cancelación" : "Sin detalle")}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  ) : <p className="text-sm text-[var(--muted)]">Todavía no hay movimientos registrados.</p>}
+                </div>
+              </details>
+            </div>
           )}
         </section>
       </div>
