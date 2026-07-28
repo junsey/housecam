@@ -2,7 +2,7 @@ import { eq } from "drizzle-orm";
 import { pathToFileURL } from "node:url";
 
 import { getDb } from "../runtime";
-import { siteSettings, storefrontContent, userProfiles } from "../schema";
+import { categories, siteSettings, storefrontContent, userProfiles } from "../schema";
 
 export async function seed() {
   const initialAdminClerkId = process.env.INITIAL_ADMIN_CLERK_USER_ID;
@@ -29,6 +29,15 @@ export async function seed() {
       heroTitle: "Tecnología para quienes son familia",
       heroDescription: "Cuidado conectado para tus mascotas.",
     },
+  ]).onConflictDoNothing();
+
+  await db.insert(categories).values([
+    { storefront: "housecam", name: "Cámaras", slug: "camaras", description: "Cámaras y dispositivos de videovigilancia para el hogar.", sortOrder: 10 },
+    { storefront: "housecam", name: "Kits", slug: "kits", description: "Soluciones completas listas para instalar.", sortOrder: 20 },
+    { storefront: "housecam", name: "Accesorios", slug: "accesorios", description: "Complementos, conectividad y almacenamiento.", sortOrder: 30 },
+    { storefront: "housepet", name: "Cámaras", slug: "camaras", description: "Cámaras para acompañar y cuidar a tus mascotas.", sortOrder: 10 },
+    { storefront: "housepet", name: "Alimentación", slug: "alimentacion", description: "Comederos, bebederos y soluciones de alimentación inteligente.", sortOrder: 20 },
+    { storefront: "housepet", name: "Accesorios", slug: "accesorios", description: "Tecnología y accesorios para el bienestar de tus mascotas.", sortOrder: 30 },
   ]).onConflictDoNothing();
 
   const [existing] = await db.select({ id: userProfiles.id }).from(userProfiles)

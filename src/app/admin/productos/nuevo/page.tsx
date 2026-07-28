@@ -21,9 +21,12 @@ export default async function NewProductPage() {
       </div>
 
       {!enabled && (
-        <p className="mt-7 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 text-sm text-[var(--muted)]">
-          Conectá la base y creá al menos una categoría antes de cargar productos.
-        </p>
+        <div className="mt-7 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 text-sm text-[var(--muted)]">
+          <p>Creá al menos una categoría antes de cargar productos.</p>
+          <Link className="rounded-xl bg-[var(--brand)] px-4 py-2 font-bold text-white" href="/admin/categorias">
+            Crear categoría
+          </Link>
+        </div>
       )}
 
       <form action={createProductAction} className="card mt-8 grid gap-6 p-6 md:grid-cols-2">
