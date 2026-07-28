@@ -17,6 +17,13 @@ function integer(value: FormDataEntryValue | null) {
   return Number.parseInt(String(value ?? ""), 10);
 }
 
+function pesosToCents(value: FormDataEntryValue | null) {
+  const normalized = String(value ?? "").trim().replace(",", ".");
+  if (!normalized) return undefined;
+  const pesos = Number(normalized);
+  return Number.isFinite(pesos) ? Math.round(pesos * 100) : undefined;
+}
+
 async function authorize() {
   if (!process.env.DATABASE_URL || !process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || !process.env.CLERK_SECRET_KEY) {
     throw new Error("Configurá Neon y Clerk antes de operar ventas.");
@@ -57,7 +64,7 @@ export async function addSaleItemAction(formData: FormData) {
     productId: formData.get("productId"),
     purchaseMode: formData.get("purchaseMode"),
     quantity: integer(formData.get("quantity")),
-    finalUnitPriceCents: String(formData.get("finalUnitPriceCents") ?? "").trim() ? integer(formData.get("finalUnitPriceCents")) : undefined,
+    finalUnitPriceCents: pesosToCents(formData.get("finalUnitPricePesos")),
   });
   const db = getDb();
   await db.transaction(async (tx) => {
@@ -129,7 +136,7 @@ export async function addSaleExpenseAction(formData: FormData) {
   const input = saleExpenseInputSchema.parse({
     saleId: formData.get("saleId"), type: formData.get("type"),
     description: String(formData.get("description") ?? "").trim() || undefined,
-    amountCents: integer(formData.get("amountCents")),
+    amountCents: pesosToCents(formData.get("amountPesos")),
   });
   await getDb().transaction(async (tx) => {
     const [sale] = await tx.select({ status: sales.status }).from(sales).where(eq(sales.id, input.saleId)).limit(1);

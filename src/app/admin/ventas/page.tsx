@@ -4,7 +4,7 @@ import Link from "next/link";
 import { getSalesDashboard } from "@/features/sales/sales-admin.data";
 
 export const metadata: Metadata = { title: "Ventas" };
-const money = new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", maximumFractionDigits: 0 });
+const money = new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0, maximumFractionDigits: 2 });
 
 export default async function SalesPage() {
   const data = await getSalesDashboard();
