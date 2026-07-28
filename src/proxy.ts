@@ -4,7 +4,10 @@ import { NextResponse } from "next/server";
 
 const protectedProxy = clerkMiddleware(async (auth, request) => {
   if (request.nextUrl.pathname.startsWith("/admin") || request.nextUrl.pathname.startsWith("/cuenta")) {
-    await auth.protect();
+    const session = await auth();
+    if (!session.userId) {
+      return session.redirectToSignIn({ returnBackUrl: request.url });
+    }
   }
 });
 
