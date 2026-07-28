@@ -14,9 +14,11 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
   const previewHref = getWhatsappHref(settings.whatsappNumber, "Hola, quiero conocer más sobre las soluciones HouseCam.");
 
   return <main className="shell py-10">
-    <p className="text-xs font-bold uppercase tracking-[0.14em] text-[var(--brand)]">Administración</p>
-    <h1 className="mt-2 text-4xl font-bold tracking-[-0.04em]">Configuración</h1>
-    <p className="mt-3 max-w-2xl text-[var(--muted)]">Administrá la disponibilidad del sitio y sus canales generales de contacto.</p>
+    <header className="admin-settings-page-header">
+      <p>Administración</p>
+      <h1>Configuración</h1>
+      <span>Administrá la disponibilidad del sitio y sus canales generales de contacto.</span>
+    </header>
     {query.guardado && <p className="mt-6 rounded-2xl border border-[var(--hc-success)]/40 bg-[var(--hc-success-light)] p-4 text-sm font-semibold text-[var(--hc-success)]">
       {query.guardado === "desarrollo"
         ? `Modo de desarrollo ${query.estado === "activo" ? "activado" : "desactivado"}.`
