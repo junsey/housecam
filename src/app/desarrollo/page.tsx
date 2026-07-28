@@ -2,16 +2,19 @@ import type { Metadata } from "next";
 
 import { PublicFooter } from "@/components/public-footer";
 import { PublicHeader } from "@/components/public-header";
+import { RecommendedProductsCarousel } from "@/components/recommended-products-carousel";
 import { getWhatsappSettings } from "@/features/catalog/catalog-admin.data";
+import { getStoreProducts } from "@/features/catalog/catalog-store.data";
 import { getWhatsappHref } from "@/lib/whatsapp";
 
 export const metadata: Metadata = {
   title: "Sitio en desarrollo",
   description: "HouseCam: seguridad simple para todos los días.",
 };
+export const dynamic = "force-dynamic";
 
 export default async function DevelopmentPage() {
-  const whatsapp = await getWhatsappSettings();
+  const [whatsapp, catalog] = await Promise.all([getWhatsappSettings(), getStoreProducts("housecam")]);
   const whatsappHref = getWhatsappHref(whatsapp.value, "Hola, quiero recibir asesoramiento sobre las soluciones HouseCam.");
   return (
     <div className="brand-housecam brand-page-enter">
@@ -41,16 +44,7 @@ export default async function DevelopmentPage() {
             </div>
           </div>
         </section>
-        <section className="features" id="beneficios">
-          <div className="container">
-            <div className="section-heading"><h2>Tranquilidad, sin complicaciones.</h2><p>La tecnología se ocupa del resto para que vos puedas concentrarte en lo importante.</p></div>
-            <div className="cards">
-              <article className="card"><span className="card-number">01</span><h3>Mirá tu hogar</h3><p>Accedé desde cualquier lugar con una experiencia clara y fácil de usar.</p></article>
-              <article className="card"><span className="card-number">02</span><h3>Recibí alertas útiles</h3><p>Enterate cuando realmente importa, sin mensajes que te abrumen.</p></article>
-              <article className="card"><span className="card-number">03</span><h3>Contá con ayuda</h3><p>Te acompañamos antes, durante y después de elegir tu solución.</p></article>
-            </div>
-          </div>
-        </section>
+        <RecommendedProductsCarousel products={catalog.items.slice(0, 10)} />
       </main>
       <PublicFooter />
     </div>
