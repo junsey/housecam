@@ -252,6 +252,70 @@ a {
   content: "−";
 }
 
+.admin-flip-card {
+  min-height: 220px;
+  padding: 24px;
+  perspective: 1200px;
+  overflow: hidden;
+}
+
+.admin-flip-face {
+  animation: admin-card-flip-in 360ms cubic-bezier(.22, .8, .3, 1);
+  transform-origin: center;
+}
+
+.admin-flip-trigger,
+.admin-flip-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--hc-border-strong);
+  border-radius: 12px;
+  background: transparent;
+  color: var(--hc-text-primary);
+  font-size: .88rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.admin-flip-trigger {
+  min-height: 42px;
+  padding: 0 16px;
+}
+
+.admin-flip-trigger span {
+  color: var(--hc-blue-500);
+  font-size: 1.15rem;
+}
+
+.admin-flip-back {
+  padding: 8px 12px;
+  color: var(--hc-blue-500);
+}
+
+.admin-flip-trigger:hover,
+.admin-flip-back:hover {
+  border-color: var(--hc-blue-500);
+  background: var(--hc-blue-100);
+}
+
+@keyframes admin-card-flip-in {
+  from {
+    opacity: 0;
+    transform: rotateY(88deg) scale(.98);
+  }
+  to {
+    opacity: 1;
+    transform: rotateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .admin-flip-face {
+    animation: none;
+  }
+}
+
 @media (max-width: 1100px) {
   .admin-header-inner {
     align-items: flex-start;

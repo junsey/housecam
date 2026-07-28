@@ -9,6 +9,7 @@ import {
   updateProductAction, uploadProductImageAction, upsertKitComponentAction,
 } from "@/features/catalog/catalog-admin.actions";
 import { getAdminCategories, getAdminProduct } from "@/features/catalog/catalog-admin.data";
+import { AdminFlipCard } from "@/components/admin-flip-card";
 
 export const metadata: Metadata = { title: "Detalle de producto" };
 const fieldClass = "min-h-11 rounded-xl border border-[var(--border)] bg-[var(--background)] px-3";
@@ -102,17 +103,20 @@ export default async function EditProductPage({
       )}
 
       <div className="mt-8 grid gap-6 lg:grid-cols-2">
-        <section className="card p-6">
-          <div className="flex items-center justify-between gap-4">
-            <h2 className="text-xl font-bold">Especificaciones</h2>
-            <span className="text-sm text-[var(--muted)]">{specs.length} cargada{specs.length === 1 ? "" : "s"}</span>
-          </div>
-          <div className="mt-5 divide-y divide-[var(--border)]">
-            {specs.map((spec) => <div className="py-3" key={spec.id}><span><strong>{spec.label}</strong>: {spec.value}</span></div>)}
-            {!specs.length && <p className="py-3 text-sm text-[var(--muted)]">Sin especificaciones.</p>}
-          </div>
-          <details className="admin-disclosure mt-5">
-            <summary>Administrar especificaciones</summary>
+        <AdminFlipCard
+          title="Especificaciones"
+          openLabel="Administrar especificaciones"
+          front={(
+            <>
+              <p className="text-sm text-[var(--muted)]">{specs.length} cargada{specs.length === 1 ? "" : "s"}</p>
+              <div className="mt-3 divide-y divide-[var(--border)]">
+                {specs.map((spec) => <div className="py-3" key={spec.id}><span><strong>{spec.label}</strong>: {spec.value}</span></div>)}
+                {!specs.length && <p className="py-3 text-sm text-[var(--muted)]">Sin especificaciones.</p>}
+              </div>
+            </>
+          )}
+          back={(
+            <>
             <div className="mt-5 divide-y divide-[var(--border)]">
               {specs.map((spec) => <div className="flex items-center justify-between gap-4 py-3" key={spec.id}><span><strong>{spec.label}</strong>: {spec.value}</span><form action={deleteProductSpecAction}><input name="id" type="hidden" value={spec.id} /><input name="productId" type="hidden" value={product.id} /><button className="text-xs font-bold text-[var(--brand)]">Eliminar</button></form></div>)}
             </div>
@@ -122,26 +126,30 @@ export default async function EditProductPage({
               <input className={fieldClass} name="value" placeholder="Valor" required />
               <button className="rounded-xl border border-[var(--border)] px-4 py-2 font-bold sm:col-span-2">Agregar especificación</button>
             </form>
-          </details>
-        </section>
+            </>
+          )}
+        />
 
-        <section className="card p-6">
-          <h2 className="text-xl font-bold">Stock físico</h2>
-          <p className="mt-2 text-sm text-[var(--muted)]">{product.type === "kit" ? "Los kits calculan stock desde componentes." : `Stock actual: ${product.stockOnHand}`}</p>
-          {product.type !== "kit" && (
-            <div className="mt-5 flex flex-wrap gap-3">
-              <details className="admin-disclosure">
-                <summary>Ajustar stock</summary>
+        <AdminFlipCard
+          title="Stock físico"
+          openLabel={product.type === "kit" ? "Ver componentes" : "Administrar stock"}
+          front={<p className="text-sm text-[var(--muted)]">{product.type === "kit" ? "Los kits calculan stock desde componentes." : `Stock actual: ${product.stockOnHand}`}</p>}
+          back={product.type === "kit" ? (
+            <p className="text-sm leading-6 text-[var(--muted)]">El stock del kit se calcula automáticamente a partir de la disponibilidad de sus componentes.</p>
+          ) : (
+            <div className="grid gap-6">
+              <section>
+                <h3 className="font-bold">Registrar variación</h3>
                 <form action={adjustStockAction} className="mt-5 grid min-w-[280px] gap-3">
                   <input name="productId" type="hidden" value={product.id} />
                   <input className={fieldClass} name="delta" type="number" placeholder="Ajuste: 10 o -2" required />
                   <input className={fieldClass} name="note" placeholder="Motivo del ajuste" required />
                   <button className="rounded-xl border border-[var(--border)] px-4 py-2 font-bold">Registrar ajuste auditado</button>
                 </form>
-              </details>
-              <details className="admin-disclosure">
-                <summary>Ver histórico</summary>
-                <div className="mt-5 min-w-[min(540px,80vw)] overflow-x-auto">
+              </section>
+              <section className="border-t border-[var(--border)] pt-5">
+                <h3 className="font-bold">Histórico de movimientos</h3>
+                <div className="mt-4 overflow-x-auto">
                   {movements.length ? (
                     <table className="w-full text-left text-sm">
                       <thead className="text-xs uppercase tracking-wider text-[var(--muted)]">
@@ -160,10 +168,10 @@ export default async function EditProductPage({
                     </table>
                   ) : <p className="text-sm text-[var(--muted)]">Todavía no hay movimientos registrados.</p>}
                 </div>
-              </details>
+              </section>
             </div>
           )}
-        </section>
+        />
       </div>
 
       {product.type === "kit" && (
