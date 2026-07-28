@@ -825,6 +825,37 @@ a {
   text-decoration: underline;
 }
 
+.quote-detail-item {
+  min-width: 250px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.quote-detail-thumbnail {
+  width: 58px;
+  height: 58px;
+  flex: 0 0 58px;
+  position: relative;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid var(--hc-border);
+  border-radius: 11px;
+  background: var(--hc-surface-soft);
+}
+
+.quote-detail-thumbnail img {
+  object-fit: cover;
+}
+
+.quote-detail-thumbnail-placeholder {
+  color: var(--hc-blue-700);
+  font-size: .85rem;
+  font-weight: 800;
+  letter-spacing: .06em;
+}
+
 @media (max-width: 1050px) {
   .quote-line {
     grid-template-columns: repeat(2, minmax(0, 1fr));

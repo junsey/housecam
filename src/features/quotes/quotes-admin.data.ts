@@ -1,6 +1,6 @@
 import "server-only";
 
-import { asc, desc, eq, isNull, sql } from "drizzle-orm";
+import { asc, desc, eq, inArray, isNull, sql } from "drizzle-orm";
 
 import { getDb } from "@/db";
 import { productImages, products, quoteItems, quotes, siteSettings } from "@/db/schema";
@@ -16,7 +16,30 @@ export async function getQuote(id: string) {
   const [quote] = await db.select().from(quotes).where(eq(quotes.id, id)).limit(1);
   if (!quote) return null;
   const items = await db.select().from(quoteItems).where(eq(quoteItems.quoteId, id)).orderBy(asc(quoteItems.sortOrder));
-  return { quote, items };
+  const productsWithoutSnapshot = [...new Set(items
+    .filter((item) => item.kind === "product" && item.productId && !item.imageUrlSnapshot)
+    .map((item) => item.productId!))];
+  const currentImages = productsWithoutSnapshot.length
+    ? await db.select({
+      productId: productImages.productId,
+      url: productImages.url,
+      isCover: productImages.isCover,
+      sortOrder: productImages.sortOrder,
+    }).from(productImages)
+      .where(inArray(productImages.productId, productsWithoutSnapshot))
+      .orderBy(desc(productImages.isCover), asc(productImages.sortOrder))
+    : [];
+  const fallbackByProduct = new Map<string, string>();
+  for (const image of currentImages) {
+    if (!fallbackByProduct.has(image.productId)) fallbackByProduct.set(image.productId, image.url);
+  }
+  return {
+    quote,
+    items: items.map((item) => ({
+      ...item,
+      imageUrlSnapshot: item.imageUrlSnapshot ?? (item.productId ? fallbackByProduct.get(item.productId) ?? null : null),
+    })),
+  };
 }
 
 export async function getQuoteFormData() {

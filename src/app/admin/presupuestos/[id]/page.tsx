@@ -1,4 +1,5 @@
 import type { Metadata, Route } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -25,7 +26,7 @@ export default async function QuoteDetailPage({ params }: { params: Promise<{ id
     <section className="card mt-8 p-6">
       <div className="grid gap-2 text-sm sm:grid-cols-3"><p><strong>Teléfono:</strong> {data.quote.customerPhone || "Sin informar"}</p><p><strong>Email:</strong> {data.quote.customerEmail || "Sin informar"}</p><p><strong>Válido hasta:</strong> {data.quote.validUntil?.toLocaleDateString("es-AR") ?? "Sin vencimiento"}</p></div>
       <div className="mt-6 overflow-x-auto"><table className="w-full min-w-[620px] text-left text-sm"><thead className="border-b border-[var(--border)] text-[var(--muted)]"><tr><th className="py-3">Ítem</th><th>Cantidad</th><th>Precio</th><th className="text-right">Subtotal</th></tr></thead><tbody>
-        {data.items.map((item) => <tr className="border-b border-[var(--border)] last:border-0" key={item.id}><td className="py-4"><strong>{item.label}</strong><br/><span className="text-xs text-[var(--muted)]">{item.kind === "product" ? item.skuSnapshot : item.additionalType}</span></td><td>{item.quantity}</td><td>{money.format(item.unitPriceCents / 100)}</td><td className="text-right font-bold">{money.format(item.subtotalCents / 100)}</td></tr>)}
+        {data.items.map((item) => <tr className="border-b border-[var(--border)] last:border-0" key={item.id}><td className="py-4"><div className="quote-detail-item">{item.imageUrlSnapshot ? <span className="quote-detail-thumbnail"><Image src={item.imageUrlSnapshot} alt="" fill sizes="56px" /></span> : <span className="quote-detail-thumbnail quote-detail-thumbnail-placeholder" aria-hidden="true">{item.kind === "product" ? "HC" : "+"}</span>}<span><strong>{item.label}</strong><br/><span className="text-xs text-[var(--muted)]">{item.kind === "product" ? item.skuSnapshot : item.additionalType}</span></span></div></td><td>{item.quantity}</td><td>{money.format(item.unitPriceCents / 100)}</td><td className="text-right font-bold">{money.format(item.subtotalCents / 100)}</td></tr>)}
       </tbody></table></div>
       <div className="mt-6 flex justify-end text-2xl">Total&nbsp; <strong>{money.format(data.quote.totalCents / 100)}</strong></div>
       {data.quote.notes && <div className="mt-6 border-t border-[var(--border)] pt-5"><strong>Notas</strong><p className="mt-2 whitespace-pre-line text-sm text-[var(--muted)]">{data.quote.notes}</p></div>}
