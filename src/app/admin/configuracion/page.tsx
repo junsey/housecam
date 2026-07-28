@@ -44,8 +44,8 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
           </button>
         </form>
         <div className="mt-5 flex flex-wrap gap-3">
-          <a className="admin-secondary-button" href="/" target="_blank" rel="noopener noreferrer">Ver portada pública</a>
-          <a className="admin-secondary-button" href="/desarrollo" target="_blank" rel="noopener noreferrer">Abrir vista previa</a>
+          <a className="admin-secondary-button" href="/vista-previa-desarrollo" target="_blank" rel="noopener noreferrer">Vista previa de pantalla de desarrollo</a>
+          <a className="admin-secondary-button" href="/" target="_blank" rel="noopener noreferrer">Ver home del sitio actual</a>
         </div>
       </section>
 

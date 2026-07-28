@@ -1,7 +1,5 @@
-import { readFile } from "node:fs/promises";
-import path from "node:path";
-
 import { getDevelopmentMode } from "@/features/catalog/catalog-admin.data";
+import { getDevelopmentHoldingPageResponse } from "@/lib/development-holding-page";
 
 export const dynamic = "force-dynamic";
 
@@ -10,12 +8,5 @@ export async function GET(request: Request) {
   if (!developmentModeEnabled) {
     return Response.redirect(new URL("/desarrollo", request.url), 307);
   }
-  const html = await readFile(path.join(process.cwd(), "public", "index.html"), "utf8");
-
-  return new Response(html, {
-    headers: {
-      "Content-Type": "text/html; charset=utf-8",
-      "Cache-Control": "public, max-age=0, must-revalidate",
-    },
-  });
+  return getDevelopmentHoldingPageResponse();
 }
