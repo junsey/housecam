@@ -390,9 +390,12 @@ h1 {
 .store-toolbar { display: flex; align-items: end; justify-content: space-between; gap: 32px; }
 .store-toolbar h2 { margin: 5px 0 0; color: var(--hc-text-primary); font-size: clamp(2rem, 3vw, 3rem); letter-spacing: -.035em; }
 .section-kicker, .store-product-category { margin: 0; color: var(--hc-blue-500); font-size: .76rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
-.store-filters { display: flex; flex-wrap: wrap; gap: 8px; }
-.store-filters a { padding: 9px 15px; border: 1px solid var(--hc-border); border-radius: 999px; background: var(--hc-surface); color: var(--hc-text-secondary); font-size: .86rem; font-weight: 700; text-decoration: none; }
-.store-filters a:hover, .store-filters .is-active { border-color: var(--hc-blue-500); background: var(--hc-blue-500); color: #fff; }
+.store-filters { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+.store-filters a { min-height: 42px; display: inline-flex; align-items: center; gap: 9px; padding: 0 11px 0 16px; border: 1px solid var(--hc-border); border-radius: 999px; background: var(--hc-surface); color: var(--hc-text-secondary); box-shadow: 0 4px 14px rgb(0 35 65 / 4%); font-size: .86rem; font-weight: 700; text-decoration: none; transition: color .18s ease, background-color .18s ease, border-color .18s ease, transform .18s ease; }
+.store-filters a span { min-width: 24px; height: 24px; display: inline-grid; place-items: center; padding-inline: 6px; border-radius: 999px; background: var(--hc-blue-100); color: var(--hc-blue-700); font-size: .7rem; }
+.store-filters a:hover { border-color: var(--hc-blue-500); color: var(--hc-blue-700); transform: translateY(-1px); }
+.store-filters .is-active { border-color: var(--hc-blue-500); background: var(--hc-blue-500); color: #fff; box-shadow: 0 8px 20px rgb(13 102 164 / 18%); }
+.store-filters .is-active span { background: rgb(255 255 255 / 20%); color: #fff; }
 .store-demo-note { margin: 30px 0 0; padding: 13px 16px; border: 1px solid var(--hc-border); border-radius: 12px; background: var(--hc-surface); color: var(--hc-text-secondary); font-size: .88rem; }
 .store-product-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; margin-top: 28px; }
 .store-product-card { overflow: hidden; border: 1px solid var(--hc-border); border-radius: 22px; background: var(--hc-surface); box-shadow: var(--hc-shadow); transition: transform .2s ease, border-color .2s ease; scroll-margin-top: 100px; }

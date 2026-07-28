@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   description: "Monitoreo, alimentación y bienestar conectado para tus mascotas.",
 };
 
-export default function HousePetProductsPage() {
-  return <StorefrontPage brand="housepet" />;
+export default async function HousePetProductsPage({ searchParams }: { searchParams: Promise<{ categoria?: string }> }) {
+  const { categoria } = await searchParams;
+  return <StorefrontPage brand="housepet" selectedCategory={categoria} />;
 }

@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   description: "Tienda HouseCam: cámaras, kits y accesorios para cuidar tu hogar.",
 };
 
-export default function ProductsPage() {
-  return <StorefrontPage brand="housecam" />;
+export default async function ProductsPage({ searchParams }: { searchParams: Promise<{ categoria?: string }> }) {
+  const { categoria } = await searchParams;
+  return <StorefrontPage brand="housecam" selectedCategory={categoria} />;
 }

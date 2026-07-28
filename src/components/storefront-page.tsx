@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 import { PublicFooter } from "@/components/public-footer";
 import { PublicHeader } from "@/components/public-header";
@@ -21,10 +22,21 @@ function ProductVisual({ imageUrl, name, type }: { imageUrl: string | null; name
   );
 }
 
-export async function StorefrontPage({ brand }: { brand: "housecam" | "housepet" }) {
+function categorySlug(value: string) {
+  return value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+}
+
+export async function StorefrontPage({ brand, selectedCategory = "" }: { brand: "housecam" | "housepet"; selectedCategory?: string }) {
   const isPet = brand === "housepet";
   const [catalog, whatsapp] = await Promise.all([getStoreProducts(brand), getWhatsappSettings()]);
-  const categories = [...new Set(catalog.items.map((product) => product.categoryName))];
+  const categories = [...new Set(catalog.items.map((product) => product.categoryName))].map((name) => ({
+    name,
+    slug: categorySlug(name),
+    count: catalog.items.filter((product) => product.categoryName === name).length,
+  }));
+  const activeCategory = categories.find((category) => category.slug === selectedCategory);
+  const visibleProducts = activeCategory ? catalog.items.filter((product) => product.categoryName === activeCategory.name) : catalog.items;
+  const storePath = isPet ? "/housepet/productos" : "/productos";
   const adviceHref = getWhatsappHref(whatsapp.value, `Hola, necesito asesoramiento para elegir una solución ${isPet ? "HousePet" : "HouseCam"}.`);
 
   return (
@@ -44,19 +56,25 @@ export async function StorefrontPage({ brand }: { brand: "housecam" | "housepet"
             <div className="store-benefits"><span>✓ Asistencia local</span><span>✓ Productos seleccionados</span><span>✓ Acompañamiento real</span></div>
           </div>
         </section>
-        <section className="store-catalog" aria-labelledby="catalog-title">
+        <section className="store-catalog" id="catalogo" aria-labelledby="catalog-title">
           <div className="container">
             <div className="store-toolbar">
               <div><p className="section-kicker">Catálogo</p><h2 id="catalog-title">Productos {isPet ? "HousePet" : "HouseCam"}</h2></div>
               <nav className="store-filters" aria-label="Categorías">
-                <a className="is-active" href="#catalog-title">Todos</a>
-                {categories.map((category) => <a href={`#${category.toLowerCase()}`} key={category}>{category}</a>)}
+                <Link className={!activeCategory ? "is-active" : ""} href={`${storePath}#catalogo`} aria-current={!activeCategory ? "page" : undefined}>
+                  Todos <span>{catalog.items.length}</span>
+                </Link>
+                {categories.map((category) => (
+                  <Link className={activeCategory?.slug === category.slug ? "is-active" : ""} href={`${storePath}?categoria=${category.slug}#catalogo`} aria-current={activeCategory?.slug === category.slug ? "page" : undefined} key={category.slug}>
+                    {category.name} <span>{category.count}</span>
+                  </Link>
+                ))}
               </nav>
             </div>
             {catalog.usingDemoData && <p className="store-demo-note">Catálogo de muestra. Conectá el administrador para publicar precios y stock reales.</p>}
             <div className="store-product-grid">
-              {catalog.items.map((product) => (
-                <article className="store-product-card" id={product.categoryName.toLowerCase()} key={product.id}>
+              {visibleProducts.map((product) => (
+                <article className="store-product-card" key={product.id}>
                   <div className="store-product-visual">
                     <ProductVisual imageUrl={product.imageUrl} name={product.name} type={product.type} />
                     <span className="store-product-badge">{product.type === "kit" ? `Kit ${isPet ? "HousePet" : "HouseCam"}` : product.categoryName}</span>
