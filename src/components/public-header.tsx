@@ -6,6 +6,7 @@ import type { Route } from "next";
 import { useEffect, useRef, useState } from "react";
 
 import { publicNavigationItems } from "@/config/public-navigation";
+import { PublicCart } from "@/components/public-cart";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { getWhatsappHref } from "@/lib/whatsapp";
 
@@ -113,6 +114,7 @@ export function PublicHeader({ activePath, brand = "housecam", showPreviewBanner
               {navigation.map((item) => <Link href={item.href as Route} aria-current={activePath === item.path ? "page" : undefined} key={item.href}>{item.label}</Link>)}
               {whatsappHref ? <a className="button button-primary" href={whatsappHref} target="_blank" rel="noopener noreferrer">Hablar con nosotros</a> : <button className="button button-primary contact-disabled" type="button" disabled title="La función de contacto está temporalmente deshabilitada. Probá más tarde.">Contacto no disponible</button>}
             </div>
+            <PublicCart whatsappNumber={whatsappNumber} />
             <span className="public-theme-desktop"><ThemeToggle /></span>
             <div className="mobile-navigation" ref={mobileNavigationRef}>
               <button ref={mobileTriggerRef} className="mobile-menu-trigger" type="button" aria-expanded={mobileMenuOpen} aria-controls="mobile-navigation-panel" aria-label={mobileMenuOpen ? "Cerrar menú" : "Abrir menú"} onClick={() => { setBrandMenuOpen(false); setMobileMenuOpen((value) => !value); }}>

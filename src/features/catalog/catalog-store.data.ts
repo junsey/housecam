@@ -1,6 +1,7 @@
 import "server-only";
 
 import { and, asc, eq, isNull } from "drizzle-orm";
+import { cache } from "react";
 
 import { getDb } from "@/db";
 import { categories, kitComponents, productImages, productSpecs, products } from "@/db/schema";
@@ -67,7 +68,7 @@ export async function getStoreProducts(storefront: "housecam" | "housepet" = "ho
   };
 }
 
-export async function getStoreProductBySlug(storefront: "housecam" | "housepet", slug: string) {
+export const getStoreProductBySlug = cache(async (storefront: "housecam" | "housepet", slug: string) => {
   if (!process.env.DATABASE_URL) {
     const product = (storefront === "housepet" ? housepetFallbackProducts : housecamFallbackProducts).find((item) => item.slug === slug);
     if (!product) return null;
@@ -139,4 +140,4 @@ export async function getStoreProductBySlug(storefront: "housecam" | "housepet",
     specs,
     availableUnits,
   };
-}
+});

@@ -17,6 +17,9 @@ export type CartItem = {
 type CartState = {
   items: CartItem[];
   addItem: (item: CartItem) => void;
+  setQuantity: (productId: string, purchaseMode: CartItem["purchaseMode"], quantity: number) => void;
+  removeItem: (productId: string, purchaseMode: CartItem["purchaseMode"]) => void;
+  clear: () => void;
 };
 
 export const useCartStore = create<CartState>()(
@@ -34,6 +37,17 @@ export const useCartStore = create<CartState>()(
             : [...state.items, item],
         };
       }),
+      setQuantity: (productId, purchaseMode, quantity) => set((state) => ({
+        items: quantity <= 0
+          ? state.items.filter((item) => item.productId !== productId || item.purchaseMode !== purchaseMode)
+          : state.items.map((item) => item.productId === productId && item.purchaseMode === purchaseMode
+            ? { ...item, quantity }
+            : item),
+      })),
+      removeItem: (productId, purchaseMode) => set((state) => ({
+        items: state.items.filter((item) => item.productId !== productId || item.purchaseMode !== purchaseMode),
+      })),
+      clear: () => set({ items: [] }),
     }),
     { name: "housecam-cart" },
   ),

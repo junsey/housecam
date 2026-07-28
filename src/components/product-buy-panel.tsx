@@ -34,6 +34,10 @@ export function ProductBuyPanel({ product, whatsappNumber }: ProductBuyPanelProp
     whatsappNumber,
     `Hola, quiero comprar ${quantity} ${mode === "pack10" ? "pack(s) de 10" : "unidad(es)"} de ${product.name}.`,
   ), [mode, product.name, quantity, whatsappNumber]);
+  const requestHref = useMemo(() => getWhatsappHref(
+    whatsappNumber,
+    `Hola, quiero consultar disponibilidad de ${product.name}. Necesito ${quantity} ${mode === "pack10" ? "pack(s) de 10" : "unidad(es)"}.`,
+  ), [mode, product.name, quantity, whatsappNumber]);
 
   function addToCart() {
     if (!available || price === null) return setFeedback("La cantidad seleccionada no está disponible.");
@@ -51,7 +55,7 @@ export function ProductBuyPanel({ product, whatsappNumber }: ProductBuyPanelProp
   }
 
   function buyNow() {
-    if (!available) return setFeedback("La cantidad seleccionada no está disponible.");
+    if (!available) return setFeedback("No hay suficientes unidades disponibles.");
     if (!whatsappHref) return setFeedback("La compra por WhatsApp está temporalmente deshabilitada.");
     window.open(whatsappHref, "_blank", "noopener,noreferrer");
   }
@@ -75,9 +79,13 @@ export function ProductBuyPanel({ product, whatsappNumber }: ProductBuyPanelProp
         <div><button type="button" aria-label="Restar uno" onClick={() => setQuantity((value) => Math.max(1, value - 1))}>−</button><input type="number" min="1" value={quantity} onChange={(event) => setQuantity(Math.max(1, Number.parseInt(event.target.value || "1", 10)))} /><button type="button" aria-label="Sumar uno" onClick={() => setQuantity((value) => value + 1)}>+</button></div>
       </label>
 
-      <button className="product-buy-primary" type="button" disabled={product.availableUnits === 0} onClick={buyNow}>Comprar ahora</button>
+      <button className="product-buy-primary" type="button" onClick={buyNow}>Comprar ahora</button>
       <button className="product-buy-secondary" type="button" disabled={product.availableUnits === 0} onClick={addToCart}>Agregar al carrito</button>
       {feedback && <p className="product-buy-feedback" role="status">{feedback}</p>}
+      {!available && feedback && requestHref && <div className="product-stock-request">
+        <p>Podemos ayudarte a conseguirlo o informarte cuándo vuelve a ingresar.</p>
+        <a href={requestHref} target="_blank" rel="noopener noreferrer">Consultar disponibilidad</a>
+      </div>}
       <small>Coordinamos pago, retiro o envío personalmente.</small>
     </aside>
   );
