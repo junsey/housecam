@@ -527,11 +527,9 @@ h1 {
 @keyframes brand-menu-in { from { opacity: 0; transform: translateY(-5px); } }
 .brand-switcher-menu a { min-height: 64px; display: grid; grid-template-columns: 112px minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 10px 12px; border: 0; border-radius: 10px; color: #5d7080; text-decoration: none; transition: color .17s ease, background-color .17s ease; }
 .brand-switcher-menu a:hover { background: #f5f8fa; color: #40596c; }
-.brand-switcher-menu a.is-current { padding-left: 9px; border-left: 3px solid #1769a5; background: #f0f7fc; }
 .brand-switcher-logo { width: 112px; display: flex; align-items: center; flex-shrink: 0; }
 .brand-switcher-logo img { width: 108px; max-height: 34px; object-fit: contain; object-position: left center; }
 .brand-switcher-claim { font-size: .76rem; font-weight: 500; line-height: 1.3; }
-.brand-switcher-current { color: #1769a5; font-size: .68rem; font-weight: 700; }
 .brand-switcher-arrow { color: #7890a1; font-size: 1rem; line-height: 1; }
 .brand-switcher-menu a:focus-visible { outline: 3px solid rgb(23 105 165 / 34%); outline-offset: -2px; }
 @media (prefers-reduced-motion: reduce) {

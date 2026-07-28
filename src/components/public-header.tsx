@@ -26,6 +26,10 @@ export function PublicHeader({ activePath, brand = "housecam", showPreviewBanner
 
   const darkLogo = isHousePet ? "/housepet-white.svg" : "/housecam-white.svg";
   const lightLogo = isHousePet ? "/housepet-black.svg" : "/housecam-black.svg";
+  const alternativeBrands = [
+    { id: "housecam", href: "/desarrollo", logo: "/housecam-black.svg", name: "HouseCam", claim: "Tranquilidad para tu hogar" },
+    { id: "housepet", href: "/housepet", logo: "/housepet-black.svg", name: "HousePet", claim: "Tecnología para tus mascotas" },
+  ].filter((item) => item.id !== brand);
   const navigation = isHousePet ? [
     { label: "Inicio", href: "/housepet", path: "/housepet" },
     { label: "Tienda", href: "/housepet/productos#tienda", path: "/housepet/productos" },
@@ -87,16 +91,13 @@ export function PublicHeader({ activePath, brand = "housecam", showPreviewBanner
             </button>
             {brandMenuOpen && (
               <div className="brand-switcher-menu" id="brand-switcher-menu" role="menu" aria-label="Seleccionar marca">
-                <Link className={!isHousePet ? "is-current" : ""} href="/desarrollo" role="menuitem" aria-current={!isHousePet ? "page" : undefined} onClick={() => setBrandMenuOpen(false)}>
-                  <span className="brand-switcher-logo"><Image src="/housecam-black.svg" alt="HouseCam" width={150} height={45} /></span>
-                  <span className="brand-switcher-claim">Tranquilidad para tu hogar</span>
-                  {!isHousePet ? <span className="brand-switcher-current">Actual</span> : <span className="brand-switcher-arrow" aria-hidden="true">→</span>}
-                </Link>
-                <Link className={isHousePet ? "is-current" : ""} href="/housepet" role="menuitem" aria-current={isHousePet ? "page" : undefined} onClick={() => setBrandMenuOpen(false)}>
-                  <span className="brand-switcher-logo"><Image src="/housepet-black.svg" alt="HousePet" width={150} height={45} /></span>
-                  <span className="brand-switcher-claim">Tecnología para tus mascotas</span>
-                  {isHousePet ? <span className="brand-switcher-current">Actual</span> : <span className="brand-switcher-arrow" aria-hidden="true">→</span>}
-                </Link>
+                {alternativeBrands.map((item) => (
+                  <Link href={item.href as Route} role="menuitem" onClick={() => setBrandMenuOpen(false)} key={item.id}>
+                    <span className="brand-switcher-logo"><Image src={item.logo} alt={item.name} width={150} height={45} /></span>
+                    <span className="brand-switcher-claim">{item.claim}</span>
+                    <span className="brand-switcher-arrow" aria-hidden="true">→</span>
+                  </Link>
+                ))}
               </div>
             )}
           </div>
