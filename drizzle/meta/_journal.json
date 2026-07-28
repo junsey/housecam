@@ -29,6 +29,13 @@
       "when": 1785264853527,
       "tag": "0003_orange_kid_colt",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1785274098782,
+      "tag": "0004_restore-development-mode",
+      "breakpoints": true
     }
   ]
 }
