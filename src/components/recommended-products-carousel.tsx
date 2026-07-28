@@ -2,10 +2,12 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import type { Route } from "next";
 import { useRef } from "react";
 
 type RecommendedProduct = {
   id: string;
+  slug: string;
   name: string;
   categoryName: string;
   shortDescription: string;
@@ -41,7 +43,7 @@ export function RecommendedProductsCarousel({ products }: { products: Recommende
           <div className="recommended-products-track" ref={trackRef}>
             {products.map((product) => (
               <article className="recommended-product-card" key={product.id}>
-                <div className="recommended-product-visual">
+                <Link className="recommended-product-visual" href={`/productos/${product.slug}` as Route} aria-label={`Ver ${product.name}`}>
                   {product.imageUrl ? (
                     <Image src={product.imageUrl} alt={product.name} fill sizes="230px" />
                   ) : (
@@ -53,10 +55,10 @@ export function RecommendedProductsCarousel({ products }: { products: Recommende
                       </svg>
                     </div>
                   )}
-                </div>
+                </Link>
                 <div className="recommended-product-body">
                   <p>{product.categoryName}</p>
-                  <h3>{product.name}</h3>
+                  <h3><Link href={`/productos/${product.slug}` as Route}>{product.name}</Link></h3>
                   <span>{product.shortDescription}</span>
                   <strong>{money.format(product.unitPriceCents / 100)}</strong>
                 </div>

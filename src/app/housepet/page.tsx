@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { PublicFooter } from "@/components/public-footer";
 import { PublicHeader } from "@/components/public-header";
@@ -21,7 +22,7 @@ export default async function HousePetPage() {
               <h1>Tecnología para quienes son familia.</h1>
               <p className="lead">HousePet comparte la misma experiencia clara y cercana de HouseCam, con soluciones pensadas para acompañar el cuidado cotidiano de tus mascotas.</p>
               <div className="actions">
-                <a className="button button-primary" href="/housepet/productos">Explorar la tienda</a>
+                <Link className="button button-primary" href="/housepet/productos">Explorar la tienda</Link>
                 {whatsappHref ? <a className="button button-secondary" href={whatsappHref} target="_blank" rel="noopener noreferrer">Hablar con nosotros</a> : <button className="button button-secondary contact-disabled" type="button" disabled title="La función de contacto está temporalmente deshabilitada. Probá más tarde.">Contacto no disponible. Probá más tarde.</button>}
               </div>
             </div>

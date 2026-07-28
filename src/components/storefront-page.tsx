@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import type { Route } from "next";
 
 import { PublicFooter } from "@/components/public-footer";
 import { PublicHeader } from "@/components/public-header";
@@ -81,10 +82,10 @@ export async function StorefrontPage({ brand, selectedCategory = "" }: { brand: 
                   </div>
                   <div className="store-product-body">
                     <p className="store-product-category">{product.categoryName}</p>
-                    <h3>{product.name}</h3><p>{product.shortDescription}</p>
+                    <h3><Link href={`${storePath}/${product.slug}` as Route}>{product.name}</Link></h3><p>{product.shortDescription}</p>
                     <div className="store-product-footer">
                       <div><span>Desde</span><strong>{money.format(product.unitPriceCents / 100)}</strong></div>
-                      {getWhatsappHref(whatsapp.value, `Hola, quiero consultar por ${product.name}.`) ? <a className="button button-primary" href={getWhatsappHref(whatsapp.value, `Hola, quiero consultar por ${product.name}.`)!} target="_blank" rel="noopener noreferrer">Consultar</a> : <button className="button button-primary contact-disabled" type="button" disabled title="La función de contacto está temporalmente deshabilitada. Probá más tarde.">No disponible</button>}
+                      {getWhatsappHref(whatsapp.value, `Hola, quiero comprar ${product.name}.`) ? <a className="button button-primary" href={getWhatsappHref(whatsapp.value, `Hola, quiero comprar ${product.name}.`)!} target="_blank" rel="noopener noreferrer">Comprar</a> : <button className="button button-primary contact-disabled" type="button" disabled title="La función de contacto está temporalmente deshabilitada. Probá más tarde.">No disponible</button>}
                     </div>
                     {product.pack10PriceCents && <small>Pack de 10: {money.format(product.pack10PriceCents / 100)}</small>}
                   </div>

@@ -3,7 +3,7 @@ import "server-only";
 import { and, asc, eq, isNull } from "drizzle-orm";
 
 import { getDb } from "@/db";
-import { categories, productImages, products } from "@/db/schema";
+import { categories, kitComponents, productImages, productSpecs, products } from "@/db/schema";
 
 export type StoreProduct = {
   id: string;
@@ -64,5 +64,79 @@ export async function getStoreProducts(storefront: "housecam" | "housepet" = "ho
   return {
     items: items.map((item) => ({ ...item, shortDescription: item.shortDescription ?? `Solución ${storefront === "housepet" ? "HousePet" : "HouseCam"} para cuidar lo que importa.` })),
     usingDemoData: false,
+  };
+}
+
+export async function getStoreProductBySlug(storefront: "housecam" | "housepet", slug: string) {
+  if (!process.env.DATABASE_URL) {
+    const product = (storefront === "housepet" ? housepetFallbackProducts : housecamFallbackProducts).find((item) => item.slug === slug);
+    if (!product) return null;
+    return {
+      ...product,
+      storefront,
+      sku: `DEMO-${product.id.toUpperCase()}`,
+      description: product.shortDescription,
+      seoTitle: null,
+      seoDescription: null,
+      images: product.imageUrl ? [{ id: `${product.id}-cover`, url: product.imageUrl, alt: product.name, isCover: true }] : [],
+      specs: [],
+      availableUnits: 20,
+    };
+  }
+
+  const db = getDb();
+  const [product] = await db.select({
+    id: products.id,
+    name: products.name,
+    slug: products.slug,
+    sku: products.sku,
+    type: products.type,
+    storefront: products.storefront,
+    shortDescription: products.shortDescription,
+    description: products.description,
+    unitPriceCents: products.unitPriceCents,
+    pack10PriceCents: products.pack10PriceCents,
+    stockOnHand: products.stockOnHand,
+    categoryName: categories.name,
+    seoTitle: products.seoTitle,
+    seoDescription: products.seoDescription,
+  }).from(products)
+    .innerJoin(categories, eq(products.categoryId, categories.id))
+    .where(and(
+      eq(products.storefront, storefront),
+      eq(products.slug, slug),
+      eq(products.isActive, true),
+      eq(categories.isActive, true),
+      isNull(products.archivedAt),
+      isNull(categories.archivedAt),
+    ))
+    .limit(1);
+
+  if (!product) return null;
+
+  const [images, specs, components] = await Promise.all([
+    db.select({ id: productImages.id, url: productImages.url, alt: productImages.alt, isCover: productImages.isCover })
+      .from(productImages).where(eq(productImages.productId, product.id)).orderBy(asc(productImages.sortOrder)),
+    db.select({ id: productSpecs.id, label: productSpecs.label, value: productSpecs.value })
+      .from(productSpecs).where(eq(productSpecs.productId, product.id)).orderBy(asc(productSpecs.sortOrder)),
+    product.type === "kit"
+      ? db.select({ quantity: kitComponents.quantity, stockOnHand: products.stockOnHand })
+        .from(kitComponents)
+        .innerJoin(products, eq(kitComponents.componentProductId, products.id))
+        .where(eq(kitComponents.kitProductId, product.id))
+      : Promise.resolve([]),
+  ]);
+
+  const availableUnits = product.type === "kit"
+    ? (components.length ? Math.min(...components.map((component) => Math.floor(component.stockOnHand / component.quantity))) : 0)
+    : product.stockOnHand;
+
+  return {
+    ...product,
+    shortDescription: product.shortDescription ?? `Solución ${storefront === "housepet" ? "HousePet" : "HouseCam"} para cuidar lo que importa.`,
+    description: product.description ?? product.shortDescription ?? "Una solución simple y confiable para acompañarte todos los días.",
+    images,
+    specs,
+    availableUnits,
   };
 }
