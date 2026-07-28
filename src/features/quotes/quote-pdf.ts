@@ -46,7 +46,11 @@ async function imageFromUrl(document: PDFDocument, url: string | null) {
   try {
     const response = await fetch(url, { signal: AbortSignal.timeout(6000) });
     if (!response.ok) return null;
-    return embedRaster(document, Buffer.from(await response.arrayBuffer()));
+    const square = await sharp(Buffer.from(await response.arrayBuffer()))
+      .resize(320, 320, { fit: "cover", position: "centre" })
+      .png()
+      .toBuffer();
+    return document.embedPng(square);
   } catch { return null; }
 }
 
@@ -90,11 +94,13 @@ export async function buildQuotePdf(data: QuoteDocumentData) {
     page.drawRectangle({ x: 46, y: y - 64, width: 503, height: 72, borderWidth: 1, borderColor: border, color: rgb(1, 1, 1) });
     const image = await imageFromUrl(document, item.imageUrlSnapshot);
     if (image) {
-      const scale = Math.min(56 / image.width, 56 / image.height);
-      page.drawImage(image, { x: 54 + (56 - image.width * scale) / 2, y: y - 56 + (56 - image.height * scale) / 2, width: image.width * scale, height: image.height * scale });
+      page.drawImage(image, { x: 54, y: y - 56, width: 56, height: 56 });
     } else {
       page.drawRectangle({ x: 54, y: y - 56, width: 56, height: 56, color: rgb(.94, .96, .97) });
-      page.drawText(item.kind === "product" ? "HC" : "+", { x: 73, y: y - 28, size: 14, font: bold, color: blue });
+      const placeholder = item.kind === "product" ? "HC" : "SERV.";
+      const placeholderSize = item.kind === "product" ? 14 : 8;
+      const placeholderWidth = bold.widthOfTextAtSize(placeholder, placeholderSize);
+      page.drawText(placeholder, { x: 54 + (56 - placeholderWidth) / 2, y: y - 34, size: placeholderSize, font: bold, color: blue });
     }
     page.drawText(item.label, { x: 122, y: y - 14, size: 11, font: bold, color: navy });
     const description = item.description ? wrap(item.description, regular, 8, 220)[0] : item.kind === "product" ? "Producto HouseCam" : "Servicio adicional";

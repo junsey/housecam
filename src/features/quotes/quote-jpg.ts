@@ -41,7 +41,7 @@ export async function buildQuoteJpg(data: QuoteDocumentData) {
     const image = images[index];
     const visual = image
       ? `<image href="${image}" x="92" y="${y + 15}" width="112" height="112" preserveAspectRatio="xMidYMid slice"/>`
-      : `<rect x="92" y="${y + 15}" width="112" height="112" rx="10" fill="#eff4f7"/><text x="148" y="${y + 82}" text-anchor="middle" class="placeholder">${item.kind === "product" ? "HC" : "+"}</text>`;
+      : `<rect x="92" y="${y + 15}" width="112" height="112" rx="10" fill="#eff4f7"/><text x="148" y="${y + 80}" text-anchor="middle" class="${item.kind === "product" ? "placeholder" : "service-placeholder"}">${item.kind === "product" ? "HC" : "SERVICIO"}</text>`;
     const description = item.description ?? (item.kind === "product" ? "Producto HouseCam" : "Servicio adicional");
     return `<g>
       <rect x="72" y="${y}" width="1096" height="132" rx="4" class="item-box"/>
@@ -70,6 +70,7 @@ export async function buildQuoteJpg(data: QuoteDocumentData) {
       .item-title { font-size: 22px; font-weight: 700; }
       .item-price { font-size: 21px; font-weight: 700; }
       .placeholder { font-size: 27px; font-weight: 800; fill: #07578f; }
+      .service-placeholder { font-size: 14px; font-weight: 800; fill: #07578f; letter-spacing: .5px; }
       .item-box { fill: #fff; stroke: #cfdae2; stroke-width: 2; }
     </style>
     <rect width="100%" height="100%" fill="#fff"/>
@@ -91,5 +92,12 @@ export async function buildQuoteJpg(data: QuoteDocumentData) {
     <line x1="72" y1="${height - 78}" x2="1168" y2="${height - 78}" stroke="#cfdae2" stroke-width="2"/>
     <text x="72" y="${height - 38}" class="small">${escapeXml(footer)}</text>
   </svg>`;
-  return sharp(Buffer.from(svg)).jpeg({ quality: 91, chromaSubsampling: "4:4:4" }).toBuffer();
+  const jpeg = await sharp(Buffer.from(svg))
+    .flatten({ background: "#ffffff" })
+    .jpeg({ quality: 91, chromaSubsampling: "4:4:4", mozjpeg: true })
+    .toBuffer();
+  if (jpeg[0] !== 0xff || jpeg[1] !== 0xd8 || jpeg[jpeg.length - 2] !== 0xff || jpeg[jpeg.length - 1] !== 0xd9) {
+    throw new Error("La imagen generada no tiene un formato JPEG válido.");
+  }
+  return jpeg;
 }
