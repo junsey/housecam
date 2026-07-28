@@ -13,7 +13,12 @@ export default function proxy(request: NextRequest, event: NextFetchEvent) {
     process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY && process.env.CLERK_SECRET_KEY,
   );
 
-  if (!clerkIsConfigured) return NextResponse.next();
+  if (!clerkIsConfigured) {
+    if (request.nextUrl.pathname.startsWith("/admin") || request.nextUrl.pathname.startsWith("/cuenta")) {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
+    return NextResponse.next();
+  }
   return protectedProxy(request, event);
 }
 
