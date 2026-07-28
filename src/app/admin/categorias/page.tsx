@@ -20,6 +20,7 @@ export default async function AdminCategoriesPage({
 
   return (
     <main className="shell py-10">
+      <Link className="mb-6 inline-flex text-sm font-bold text-[var(--brand)] hover:underline" href="/admin/productos">← Volver a Productos</Link>
       <div className="flex flex-wrap items-end justify-between gap-5">
         <div>
           <p className="text-xs font-bold uppercase tracking-[0.14em] text-[var(--brand)]">Catálogo</p>
