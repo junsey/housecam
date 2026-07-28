@@ -31,22 +31,22 @@ export default async function NewProductPage() {
       )}
 
       <form action={createProductAction} className="card mt-8 grid gap-6 p-6 md:grid-cols-2">
-        <label className="grid gap-2 text-sm font-semibold">Marca
+        <label className="admin-product-field text-sm font-semibold">Marca
           <select className={inputClass} name="storefront" disabled={!enabled}><option value="housecam">HouseCam</option><option value="housepet">HousePet</option></select>
         </label>
-        <label className="grid gap-2 text-sm font-semibold">Categoría
+        <label className="admin-product-field text-sm font-semibold">Categoría
           <select className={inputClass} name="categoryId" required disabled={!enabled}>
             {categories.items.map((category) => <option value={category.id} key={category.id}>{category.name} · {category.storefront}</option>)}
           </select>
         </label>
         <ProductIdentityFields className={inputClass} disabled={!enabled} />
-        <label className="grid gap-2 text-sm font-semibold">Tipo
+        <label className="admin-product-field text-sm font-semibold">Tipo
           <select className={inputClass} name="type" disabled={!enabled}><option value="standard">Estándar</option><option value="kit">Kit</option></select>
         </label>
-        <label className="grid gap-2 text-sm font-semibold">Precio unitario (ARS)<input className={inputClass} min="0" step="0.01" name="unitPricePesos" placeholder="25000,00" type="number" required disabled={!enabled} /></label>
-        <label className="grid gap-2 text-sm font-semibold">Precio pack de 10 (ARS)<input className={inputClass} min="0" step="0.01" name="pack10PricePesos" placeholder="Opcional" type="number" disabled={!enabled} /></label>
-        <label className="grid gap-2 text-sm font-semibold">Costo comercial (ARS)<input className={inputClass} min="0" step="0.01" name="commercialCostPesos" placeholder="10000,00" type="number" required disabled={!enabled} /></label>
-        <label className="flex items-center gap-2 self-end pb-3 text-sm"><input name="isActive" type="checkbox" disabled={!enabled} /> Publicar al crear</label>
+        <label className="admin-product-field text-sm font-semibold">Precio unitario (ARS)<input className={inputClass} min="0" step="0.01" name="unitPricePesos" placeholder="25000,00" type="number" required disabled={!enabled} /></label>
+        <label className="admin-product-field text-sm font-semibold">Precio pack de 10 (ARS)<input className={inputClass} min="0" step="0.01" name="pack10PricePesos" placeholder="Opcional" type="number" disabled={!enabled} /></label>
+        <label className="admin-product-field text-sm font-semibold">Costo comercial (ARS)<input className={inputClass} min="0" step="0.01" name="commercialCostPesos" placeholder="10000,00" type="number" required disabled={!enabled} /></label>
+        <label className="admin-product-field text-sm"><span className="sr-only">Publicación</span><span className="admin-product-checkbox"><input name="isActive" type="checkbox" disabled={!enabled} /> Publicar al crear</span></label>
         <label className="grid gap-2 text-sm font-semibold md:col-span-2">Descripción breve<textarea className="min-h-28 rounded-xl border border-[var(--border)] bg-[var(--background)] p-3" name="shortDescription" disabled={!enabled} /></label>
         <div className="flex justify-end md:col-span-2">
           <button className="min-h-11 rounded-xl bg-[var(--brand)] px-6 font-bold text-white disabled:opacity-40" type="submit" disabled={!enabled}>Crear producto</button>

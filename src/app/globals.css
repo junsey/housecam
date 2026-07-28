@@ -267,6 +267,29 @@ a {
   color: var(--hc-text-secondary);
 }
 
+.admin-product-field {
+  display: grid;
+  grid-template-rows: auto minmax(44px, auto) minmax(18px, auto);
+  align-content: start;
+  gap: 8px;
+}
+
+.admin-product-field > small {
+  align-self: start;
+  line-height: 1.35;
+}
+
+.admin-product-checkbox {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.admin-product-checkbox > input {
+  flex: 0 0 auto;
+}
+
 .admin-root input:not([type="checkbox"]):not([type="radio"]),
 .admin-root select,
 .admin-root textarea {

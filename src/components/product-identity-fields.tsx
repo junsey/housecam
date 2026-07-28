@@ -18,7 +18,7 @@ export function ProductIdentityFields({ className, disabled }: { className: stri
 
   return (
     <>
-      <label className="grid gap-2 text-sm font-semibold">
+      <label className="admin-product-field text-sm font-semibold">
         Nombre
         <input
           className={className}
@@ -30,12 +30,12 @@ export function ProductIdentityFields({ className, disabled }: { className: stri
           }}
         />
       </label>
-      <label className="grid gap-2 text-sm font-semibold">
+      <label className="admin-product-field text-sm font-semibold">
         SKU
         <input className={className} value="Se genera automáticamente" disabled readOnly aria-describedby="sku-help" />
         <small className="font-normal text-[var(--muted)]" id="sku-help">HouseCam asignará un código único al crear el producto.</small>
       </label>
-      <label className="grid gap-2 text-sm font-semibold">
+      <label className="admin-product-field text-sm font-semibold">
         Slug
         <input
           className={className}
