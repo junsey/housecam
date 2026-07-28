@@ -4,7 +4,7 @@ import path from "node:path";
 import { PDFDocument, PDFFont, PDFImage, PDFPage, StandardFonts, rgb } from "pdf-lib";
 import sharp from "sharp";
 
-type QuotePdfData = {
+export type QuoteDocumentData = {
   quote: {
     code: string | null; customerName: string; customerPhone: string | null; customerEmail: string | null;
     whatsappNumberSnapshot: string | null; notes: string | null; validUntil: Date | null; createdAt: Date; totalCents: number;
@@ -50,8 +50,14 @@ async function imageFromUrl(document: PDFDocument, url: string | null) {
   } catch { return null; }
 }
 
-function drawHeader(page: PDFPage, logo: PDFImage, regular: PDFFont, bold: PDFFont, data: QuotePdfData) {
-  page.drawImage(logo, { x: 46, y: 755, width: 155, height: 47 });
+function fitImage(image: PDFImage, maxWidth: number, maxHeight: number) {
+  const scale = Math.min(maxWidth / image.width, maxHeight / image.height);
+  return { width: image.width * scale, height: image.height * scale };
+}
+
+function drawHeader(page: PDFPage, logo: PDFImage, regular: PDFFont, bold: PDFFont, data: QuoteDocumentData) {
+  const logoSize = fitImage(logo, 155, 47);
+  page.drawImage(logo, { x: 46, y: 755 + (47 - logoSize.height) / 2, ...logoSize });
   page.drawText("PRESUPUESTO", { x: 406, y: 785, size: 10, font: bold, color: blue });
   page.drawText(data.quote.code ?? "Presupuesto", { x: 406, y: 762, size: 18, font: bold, color: navy });
   page.drawLine({ start: { x: 46, y: 738 }, end: { x: 549, y: 738 }, thickness: 1, color: border });
@@ -63,7 +69,7 @@ function drawHeader(page: PDFPage, logo: PDFImage, regular: PDFFont, bold: PDFFo
   page.drawText(`Validez: ${data.quote.validUntil?.toLocaleDateString("es-AR") ?? "sin vencimiento"}`, { x: 406, y: 683, size: 9, font: regular, color: muted });
 }
 
-export async function buildQuotePdf(data: QuotePdfData) {
+export async function buildQuotePdf(data: QuoteDocumentData) {
   const document = await PDFDocument.create();
   const regular = await document.embedFont(StandardFonts.Helvetica);
   const bold = await document.embedFont(StandardFonts.HelveticaBold);
@@ -77,7 +83,8 @@ export async function buildQuotePdf(data: QuotePdfData) {
   for (const item of data.items) {
     if (y < 120) {
       page = document.addPage([595, 842]);
-      page.drawImage(logo, { x: 46, y: 770, width: 130, height: 39 });
+      const pageLogoSize = fitImage(logo, 130, 39);
+      page.drawImage(logo, { x: 46, y: 770 + (39 - pageLogoSize.height) / 2, ...pageLogoSize });
       y = 735;
     }
     page.drawRectangle({ x: 46, y: y - 64, width: 503, height: 72, borderWidth: 1, borderColor: border, color: rgb(1, 1, 1) });

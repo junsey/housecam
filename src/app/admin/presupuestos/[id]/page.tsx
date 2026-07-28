@@ -19,6 +19,7 @@ export default async function QuoteDetailPage({ params }: { params: Promise<{ id
       <div><p className="text-xs font-bold uppercase tracking-wider text-[var(--brand)]">{data.quote.status}</p><h1 className="mt-2 text-4xl font-bold">{data.quote.code}</h1><p className="mt-2 text-[var(--muted)]">{data.quote.customerName}</p></div>
       <div className="flex flex-wrap gap-2">
         <a className="admin-secondary-button" href={`/admin/presupuestos/${id}/pdf`}>Descargar PDF</a>
+        <a className="admin-secondary-button" href={`/admin/presupuestos/${id}/jpg`}>Descargar JPG</a>
         {data.quote.status !== "converted" && data.quote.status !== "cancelled" && <form action={convertQuoteToSaleAction}><input type="hidden" name="quoteId" value={id} /><button className="admin-primary-button">Convertir en venta</button></form>}
         {data.quote.convertedSaleId && <Link className="admin-primary-button" href={`/admin/ventas/${data.quote.convertedSaleId}` as Route}>Ver venta</Link>}
       </div>
