@@ -16,6 +16,7 @@ export async function seed() {
     id: "global",
     businessName: "HouseCam",
     whatsappNumber: process.env.BUSINESS_WHATSAPP_NUMBER ?? "",
+    developmentModeEnabled: true,
   }).onConflictDoNothing();
 
   await db.insert(storefrontContent).values([

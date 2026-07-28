@@ -1,0 +1,1 @@
+ALTER TABLE "site_settings" ADD COLUMN "development_mode_enabled" boolean DEFAULT true NOT NULL;

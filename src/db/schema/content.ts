@@ -6,6 +6,7 @@ export const siteSettings = pgTable("site_settings", {
   id: text("id").primaryKey().default("global"),
   businessName: text("business_name").notNull().default("HouseCam"),
   whatsappNumber: text("whatsapp_number").notNull(),
+  developmentModeEnabled: boolean("development_mode_enabled").notNull().default(true),
   pickupAddress: text("pickup_address"),
   instagramUrl: text("instagram_url"),
   facebookUrl: text("facebook_url"),
