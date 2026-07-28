@@ -18,8 +18,11 @@ type PublicHeaderProps = {
 
 export function PublicHeader({ activePath, brand = "housecam", showPreviewBanner = false, whatsappNumber = "" }: PublicHeaderProps) {
   const [brandMenuOpen, setBrandMenuOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const brandSwitcherRef = useRef<HTMLDivElement>(null);
   const brandTriggerRef = useRef<HTMLButtonElement>(null);
+  const mobileNavigationRef = useRef<HTMLDivElement>(null);
+  const mobileTriggerRef = useRef<HTMLButtonElement>(null);
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isHousePet = brand === "housepet";
   const whatsappHref = getWhatsappHref(whatsappNumber, `Hola, quiero recibir asesoramiento sobre ${isHousePet ? "HousePet" : "HouseCam"}.`);
@@ -43,11 +46,15 @@ export function PublicHeader({ activePath, brand = "housecam", showPreviewBanner
   useEffect(() => {
     function handleOutsideClick(event: PointerEvent) {
       if (!brandSwitcherRef.current?.contains(event.target as Node)) setBrandMenuOpen(false);
+      if (!mobileNavigationRef.current?.contains(event.target as Node)) setMobileMenuOpen(false);
     }
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key !== "Escape") return;
+      const mobileWasOpen = mobileMenuOpen;
       setBrandMenuOpen(false);
-      brandTriggerRef.current?.focus();
+      setMobileMenuOpen(false);
+      if (mobileWasOpen) mobileTriggerRef.current?.focus();
+      else brandTriggerRef.current?.focus();
     }
     document.addEventListener("pointerdown", handleOutsideClick);
     document.addEventListener("keydown", handleKeyDown);
@@ -56,7 +63,7 @@ export function PublicHeader({ activePath, brand = "housecam", showPreviewBanner
       document.removeEventListener("keydown", handleKeyDown);
       if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
     };
-  }, []);
+  }, [mobileMenuOpen]);
 
   function openOnHover() {
     if (!window.matchMedia("(hover: hover)").matches) return;
@@ -84,7 +91,7 @@ export function PublicHeader({ activePath, brand = "housecam", showPreviewBanner
       <header className="site-header">
         <nav className="container nav" aria-label="Navegación principal">
           <div className="brand-switcher" ref={brandSwitcherRef} onMouseEnter={openOnHover} onMouseLeave={closeAfterHover}>
-            <button ref={brandTriggerRef} className="brand-switcher-trigger" type="button" aria-expanded={brandMenuOpen} aria-haspopup="menu" aria-controls="brand-switcher-menu" aria-label="Cambiar entre HouseCam y HousePet" onClick={() => setBrandMenuOpen((value) => !value)} onKeyDown={handleTriggerKeyDown}>
+            <button ref={brandTriggerRef} className="brand-switcher-trigger" type="button" aria-expanded={brandMenuOpen} aria-haspopup="menu" aria-controls="brand-switcher-menu" aria-label="Cambiar entre HouseCam y HousePet" onClick={() => { setMobileMenuOpen(false); setBrandMenuOpen((value) => !value); }} onKeyDown={handleTriggerKeyDown}>
               <Image className="logo logo-dark-theme" src={darkLogo} alt={isHousePet ? "HousePet" : "HouseCam"} width={190} height={58} priority />
               <Image className="logo logo-light-theme" src={lightLogo} alt="" width={190} height={58} priority />
               <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 7 5 5 5-5" /></svg>
@@ -106,7 +113,21 @@ export function PublicHeader({ activePath, brand = "housecam", showPreviewBanner
               {navigation.map((item) => <Link href={item.href as Route} aria-current={activePath === item.path ? "page" : undefined} key={item.href}>{item.label}</Link>)}
               {whatsappHref ? <a className="button button-primary" href={whatsappHref} target="_blank" rel="noopener noreferrer">Hablar con nosotros</a> : <button className="button button-primary contact-disabled" type="button" disabled title="La función de contacto está temporalmente deshabilitada. Probá más tarde.">Contacto no disponible</button>}
             </div>
-            <ThemeToggle />
+            <span className="public-theme-desktop"><ThemeToggle /></span>
+            <div className="mobile-navigation" ref={mobileNavigationRef}>
+              <button ref={mobileTriggerRef} className="mobile-menu-trigger" type="button" aria-expanded={mobileMenuOpen} aria-controls="mobile-navigation-panel" aria-label={mobileMenuOpen ? "Cerrar menú" : "Abrir menú"} onClick={() => { setBrandMenuOpen(false); setMobileMenuOpen((value) => !value); }}>
+                <span /><span /><span />
+              </button>
+              {mobileMenuOpen && (
+                <div className="mobile-navigation-panel" id="mobile-navigation-panel">
+                  <div className="mobile-navigation-links" role="navigation" aria-label="Navegación móvil">
+                    {navigation.map((item) => <Link href={item.href as Route} aria-current={activePath === item.path ? "page" : undefined} key={item.href} onClick={() => setMobileMenuOpen(false)}>{item.label}</Link>)}
+                  </div>
+                  {whatsappHref ? <a className="button button-primary mobile-contact-button" href={whatsappHref} target="_blank" rel="noopener noreferrer" onClick={() => setMobileMenuOpen(false)}>Hablar con nosotros</a> : <button className="button button-primary mobile-contact-button contact-disabled" type="button" disabled>Contacto no disponible</button>}
+                  <div className="mobile-theme-row"><span>Tema</span><ThemeToggle /></div>
+                </div>
+              )}
+            </div>
           </div>
         </nav>
       </header>
