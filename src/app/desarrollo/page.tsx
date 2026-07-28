@@ -20,23 +20,23 @@ export default async function DevelopmentPage() {
         <section className="hero">
           <div className="container hero-grid">
             <div>
-              <p className="eyebrow">Seguridad simple para todos los días</p>
+              <p className="eyebrow">Tecnología confiable para tu hogar</p>
               <h1>Tu hogar, siempre cerca.</h1>
-              <p className="lead">Cámaras y soluciones inteligentes para que puedas saber que todo está bien, estés donde estés.</p>
+              <p className="lead">Cámaras y soluciones inteligentes para cuidar lo que más te importa con mayor control y tranquilidad.</p>
               <div className="actions">
-                <a className="button button-primary" href="#beneficios">Encontrar mi solución</a>
+                <a className="button button-primary" href="#beneficios">Explorar soluciones</a>
                 {whatsappHref ? <a className="button button-secondary" href={whatsappHref} target="_blank" rel="noopener noreferrer">Hablar con un asesor</a> : <button className="button button-secondary contact-disabled" type="button" disabled title="La función de contacto está temporalmente deshabilitada. Probá más tarde.">Contacto no disponible. Probá más tarde.</button>}
               </div>
-              <ul className="trust-list"><li>Instalación sencilla</li><li>Asistencia local</li><li>Acceso desde tu celular</li></ul>
+              <ul className="trust-list"><li>Instalación simple</li><li>Asesoramiento personalizado</li><li>Control desde tu celular</li></ul>
             </div>
-            <div className="hero-visual" aria-label="Representación de un hogar protegido">
+            <div className="hero-visual" aria-label="Representación de un sistema conectado">
               <div className="home-card">
                 <div className="home-icon">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true"><path d="m3 11 9-8 9 8" /><path d="M5 10v10h14V10M9 20v-6h6v6" /></svg>
                 </div>
-                <h2>Todo está bien en casa</h2>
-                <p>Conectado y a tu alcance, estés donde estés.</p>
-                <div className="status"><span className="status-dot" />Hogar protegido</div>
+                <h2>Todo en orden</h2>
+                <p>Accedé a tus cámaras y dispositivos en tiempo real desde cualquier lugar.</p>
+                <div className="status"><span className="status-dot" />Conexión activa</div>
               </div>
             </div>
           </div>
