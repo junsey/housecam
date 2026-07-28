@@ -1,6 +1,6 @@
 import "server-only";
 
-import { and, asc, desc, eq, isNull } from "drizzle-orm";
+import { and, asc, count, desc, eq, isNotNull, isNull } from "drizzle-orm";
 
 import { getDb } from "@/db";
 import { categories, kitComponents, productImages, productSpecs, products, siteSettings, stockMovements } from "@/db/schema";
@@ -9,10 +9,22 @@ import { getKitAvailability, getKitMaterialCostCents } from "./kit.domain";
 
 export async function getAdminCategories() {
   if (!process.env.DATABASE_URL) return { configured: false as const, items: [] };
-  const items = await getDb().select().from(categories)
-    .where(isNull(categories.archivedAt))
-    .orderBy(asc(categories.storefront), asc(categories.sortOrder), asc(categories.name));
+  const db = getDb();
+  const [categoryItems, usage] = await Promise.all([
+    db.select().from(categories).where(isNull(categories.archivedAt))
+      .orderBy(asc(categories.storefront), asc(categories.sortOrder), asc(categories.name)),
+    db.select({ categoryId: products.categoryId, value: count(products.id) }).from(products)
+      .where(isNull(products.archivedAt)).groupBy(products.categoryId),
+  ]);
+  const usageByCategory = new Map(usage.map((item) => [item.categoryId, item.value]));
+  const items = categoryItems.map((item) => ({ ...item, activeProductCount: usageByCategory.get(item.id) ?? 0 }));
   return { configured: true as const, items };
+}
+
+export async function getArchivedCategories() {
+  if (!process.env.DATABASE_URL) return [];
+  return getDb().select().from(categories).where(isNotNull(categories.archivedAt))
+    .orderBy(desc(categories.archivedAt), asc(categories.name));
 }
 
 export async function getAdminProducts() {

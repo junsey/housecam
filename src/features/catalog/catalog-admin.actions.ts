@@ -118,10 +118,20 @@ export async function archiveCategoryAction(formData: FormData) {
   const admin = await authorizeMutation();
   const id = String(formData.get("id") ?? "");
   const [linked] = await getDb().select({ id: products.id }).from(products).where(and(eq(products.categoryId, id), sql`${products.archivedAt} is null`)).limit(1);
-  if (linked) throw new Error("No se puede archivar una categoría con productos activos.");
+  if (linked) redirect("/admin/categorias?error=categoria-en-uso");
   await getDb().update(categories).set({ archivedAt: new Date(), isActive: false, updatedAt: new Date() }).where(eq(categories.id, id));
   await writeAudit(admin.clerkUserId, "category.archived", "category", id);
   revalidatePath("/admin/categorias");
+  redirect("/admin/categorias");
+}
+
+export async function restoreCategoryAction(formData: FormData) {
+  const admin = await authorizeMutation();
+  const id = String(formData.get("id") ?? "");
+  await getDb().update(categories).set({ archivedAt: null, isActive: false, updatedAt: new Date() }).where(eq(categories.id, id));
+  await writeAudit(admin.clerkUserId, "category.restored", "category", id);
+  revalidatePath("/admin/categorias");
+  redirect("/admin/categorias?restaurada=1");
 }
 
 export async function createProductAction(formData: FormData) {
