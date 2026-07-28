@@ -430,7 +430,7 @@ h1 {
 .recommended-products-shell { position: relative; }
 .recommended-products-track { display: flex; gap: 16px; overflow-x: auto; padding: 2px 2px 18px; scroll-behavior: smooth; scroll-snap-type: x mandatory; scrollbar-width: none; }
 .recommended-products-track::-webkit-scrollbar { display: none; }
-.recommended-product-card { width: 228px; min-width: 228px; overflow: hidden; border: 1px solid var(--hc-border); border-radius: 12px; background: var(--hc-surface); box-shadow: 0 6px 18px rgb(0 35 65 / 7%); scroll-snap-align: start; transition: transform .18s ease, box-shadow .18s ease; }
+.recommended-product-card { width: 228px; min-width: 228px; position: relative; overflow: hidden; border: 1px solid var(--hc-border); border-radius: 12px; background: var(--hc-surface); box-shadow: 0 6px 18px rgb(0 35 65 / 7%); scroll-snap-align: start; transition: transform .18s ease, box-shadow .18s ease; cursor: pointer; }
 .recommended-product-card:hover { box-shadow: 0 13px 28px rgb(0 35 65 / 12%); transform: translateY(-3px); }
 .recommended-product-visual { height: 190px; position: relative; display: block; overflow: hidden; border-bottom: 1px solid var(--hc-border); background: var(--hc-background); }
 .recommended-product-visual img { object-fit: cover; padding: 0; }
@@ -439,6 +439,7 @@ h1 {
 .recommended-product-body { min-height: 180px; display: flex; flex-direction: column; padding: 17px 16px 18px; }
 .recommended-product-body p { margin: 0; color: var(--hc-blue-700); font-size: .7rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
 .recommended-product-body h3 { margin: 10px 0 7px; color: var(--hc-text-primary); font-size: 1rem; line-height: 1.3; }
+.recommended-product-detail-link::after { content: ""; position: absolute; z-index: 1; inset: 0; }
 .recommended-product-body span { display: -webkit-box; overflow: hidden; color: var(--hc-text-secondary); font-size: .78rem; line-height: 1.45; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
 .recommended-product-body strong { margin-top: auto; padding-top: 16px; color: var(--hc-text-primary); font-size: 1.25rem; }
 .recommended-products-arrow { width: 48px; height: 48px; position: absolute; z-index: 2; top: 94px; display: grid; place-items: center; border: 1px solid var(--hc-border); border-radius: 50%; background: var(--hc-surface); color: var(--hc-blue-500); box-shadow: 0 8px 22px rgb(0 35 65 / 16%); font-size: 2rem; line-height: 1; cursor: pointer; }

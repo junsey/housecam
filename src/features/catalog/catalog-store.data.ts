@@ -1,6 +1,6 @@
 import "server-only";
 
-import { and, asc, eq, isNull } from "drizzle-orm";
+import { and, asc, eq, inArray, isNull } from "drizzle-orm";
 import { cache } from "react";
 
 import { getDb } from "@/db";
@@ -49,10 +49,8 @@ export async function getStoreProducts(storefront: "housecam" | "housepet" = "ho
     unitPriceCents: products.unitPriceCents,
     pack10PriceCents: products.pack10PriceCents,
     categoryName: categories.name,
-    imageUrl: productImages.url,
   }).from(products)
     .innerJoin(categories, eq(products.categoryId, categories.id))
-    .leftJoin(productImages, and(eq(productImages.productId, products.id), eq(productImages.isCover, true)))
     .where(and(
       eq(products.storefront, storefront),
       eq(products.isActive, true),
@@ -62,8 +60,27 @@ export async function getStoreProducts(storefront: "housecam" | "housepet" = "ho
     ))
     .orderBy(asc(categories.sortOrder), asc(products.sortOrder), asc(products.name));
 
+  const images = items.length
+    ? await getDb().select({
+      productId: productImages.productId,
+      url: productImages.url,
+      isCover: productImages.isCover,
+      sortOrder: productImages.sortOrder,
+    }).from(productImages)
+      .where(inArray(productImages.productId, items.map((item) => item.id)))
+      .orderBy(asc(productImages.sortOrder))
+    : [];
+
   return {
-    items: items.map((item) => ({ ...item, shortDescription: item.shortDescription ?? `Solución ${storefront === "housepet" ? "HousePet" : "HouseCam"} para cuidar lo que importa.` })),
+    items: items.map((item) => {
+      const productImages = images.filter((image) => image.productId === item.id);
+      const image = productImages.find((candidate) => candidate.isCover) ?? productImages[0];
+      return {
+        ...item,
+        imageUrl: image?.url ?? null,
+        shortDescription: item.shortDescription ?? `Solución ${storefront === "housepet" ? "HousePet" : "HouseCam"} para cuidar lo que importa.`,
+      };
+    }),
     usingDemoData: false,
   };
 }
