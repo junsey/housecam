@@ -10,3 +10,4 @@ coverage/
 drizzle/meta/_journal.json.tmp
 
 .vercel
+.env*
