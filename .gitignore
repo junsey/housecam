@@ -1,3 +1,13 @@
 dist/
 node_modules/
 npm-debug.log*
+.next/
+.env
+.env.local
+.env.*.local
+coverage/
+*.tsbuildinfo
+drizzle/meta/_journal.json.tmp
+
+.vercel
+.env*

@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="HouseCam está preparando una nueva experiencia para cuidar tu hogar.">
+  <meta name="theme-color" content="#071019">
+  <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="msapplication-config" content="/browserconfig.xml">
+  <meta name="msapplication-TileColor" content="#071019">
+  <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+  <title>HouseCam | Muy pronto</title><link rel="stylesheet" href="/src.css">
+  <script src="/theme.js"></script>
+  <script src="/dev-gate.js"></script>
+</head>
+<body class="holding-page">
+  <button class="theme-toggle holding-theme-toggle" type="button" role="switch" data-theme-toggle aria-checked="false" aria-label="Activar tema claro" title="Activar tema claro">
+    <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20.2 15.6A8.5 8.5 0 0 1 8.4 3.8 8.5 8.5 0 1 0 20.2 15.6Z"/></svg>
+    <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="3.5"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"/></svg>
+  </button>
+  <main class="holding-main">
+    <div class="holding-stack">
+      <section class="holding-content" aria-labelledby="holding-title">
+        <div class="holding-brand">
+          <div class="holding-logo-frame">
+            <img class="logo holding-logo" data-theme-logo src="/housecam-white.svg" alt="HouseCam">
+          </div>
+          <p class="tagline">Tranquilidad para tu hogar</p>
+        </div>
+        <div class="holding-message">
+          <h1 id="holding-title">Estamos renovando nuestro sitio</h1>
+          <p class="holding-copy">Muy pronto vas a encontrar una experiencia más clara, rápida y segura para proteger lo que más te importa.</p>
+        </div>
+      </section>
+      <button class="dev-access-trigger" type="button" data-dev-access-trigger aria-haspopup="dialog" aria-controls="dev-access-modal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+        Acceso privado al sitio
+      </button>
+    </div>
+  </main>
+  <div class="dev-modal-overlay" id="dev-access-modal" data-dev-modal hidden>
+    <section class="dev-modal" role="dialog" aria-modal="true" aria-labelledby="dev-modal-title">
+      <button class="dev-modal-close" type="button" data-dev-modal-close aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+      </button>
+      <h2 id="dev-modal-title">Acceso al sitio en desarrollo</h2>
+      <p class="dev-modal-description">Ingresá las credenciales temporales para continuar.</p>
+      <form data-dev-access-form novalidate>
+        <div class="dev-field">
+          <label for="dev-username">Usuario</label>
+          <input id="dev-username" name="username" type="text" autocomplete="username" required>
+        </div>
+        <div class="dev-field">
+          <label for="dev-password">Contraseña</label>
+          <input id="dev-password" name="password" type="password" autocomplete="current-password" required>
+        </div>
+        <p class="dev-auth-error" data-dev-auth-error aria-live="polite" hidden></p>
+        <button class="dev-submit" type="submit">Ingresar</button>
+      </form>
+    </section>
+  </div>
+</body></html>
