@@ -903,6 +903,288 @@ a {
   flex-wrap: wrap;
 }
 
+.admin-sales-history-header {
+  margin-top: 28px;
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 28px;
+}
+
+.admin-sales-history-header h1 {
+  margin: 8px 0 0;
+  font-size: clamp(2.5rem, 6vw, 4.25rem);
+  line-height: .98;
+  letter-spacing: -.055em;
+}
+
+.admin-sales-history-header > div > p:last-child {
+  max-width: 700px;
+  margin: 18px 0 0;
+  color: var(--hc-text-secondary);
+  line-height: 1.65;
+}
+
+.admin-month-picker {
+  min-width: min(100%, 310px);
+  display: grid;
+  gap: 8px;
+}
+
+.admin-month-picker label {
+  color: var(--hc-text-secondary);
+  font-size: .75rem;
+  font-weight: 750;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.admin-month-picker > div {
+  display: flex;
+  gap: 8px;
+}
+
+.admin-month-picker input {
+  min-width: 0;
+  flex: 1;
+  border: 1px solid var(--hc-border-strong);
+  border-radius: 12px;
+  padding: 11px 12px;
+  background: var(--hc-surface);
+  color: var(--hc-text-primary);
+  font: inherit;
+}
+
+.admin-month-picker button {
+  border: 1px solid var(--hc-blue-600);
+  border-radius: 12px;
+  padding: 11px 16px;
+  background: var(--hc-blue-600);
+  color: #fff;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.admin-month-picker button:hover {
+  background: var(--hc-blue-700);
+  transform: translateY(-1px);
+}
+
+.admin-sales-calendar {
+  margin-top: 32px;
+  border: 1px solid var(--hc-border);
+  border-radius: 24px;
+  padding: 26px;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--hc-blue-500) 8%, transparent), transparent 48%),
+    var(--hc-surface);
+  box-shadow: var(--hc-shadow-md);
+}
+
+.admin-sales-calendar-heading,
+.admin-sales-history-section-heading,
+.admin-sales-period-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.admin-sales-calendar-heading p,
+.admin-sales-history-section-heading p,
+.admin-sales-period-heading p {
+  margin: 0;
+  color: var(--hc-blue-600);
+  font-size: .72rem;
+  font-weight: 750;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
+
+.admin-sales-calendar-heading h2,
+.admin-sales-history-section-heading h2,
+.admin-sales-period-heading h2 {
+  margin: 6px 0 0;
+  font-size: 1.6rem;
+  letter-spacing: -.025em;
+}
+
+.admin-sales-calendar-heading > span,
+.admin-sales-history-section-heading > span,
+.admin-sales-period-heading > span {
+  color: var(--hc-text-secondary);
+  font-size: .85rem;
+}
+
+.admin-sales-month-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.admin-sales-calendar-year {
+  margin-top: 24px;
+}
+
+.admin-sales-calendar-year h3 {
+  margin: 0 0 12px;
+  color: var(--hc-text-secondary);
+  font-size: .85rem;
+  letter-spacing: .1em;
+}
+
+.admin-sales-month {
+  min-height: 132px;
+  display: grid;
+  align-content: center;
+  gap: 7px;
+  border: 1px solid var(--hc-border);
+  border-radius: 16px;
+  padding: 18px;
+  background: color-mix(in srgb, var(--hc-surface-raised) 96%, transparent);
+}
+
+.admin-sales-month.is-empty {
+  opacity: .72;
+  box-shadow: none;
+}
+
+.admin-sales-month.is-empty strong {
+  color: var(--hc-text-secondary);
+}
+
+.admin-sales-month:hover {
+  border-color: var(--hc-blue-400);
+  box-shadow: 0 16px 34px rgb(0 45 85 / 12%);
+  transform: translateY(-2px);
+}
+
+.admin-sales-month.is-active {
+  border-color: var(--hc-blue-500);
+  background: var(--hc-blue-100);
+  box-shadow: inset 0 0 0 1px var(--hc-blue-500);
+}
+
+.admin-sales-month > span {
+  color: var(--hc-text-secondary);
+  font-size: .76rem;
+  font-weight: 750;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.admin-sales-month strong {
+  color: var(--hc-text-primary);
+  font-size: 1.45rem;
+  letter-spacing: -.025em;
+}
+
+.admin-sales-month small {
+  color: var(--hc-text-secondary);
+  font-size: .76rem;
+  line-height: 1.45;
+}
+
+.admin-sales-period-heading {
+  margin-top: 38px;
+}
+
+.admin-sales-history-metrics {
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.admin-sales-history-metric {
+  min-height: 116px;
+  padding: 20px;
+}
+
+.admin-sales-history-metric p {
+  margin: 0;
+  color: var(--hc-text-secondary);
+  font-size: .72rem;
+  font-weight: 750;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+
+.admin-sales-history-metric strong {
+  display: block;
+  margin-top: 13px;
+  font-size: 1.45rem;
+  letter-spacing: -.035em;
+}
+
+.admin-sales-history-metric.is-highlighted {
+  border-color: color-mix(in srgb, var(--hc-success) 50%, var(--hc-border));
+  background: color-mix(in srgb, var(--hc-success-light) 56%, var(--hc-surface));
+}
+
+.admin-sales-history-metric.is-highlighted strong {
+  color: var(--hc-success);
+}
+
+.admin-sales-history-section {
+  margin-top: 22px;
+  overflow: hidden;
+}
+
+.admin-sales-history-section-heading {
+  padding: 24px 26px;
+  border-bottom: 1px solid var(--hc-border);
+}
+
+.admin-sales-history-table {
+  width: 100%;
+  min-width: 760px;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: .86rem;
+}
+
+.admin-sales-history-table th {
+  padding: 14px 18px;
+  background: color-mix(in srgb, var(--hc-blue-100) 48%, var(--hc-surface));
+  color: var(--hc-text-secondary);
+  font-size: .7rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.admin-sales-history-table td {
+  padding: 17px 18px;
+  border-top: 1px solid var(--hc-border);
+  vertical-align: middle;
+}
+
+.admin-sales-history-table tbody tr:hover {
+  background: color-mix(in srgb, var(--hc-blue-100) 38%, transparent);
+}
+
+.admin-sales-history-table td:first-child strong,
+.admin-sales-history-table td:first-child small {
+  display: block;
+}
+
+.admin-sales-history-table td:first-child small {
+  margin-top: 4px;
+  color: var(--hc-text-secondary);
+}
+
+.admin-sales-history-table a {
+  color: var(--hc-blue-600);
+  font-weight: 750;
+}
+
+.admin-sales-history-empty {
+  margin: 0;
+  padding: 28px;
+  color: var(--hc-text-secondary);
+  line-height: 1.6;
+}
+
 .admin-toolbar-actions {
   min-width: 0;
 }
@@ -998,6 +1280,9 @@ a {
   .quote-line {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+  .admin-sales-history-metrics {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 600px) {
@@ -1006,6 +1291,26 @@ a {
   }
   .admin-sales-toolbar {
     width: 100%;
+  }
+  .admin-sales-history-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .admin-month-picker {
+    width: 100%;
+  }
+  .admin-sales-calendar {
+    padding: 20px;
+  }
+  .admin-sales-calendar-heading,
+  .admin-sales-history-section-heading,
+  .admin-sales-period-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .admin-sales-month-grid,
+  .admin-sales-history-metrics {
+    grid-template-columns: 1fr;
   }
 }
 

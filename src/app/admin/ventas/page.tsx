@@ -23,6 +23,7 @@ export default async function SalesPage({ searchParams }: { searchParams: Promis
                 {showCancelled ? "Volver a ventas" : `Ver canceladas (${data.metrics?.cancelledCount ?? 0})`}
               </Link>
               <Link href={"/admin/presupuestos" as Route}>Presupuestos</Link>
+              <Link href={"/admin/ventas/historico" as Route}>Histórico mensual</Link>
               {!showCancelled && <Link href="/admin/ventas/exportar">Exportar CSV</Link>}
             </div>
           </details>

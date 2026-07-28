@@ -1,6 +1,6 @@
 import "server-only";
 
-import { asc, desc, eq, isNull, ne, sql } from "drizzle-orm";
+import { and, asc, desc, eq, isNotNull, isNull, ne, sql } from "drizzle-orm";
 
 import { getDb } from "@/db";
 import { products, saleCharges, saleExpenses, saleItemComponents, saleItems, sales } from "@/db/schema";
@@ -51,4 +51,104 @@ export async function getSaleProductOptions() {
     unitPriceCents: products.unitPriceCents,
     pack10PriceCents: products.pack10PriceCents,
   }).from(products).where(isNull(products.archivedAt)).orderBy(asc(products.storefront), asc(products.name));
+}
+
+const buenosAiresTimezone = "America/Argentina/Buenos_Aires";
+
+export async function getMonthlySalesHistory(requestedMonth?: string) {
+  if (!process.env.DATABASE_URL) {
+    return {
+      configured: false as const,
+      selectedMonth: requestedMonth ?? "",
+      months: [],
+      summary: null,
+      products: [],
+      sales: [],
+    };
+  }
+
+  const db = getDb();
+  const monthExpression = sql<string>`to_char(${sales.confirmedAt} at time zone ${buenosAiresTimezone}, 'YYYY-MM')`;
+  const months = await db.select({
+    month: monthExpression,
+    saleCount: sql<number>`count(*)::int`,
+    revenueCents: sql<number>`coalesce(sum(${sales.finalTotalCents}), 0)::int`,
+    profitCents: sql<number>`coalesce(sum(${sales.profitCents}), 0)::int`,
+  })
+    .from(sales)
+    .where(and(eq(sales.status, "confirmed"), isNotNull(sales.confirmedAt)))
+    .groupBy(monthExpression)
+    .orderBy(desc(monthExpression));
+
+  const normalizedRequestedMonth = /^\d{4}-(0[1-9]|1[0-2])$/.test(requestedMonth ?? "")
+    ? requestedMonth!
+    : undefined;
+  const selectedMonth = normalizedRequestedMonth ?? months[0]?.month ?? getCurrentBuenosAiresMonth();
+
+  const selectedMonthCondition = and(
+    eq(sales.status, "confirmed"),
+    isNotNull(sales.confirmedAt),
+    sql`${monthExpression} = ${selectedMonth}`,
+  );
+
+  const [[summary], selectedSales, soldProducts] = await Promise.all([
+    db.select({
+      saleCount: sql<number>`count(*)::int`,
+      revenueCents: sql<number>`coalesce(sum(${sales.finalTotalCents}), 0)::int`,
+      listedCents: sql<number>`coalesce(sum(${sales.listedTotalCents}), 0)::int`,
+      discountCents: sql<number>`coalesce(sum(${sales.discountTotalCents}), 0)::int`,
+      productCostCents: sql<number>`coalesce(sum(${sales.productCostTotalCents}), 0)::int`,
+      expenseCents: sql<number>`coalesce(sum(${sales.expenseTotalCents}), 0)::int`,
+      profitCents: sql<number>`coalesce(sum(${sales.profitCents}), 0)::int`,
+    }).from(sales).where(selectedMonthCondition),
+    db.select().from(sales)
+      .where(selectedMonthCondition)
+      .orderBy(desc(sales.confirmedAt)),
+    db.select({
+      productName: saleItems.productNameSnapshot,
+      sku: saleItems.skuSnapshot,
+      storefront: saleItems.storefrontSnapshot,
+      quantity: sql<number>`coalesce(sum(${saleItems.quantity}), 0)::int`,
+      physicalUnits: sql<number>`coalesce(sum(${saleItems.physicalUnits}), 0)::int`,
+      revenueCents: sql<number>`coalesce(sum(${saleItems.finalSubtotalCents}), 0)::int`,
+      historicalCostCents: sql<number>`coalesce(sum(${saleItems.historicalCostSubtotalCents}), 0)::int`,
+    })
+      .from(saleItems)
+      .innerJoin(sales, eq(saleItems.saleId, sales.id))
+      .where(selectedMonthCondition)
+      .groupBy(
+        saleItems.productNameSnapshot,
+        saleItems.skuSnapshot,
+        saleItems.storefrontSnapshot,
+      )
+      .orderBy(desc(sql`sum(${saleItems.finalSubtotalCents})`), asc(saleItems.productNameSnapshot)),
+  ]);
+
+  return {
+    configured: true as const,
+    selectedMonth,
+    months,
+    summary: summary ?? {
+      saleCount: 0,
+      revenueCents: 0,
+      listedCents: 0,
+      discountCents: 0,
+      productCostCents: 0,
+      expenseCents: 0,
+      profitCents: 0,
+    },
+    products: soldProducts,
+    sales: selectedSales,
+  };
+}
+
+function getCurrentBuenosAiresMonth() {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: buenosAiresTimezone,
+    year: "numeric",
+    month: "2-digit",
+  }).formatToParts(new Date());
+  const year = parts.find((part) => part.type === "year")?.value;
+  const month = parts.find((part) => part.type === "month")?.value;
+  return `${year}-${month}`;
 }

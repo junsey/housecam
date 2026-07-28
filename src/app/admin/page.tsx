@@ -19,6 +19,7 @@ export default async function AdminPage() {
     { name: "Categorías", value: String(metrics.categoryCount), detail: "categorías activas", description: "Organización separada por marca.", href: "/admin/categorias" },
     { name: "Ventas", value: String(metrics.confirmedSaleCount), detail: "ventas confirmadas", description: "Borradores, confirmación, gastos y margen.", href: "/admin/ventas" },
     { name: "Inventario", value: String(metrics.inventoryUnits), detail: "unidades disponibles", description: "Stock físico total de productos estándar.", href: "/admin/productos" },
+    { name: "Capital en stock", value: money.format(metrics.inventoryCapitalCents / 100), detail: "costo del inventario", description: "Capital inmovilizado según el costo comercial y el stock disponible.", href: "/admin/productos" },
     { name: "Balance", value: money.format(metrics.balanceCents / 100), detail: "margen acumulado", description: "Resultado de las ventas confirmadas.", href: "/admin/ventas" },
   ] as const;
 

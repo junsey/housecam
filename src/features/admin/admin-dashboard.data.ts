@@ -13,6 +13,7 @@ export async function getAdminDashboardMetrics() {
       categoryCount: 0,
       confirmedSaleCount: 0,
       inventoryUnits: 0,
+      inventoryCapitalCents: 0,
       balanceCents: 0,
     };
   }
@@ -22,6 +23,7 @@ export async function getAdminDashboardMetrics() {
     db.select({
       count: sql<number>`count(*)::int`,
       inventoryUnits: sql<number>`coalesce(sum(${products.stockOnHand}) filter (where ${products.type} = 'standard'), 0)::int`,
+      inventoryCapitalCents: sql<number>`coalesce(sum(${products.stockOnHand} * ${products.commercialCostCents}) filter (where ${products.type} = 'standard'), 0)::int`,
     }).from(products).where(isNull(products.archivedAt)),
     db.select({ count: sql<number>`count(*)::int` })
       .from(categories)
@@ -38,6 +40,7 @@ export async function getAdminDashboardMetrics() {
     categoryCount: categoryMetrics?.count ?? 0,
     confirmedSaleCount: saleMetrics?.count ?? 0,
     inventoryUnits: productMetrics?.inventoryUnits ?? 0,
+    inventoryCapitalCents: productMetrics?.inventoryCapitalCents ?? 0,
     balanceCents: saleMetrics?.balanceCents ?? 0,
   };
 }
