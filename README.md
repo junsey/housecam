@@ -39,6 +39,15 @@ El seed crea el administrador inicial usando `INITIAL_ADMIN_CLERK_USER_ID` e `IN
 - ajustes de stock transaccionales y auditados;
 - configuración del número de WhatsApp.
 
+La Fase 3 incorpora:
+
+- borradores de venta sin impacto en stock;
+- líneas por unidad o pack de 10 y expansión de componentes de kits;
+- confirmación transaccional con bloqueos de inventario;
+- anulación con reposición exacta y movimientos compensatorios;
+- gastos, costos históricos, margen y exportación CSV;
+- códigos `HC`, `HP` o `MX` según las marcas incluidas.
+
 No se permite publicar un kit sin componentes ni archivar una categoría que todavía tenga productos. Los importes se almacenan como centavos enteros.
 
 ## Variables de entorno
