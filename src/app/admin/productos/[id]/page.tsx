@@ -220,11 +220,14 @@ export default async function EditProductPage({
           {images.map((image) => (
             <article className="overflow-hidden rounded-2xl border border-[var(--border)]" key={image.id}>
               <div className="relative aspect-square"><Image src={image.url} alt={image.alt} fill className="object-cover" /></div>
-              <div className="p-3"><p className="text-xs text-[var(--muted)]">{image.alt}</p><div className="mt-3 flex flex-wrap gap-2">
-                {!image.isCover && <form action={setProductCoverAction}><input name="id" type="hidden" value={image.id} /><input name="productId" type="hidden" value={product.id} /><button className="text-xs font-bold text-[var(--brand)]">Hacer portada</button></form>}
-                {image.isCover && <span className="text-xs font-bold text-[var(--brand)]">Portada</span>}
-                <form action={deleteProductImageAction}><input name="id" type="hidden" value={image.id} /><input name="productId" type="hidden" value={product.id} /><button className="text-xs font-bold">Eliminar</button></form>
-              </div></div>
+              <div className="admin-image-card-body">
+                <p className="admin-image-alt">{image.alt}</p>
+                <div className="admin-image-actions">
+                  {!image.isCover && <form action={setProductCoverAction}><input name="id" type="hidden" value={image.id} /><input name="productId" type="hidden" value={product.id} /><button className="admin-image-action admin-image-action-cover">Hacer portada</button></form>}
+                  {image.isCover && <span className="admin-image-cover-badge">Portada</span>}
+                  <form action={deleteProductImageAction}><input name="id" type="hidden" value={image.id} /><input name="productId" type="hidden" value={product.id} /><button className="admin-image-action admin-image-action-delete">Eliminar</button></form>
+                </div>
+              </div>
             </article>
           ))}
         </div>

@@ -299,6 +299,71 @@ a {
   align-items: center;
 }
 
+.admin-image-card-body {
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+}
+
+.admin-image-alt {
+  min-height: 18px;
+  margin: 0;
+  overflow: hidden;
+  color: var(--hc-text-secondary);
+  font-size: .75rem;
+  line-height: 1.5;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-image-actions {
+  min-height: 34px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 12px;
+}
+
+.admin-image-action,
+.admin-image-cover-badge {
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9px;
+  padding: 0 11px;
+  font-size: .72rem;
+  font-weight: 750;
+  line-height: 1;
+}
+
+.admin-image-action {
+  cursor: pointer;
+}
+
+.admin-image-action-cover {
+  border: 1px solid color-mix(in srgb, var(--hc-blue-500) 36%, var(--hc-border));
+  background: var(--hc-blue-100);
+  color: var(--hc-blue-700);
+}
+
+.admin-image-cover-badge {
+  background: var(--hc-blue-100);
+  color: var(--hc-blue-700);
+}
+
+.admin-image-action-delete {
+  border: 1px solid color-mix(in srgb, #c2413b 28%, var(--hc-border));
+  background: transparent;
+  color: #b93832;
+}
+
+.admin-image-action:hover {
+  filter: brightness(.96);
+}
+
 @media (min-width: 768px) {
   .admin-image-upload-action {
     min-height: 70px;
