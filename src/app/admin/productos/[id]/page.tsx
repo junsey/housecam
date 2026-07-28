@@ -103,28 +103,42 @@ export default async function EditProductPage({
 
       <div className="mt-8 grid gap-6 lg:grid-cols-2">
         <section className="card p-6">
-          <h2 className="text-xl font-bold">Especificaciones</h2>
+          <div className="flex items-center justify-between gap-4">
+            <h2 className="text-xl font-bold">Especificaciones</h2>
+            <span className="text-sm text-[var(--muted)]">{specs.length} cargada{specs.length === 1 ? "" : "s"}</span>
+          </div>
           <div className="mt-5 divide-y divide-[var(--border)]">
-            {specs.map((spec) => <div className="flex items-center justify-between gap-4 py-3" key={spec.id}><span><strong>{spec.label}</strong>: {spec.value}</span><form action={deleteProductSpecAction}><input name="id" type="hidden" value={spec.id} /><input name="productId" type="hidden" value={product.id} /><button className="text-xs font-bold text-[var(--brand)]">Eliminar</button></form></div>)}
+            {specs.map((spec) => <div className="py-3" key={spec.id}><span><strong>{spec.label}</strong>: {spec.value}</span></div>)}
             {!specs.length && <p className="py-3 text-sm text-[var(--muted)]">Sin especificaciones.</p>}
           </div>
-          <form action={addProductSpecAction} className="mt-5 grid gap-3 sm:grid-cols-2">
-            <input name="productId" type="hidden" value={product.id} />
-            <input className={fieldClass} name="label" placeholder="Etiqueta" required />
-            <input className={fieldClass} name="value" placeholder="Valor" required />
-            <button className="rounded-xl border border-[var(--border)] px-4 py-2 font-bold sm:col-span-2">Agregar especificación</button>
-          </form>
+          <details className="admin-disclosure mt-5">
+            <summary>Administrar especificaciones</summary>
+            <div className="mt-5 divide-y divide-[var(--border)]">
+              {specs.map((spec) => <div className="flex items-center justify-between gap-4 py-3" key={spec.id}><span><strong>{spec.label}</strong>: {spec.value}</span><form action={deleteProductSpecAction}><input name="id" type="hidden" value={spec.id} /><input name="productId" type="hidden" value={product.id} /><button className="text-xs font-bold text-[var(--brand)]">Eliminar</button></form></div>)}
+            </div>
+            <form action={addProductSpecAction} className="mt-5 grid gap-3 sm:grid-cols-2">
+              <input name="productId" type="hidden" value={product.id} />
+              <input className={fieldClass} name="label" placeholder="Etiqueta" required />
+              <input className={fieldClass} name="value" placeholder="Valor" required />
+              <button className="rounded-xl border border-[var(--border)] px-4 py-2 font-bold sm:col-span-2">Agregar especificación</button>
+            </form>
+          </details>
         </section>
 
         <section className="card p-6">
           <h2 className="text-xl font-bold">Stock físico</h2>
           <p className="mt-2 text-sm text-[var(--muted)]">{product.type === "kit" ? "Los kits calculan stock desde componentes." : `Stock actual: ${product.stockOnHand}`}</p>
-          <form action={adjustStockAction} className="mt-5 grid gap-3">
-            <input name="productId" type="hidden" value={product.id} />
-            <input className={fieldClass} name="delta" type="number" placeholder="Ajuste: 10 o -2" required disabled={product.type === "kit"} />
-            <input className={fieldClass} name="note" placeholder="Motivo del ajuste" required disabled={product.type === "kit"} />
-            <button className="rounded-xl border border-[var(--border)] px-4 py-2 font-bold disabled:opacity-40" disabled={product.type === "kit"}>Registrar ajuste auditado</button>
-          </form>
+          {product.type !== "kit" && (
+            <details className="admin-disclosure mt-5">
+              <summary>Ajustar stock</summary>
+              <form action={adjustStockAction} className="mt-5 grid gap-3">
+                <input name="productId" type="hidden" value={product.id} />
+                <input className={fieldClass} name="delta" type="number" placeholder="Ajuste: 10 o -2" required />
+                <input className={fieldClass} name="note" placeholder="Motivo del ajuste" required />
+                <button className="rounded-xl border border-[var(--border)] px-4 py-2 font-bold">Registrar ajuste auditado</button>
+              </form>
+            </details>
+          )}
         </section>
       </div>
 
@@ -152,15 +166,18 @@ export default async function EditProductPage({
             ))}
             {!components.length && <p className="py-3 text-sm text-[var(--muted)]">Todavía no hay componentes. El kit no puede publicarse.</p>}
           </div>
-          <form action={upsertKitComponentAction} className="mt-5 grid gap-3 md:grid-cols-[1fr_160px_auto]">
-            <input name="kitProductId" type="hidden" value={product.id} />
-            <select className={fieldClass} name="componentProductId" required>
-              <option value="">Elegí un producto estándar</option>
-              {componentOptions.map((component) => <option key={component.id} value={component.id}>{component.name} · {component.sku}</option>)}
-            </select>
-            <input className={fieldClass} min="1" name="quantity" placeholder="Cantidad" required type="number" />
-            <button className="rounded-xl border border-[var(--border)] px-5 py-2 font-bold">Agregar o actualizar</button>
-          </form>
+          <details className="admin-disclosure mt-5">
+            <summary>Agregar o actualizar componente</summary>
+            <form action={upsertKitComponentAction} className="mt-5 grid gap-3 md:grid-cols-[1fr_160px_auto]">
+              <input name="kitProductId" type="hidden" value={product.id} />
+              <select className={fieldClass} name="componentProductId" required>
+                <option value="">Elegí un producto estándar</option>
+                {componentOptions.map((component) => <option key={component.id} value={component.id}>{component.name} · {component.sku}</option>)}
+              </select>
+              <input className={fieldClass} min="1" name="quantity" placeholder="Cantidad" required type="number" />
+              <button className="rounded-xl border border-[var(--border)] px-5 py-2 font-bold">Agregar o actualizar</button>
+            </form>
+          </details>
         </section>
       )}
 
@@ -178,12 +195,21 @@ export default async function EditProductPage({
             </article>
           ))}
         </div>
-        <form action={uploadProductImageAction} className="mt-6 grid gap-3 md:grid-cols-[1fr_1fr_auto]">
-          <input name="productId" type="hidden" value={product.id} />
-          <input className={fieldClass} name="file" type="file" accept="image/png,image/jpeg,image/webp" required />
-          <input className={fieldClass} name="alt" placeholder="Texto alternativo" required />
-          <button className="rounded-xl bg-[var(--brand)] px-5 py-2 font-bold text-white">Subir imagen</button>
-        </form>
+        {!images.length && <p className="mt-4 text-sm text-[var(--muted)]">Todavía no hay imágenes cargadas.</p>}
+        <details className="admin-disclosure mt-6">
+          <summary>Subir imagen</summary>
+          <form action={uploadProductImageAction} className="mt-5 grid gap-3 md:grid-cols-[1fr_1fr_auto]">
+            <input name="productId" type="hidden" value={product.id} />
+            <label className="grid gap-2 text-sm font-semibold">Archivo
+              <input className={fieldClass} name="file" type="file" accept="image/png,image/jpeg,image/webp" required />
+              <small className="font-normal text-[var(--muted)]">JPG, PNG o WebP de hasta 4 MB.</small>
+            </label>
+            <label className="grid gap-2 text-sm font-semibold">Descripción de la imagen
+              <input className={fieldClass} name="alt" placeholder="Ej.: Cámara instalada en una entrada" required />
+            </label>
+            <button className="self-start rounded-xl bg-[var(--brand)] px-5 py-3 font-bold text-white md:mt-7">Subir imagen</button>
+          </form>
+        </details>
       </section>
     </main>
   );

@@ -1,12 +1,12 @@
 const supportedImageTypes = ["image/jpeg", "image/png", "image/webp"] as const;
-const maxImageBytes = 5 * 1024 * 1024;
+const maxImageBytes = 4 * 1024 * 1024;
 
 export function validateCatalogImage(input: { type: string; size: number; alt: string }) {
   if (!supportedImageTypes.includes(input.type as (typeof supportedImageTypes)[number])) {
     throw new Error("Usá JPG, PNG o WebP.");
   }
   if (!Number.isInteger(input.size) || input.size <= 0 || input.size > maxImageBytes) {
-    throw new Error("La imagen debe pesar entre 1 byte y 5 MB.");
+    throw new Error("La imagen debe pesar entre 1 byte y 4 MB.");
   }
   const alt = input.alt.trim();
   if (alt.length < 3 || alt.length > 160) {

@@ -37,10 +37,10 @@ describe("catálogo administrativo", () => {
     expect(result.unitPriceCents).toBe(120_000);
   });
 
-  it("acepta solo imágenes web seguras de hasta 5 MB", () => {
+  it("acepta solo imágenes web seguras de hasta 4 MB", () => {
     expect(validateCatalogImage({ type: "image/webp", size: 100_000, alt: "Cámara exterior" }).alt).toBe("Cámara exterior");
     expect(() => validateCatalogImage({ type: "image/svg+xml", size: 100, alt: "SVG" })).toThrow("JPG");
-    expect(() => validateCatalogImage({ type: "image/png", size: 6 * 1024 * 1024, alt: "Imagen grande" })).toThrow("5 MB");
+    expect(() => validateCatalogImage({ type: "image/png", size: 5 * 1024 * 1024, alt: "Imagen grande" })).toThrow("4 MB");
   });
 
   it("valida componentes de kit y rechaza autorreferencias", () => {

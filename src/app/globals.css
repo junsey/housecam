@@ -216,6 +216,42 @@ a {
   accent-color: var(--hc-blue-500);
 }
 
+.admin-disclosure > summary {
+  min-height: 42px;
+  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--hc-border-strong);
+  border-radius: 12px;
+  padding: 0 16px;
+  color: var(--hc-text-primary);
+  font-size: .88rem;
+  font-weight: 700;
+  cursor: pointer;
+  list-style: none;
+}
+
+.admin-disclosure > summary::-webkit-details-marker {
+  display: none;
+}
+
+.admin-disclosure > summary::after {
+  content: "+";
+  margin-left: 10px;
+  color: var(--hc-blue-500);
+  font-size: 1.1rem;
+}
+
+.admin-disclosure[open] > summary {
+  border-color: var(--hc-blue-500);
+  background: var(--hc-blue-100);
+  color: var(--hc-blue-700);
+}
+
+.admin-disclosure[open] > summary::after {
+  content: "−";
+}
+
 @media (max-width: 1100px) {
   .admin-header-inner {
     align-items: flex-start;
