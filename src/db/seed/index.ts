@@ -1,9 +1,10 @@
 import { eq } from "drizzle-orm";
+import { pathToFileURL } from "node:url";
 
-import { getDb } from "../index";
+import { getDb } from "../runtime";
 import { siteSettings, storefrontContent, userProfiles } from "../schema";
 
-async function seed() {
+export async function seed() {
   const initialAdminClerkId = process.env.INITIAL_ADMIN_CLERK_USER_ID;
   const initialAdminEmail = process.env.INITIAL_ADMIN_EMAIL?.trim().toLowerCase();
   if (!initialAdminClerkId || !initialAdminEmail) {
@@ -44,12 +45,14 @@ async function seed() {
   }
 }
 
-seed()
-  .then(() => {
-    console.info("Seed inicial completado.");
-    process.exit(0);
-  })
-  .catch((error: unknown) => {
-    console.error(error);
-    process.exit(1);
-  });
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  seed()
+    .then(() => {
+      console.info("Seed inicial completado.");
+      process.exit(0);
+    })
+    .catch((error: unknown) => {
+      console.error(error);
+      process.exit(1);
+    });
+}
