@@ -11,13 +11,10 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
   if (!data) return new Response("Presupuesto no encontrado", { status: 404 });
   const bytes = await buildQuoteJpg(data);
   const filename = `${data.quote.code ?? "presupuesto"}.jpg`;
-  const body = bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) as ArrayBuffer;
-  return new Response(body, {
+  return new Response(Buffer.from(bytes), {
     headers: {
       "Content-Type": "image/jpeg",
       "Content-Disposition": `attachment; filename="${filename}"`,
-      "Content-Length": String(bytes.byteLength),
-      "X-Content-Type-Options": "nosniff",
       "Cache-Control": "private, no-store",
     },
   });
