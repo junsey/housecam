@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { archiveProductAction } from "@/features/catalog/catalog-admin.actions";
+import { archiveProductAction, toggleProductPublicationAction } from "@/features/catalog/catalog-admin.actions";
 import { getAdminProducts } from "@/features/catalog/catalog-admin.data";
 
 export const metadata: Metadata = { title: "Productos" };
@@ -44,11 +44,22 @@ export default async function AdminProductsPage() {
                   <td className="p-4">{currency.format(product.unitPriceCents / 100)}</td>
                   <td className="p-4">{product.type === "kit" ? "Por componentes" : product.stockOnHand}</td>
                   <td className="p-4">{product.isActive ? "Publicado" : "Borrador"}</td>
-                  <td className="p-4">
-                    <form action={archiveProductAction}>
-                      <input name="id" type="hidden" value={product.id} />
-                      <button className="rounded-full border border-[var(--border)] px-3 py-2 text-xs font-bold" type="submit">Archivar</button>
-                    </form>
+                  <td className="p-4 align-top">
+                    <details className="admin-row-actions">
+                      <summary>Acciones</summary>
+                      <div className="admin-row-actions-menu">
+                        <Link href={`/admin/productos/${product.id}?edit=1`}>Editar</Link>
+                        <form action={toggleProductPublicationAction}>
+                          <input name="id" type="hidden" value={product.id} />
+                          <input name="isActive" type="hidden" value={String(!product.isActive)} />
+                          <button type="submit">{product.isActive ? "Despublicar" : "Publicar"}</button>
+                        </form>
+                        <form action={archiveProductAction}>
+                          <input name="id" type="hidden" value={product.id} />
+                          <button className="is-danger" type="submit">Archivar</button>
+                        </form>
+                      </div>
+                    </details>
                   </td>
                 </tr>
               ))}
