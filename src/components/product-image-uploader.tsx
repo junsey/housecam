@@ -27,9 +27,9 @@ export function ProductImageUploader({ productId, fieldClass }: { productId: str
           </div>
           <form action={formAction} className="mt-5 grid gap-3 md:grid-cols-[1fr_1fr_auto]">
             <input name="productId" type="hidden" value={productId} />
-            <label className="grid gap-2 text-sm font-semibold">Archivo
+            <label className="admin-product-field text-sm font-semibold">Archivo
               <input
-                className={fieldClass}
+                className={`${fieldClass} admin-image-file-input`}
                 name="file"
                 type="file"
                 accept="image/png,image/jpeg,image/webp"
@@ -44,12 +44,14 @@ export function ProductImageUploader({ productId, fieldClass }: { productId: str
               />
               <small className="font-normal text-[var(--muted)]">JPG, PNG o WebP de hasta 4 MB.</small>
             </label>
-            <label className="grid gap-2 text-sm font-semibold">Descripción de la imagen
+            <label className="admin-product-field text-sm font-semibold">Descripción de la imagen
               <input className={fieldClass} name="alt" placeholder="Ej.: Cámara instalada en una entrada" required />
             </label>
-            <button className="self-start rounded-xl bg-[var(--brand)] px-5 py-3 font-bold text-white disabled:cursor-not-allowed disabled:opacity-50 md:mt-7" type="submit" disabled={pending || Boolean(clientError)}>
-              {pending ? "Subiendo…" : "Subir imagen"}
-            </button>
+            <div className="admin-image-upload-action">
+              <button className="min-h-11 rounded-xl bg-[var(--brand)] px-5 font-bold text-white disabled:cursor-not-allowed disabled:opacity-50" type="submit" disabled={pending || Boolean(clientError)}>
+                {pending ? "Subiendo…" : "Subir imagen"}
+              </button>
+            </div>
           </form>
           {(clientError || state.error) && (
             <p className="mt-4 rounded-xl border border-red-400/40 bg-red-500/10 p-3 text-sm font-semibold text-red-700 dark:text-red-300" role="alert">

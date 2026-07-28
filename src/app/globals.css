@@ -290,6 +290,23 @@ a {
   flex: 0 0 auto;
 }
 
+.admin-image-file-input {
+  padding-block: 4px;
+}
+
+.admin-image-upload-action {
+  display: flex;
+  align-items: center;
+}
+
+@media (min-width: 768px) {
+  .admin-image-upload-action {
+    min-height: 70px;
+    padding-top: 26px;
+    align-items: flex-start;
+  }
+}
+
 .admin-root input:not([type="checkbox"]):not([type="radio"]),
 .admin-root select,
 .admin-root textarea {
