@@ -7,15 +7,15 @@ export function AboutStory() {
         <p className={styles.sectionKicker}>Sobre nosotros</p>
         <h2 id="about-story-title">Un hogar seguro también debe darte tranquilidad</h2>
         <p className={styles.storyHighlight}>
-          Tu casa guarda mucho más que objetos: guarda recuerdos, rutinas y todo aquello que construiste con esfuerzo.
+          La tecnología debe ayudarte a vivir con más calma, no darte nuevas preocupaciones.
         </p>
       </div>
       <div className={styles.storyBody}>
         <p>
-          Sabemos que tu casa es mucho más que un espacio. Es el lugar donde construís tus recuerdos, desarrollás tu vida cotidiana y protegés todo aquello que conseguiste con esfuerzo.
+          En HouseCam entendemos el valor de tu hogar y de todo lo que construiste dentro de él. Por eso acercamos soluciones tecnológicas simples, confiables y pensadas para acompañarte todos los días.
         </p>
         <p>
-          Por eso ponemos a tu alcance herramientas tecnológicas pensadas para que tu hogar no solo sea un lugar seguro, sino también un espacio que te dé tranquilidad.
+          Queremos que puedas sentirte tranquilo tanto cuando estás en casa como cuando salís, sabiendo que contás con herramientas para cuidar lo que más te importa.
         </p>
       </div>
     </section>

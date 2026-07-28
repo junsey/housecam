@@ -139,10 +139,11 @@
 }
 
 .storyHighlight {
+  max-width: 440px;
   margin: 28px 0 0;
   color: var(--about-brand-strong);
-  font-size: 1.17rem;
-  font-weight: 650;
+  font-size: 18px;
+  font-weight: 600;
   line-height: 1.55;
 }
 
