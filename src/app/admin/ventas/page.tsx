@@ -11,7 +11,7 @@ export default async function SalesPage() {
   return (
     <main className="shell py-10">
       <div className="flex flex-wrap items-end justify-between gap-5">
-        <div><p className="text-xs font-bold uppercase tracking-wider text-[var(--brand)]">Fase 3</p><h1 className="mt-2 text-3xl font-bold">Ventas e inventario</h1><p className="mt-3 text-[var(--muted)]">Borradores, confirmación transaccional, gastos y margen real.</p></div>
+        <div><p className="text-xs font-bold uppercase tracking-wider text-[var(--brand)]">Configuración</p><h1 className="mt-2 text-3xl font-bold">Ventas e inventario</h1><p className="mt-3 text-[var(--muted)]">Borradores, confirmación transaccional, gastos y margen real.</p></div>
         <div className="flex gap-2"><Link className="rounded-xl border border-[var(--border)] px-4 py-3 text-sm font-bold" href="/admin/ventas/exportar">Exportar CSV</Link><Link className="rounded-xl bg-[var(--brand)] px-5 py-3 font-bold text-white" href="/admin/ventas/nueva">Nueva venta</Link></div>
       </div>
       {!data.configured ? <p className="card mt-8 p-6 text-[var(--muted)]">Configurá Neon y Clerk para operar ventas reales.</p> : (

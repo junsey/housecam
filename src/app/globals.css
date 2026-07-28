@@ -169,6 +169,10 @@ a {
   color: var(--hc-text-primary);
 }
 
+.admin-root .text-white {
+  color: #fff !important;
+}
+
 .admin-root .card {
   border-color: var(--hc-border);
   background: color-mix(in srgb, var(--hc-surface) 96%, transparent);
