@@ -2,6 +2,7 @@ import "server-only";
 
 import { auth } from "@clerk/nextjs/server";
 import { eq } from "drizzle-orm";
+import type { Route } from "next";
 import { redirect } from "next/navigation";
 
 import { getDb } from "@/db";
@@ -9,7 +10,7 @@ import { userProfiles } from "@/db/schema";
 
 export async function requireAdmin() {
   const session = await auth();
-  if (!session.userId) redirect("/sign-in");
+  if (!session.userId) redirect("/sign-in" as Route);
 
   const [profile] = await getDb()
     .select({ id: userProfiles.id, role: userProfiles.role, clerkUserId: userProfiles.clerkUserId })

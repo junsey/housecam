@@ -517,6 +517,8 @@ h1 {
 .public-footer a { text-decoration: none; }
 .public-footer a:hover { color: var(--hc-blue-500); }
 .public-footer .footer-admin-link { padding-left: 22px; border-left: 1px solid var(--hc-border); color: var(--hc-text-muted); font-size: .76rem; }
+.footer-auth-button { padding: 0; border: 0; background: transparent; color: inherit; font: inherit; cursor: pointer; }
+.footer-auth-button:hover { color: var(--hc-blue-500); }
 
 @media (max-width: 800px) {
   .brand-switcher-menu { width: 280px; }

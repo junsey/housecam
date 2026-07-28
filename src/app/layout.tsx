@@ -21,7 +21,8 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const content = (
+  const clerkConfigured = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
+  return (
     <html lang="es" data-theme="dark" suppressHydrationWarning>
       <head>
         <script
@@ -31,15 +32,18 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         />
       </head>
       <body>
-        {children}
-        <Analytics />
+        {clerkConfigured ? (
+          <ClerkProvider>
+            {children}
+            <Analytics />
+          </ClerkProvider>
+        ) : (
+          <>
+            {children}
+            <Analytics />
+          </>
+        )}
       </body>
     </html>
-  );
-
-  return process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY ? (
-    <ClerkProvider>{content}</ClerkProvider>
-  ) : (
-    content
   );
 }
