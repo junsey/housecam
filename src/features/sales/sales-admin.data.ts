@@ -1,20 +1,24 @@
 import "server-only";
 
-import { asc, desc, eq, isNull, sql } from "drizzle-orm";
+import { asc, desc, eq, isNull, ne, sql } from "drizzle-orm";
 
 import { getDb } from "@/db";
 import { products, saleExpenses, saleItemComponents, saleItems, sales } from "@/db/schema";
 
-export async function getSalesDashboard() {
+export async function getSalesDashboard(showCancelled = false) {
   if (!process.env.DATABASE_URL) return { configured: false as const, sales: [], metrics: null };
   const db = getDb();
   const [items, [metrics]] = await Promise.all([
-    db.select().from(sales).orderBy(desc(sales.createdAt)).limit(100),
+    db.select().from(sales)
+      .where(showCancelled ? eq(sales.status, "cancelled") : ne(sales.status, "cancelled"))
+      .orderBy(desc(sales.createdAt))
+      .limit(100),
     db.select({
       confirmedCount: sql<number>`count(*) filter (where ${sales.status} = 'confirmed')::int`,
       revenueCents: sql<number>`coalesce(sum(${sales.finalTotalCents}) filter (where ${sales.status} = 'confirmed'), 0)::int`,
       profitCents: sql<number>`coalesce(sum(${sales.profitCents}) filter (where ${sales.status} = 'confirmed'), 0)::int`,
       draftCount: sql<number>`count(*) filter (where ${sales.status} = 'draft')::int`,
+      cancelledCount: sql<number>`count(*) filter (where ${sales.status} = 'cancelled')::int`,
     }).from(sales),
   ]);
   return { configured: true as const, sales: items, metrics };
