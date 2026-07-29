@@ -471,9 +471,9 @@ h1 {
 .housecam-app-download > p { margin: 17px 0 10px; color: var(--hc-text-secondary); font-size: .72rem; }
 .housecam-qr-placeholder { width: 104px; height: 104px; display: grid; place-items: center; border: 9px solid var(--hc-surface); border-radius: 15px; background: repeating-conic-gradient(var(--hc-text-primary) 0 25%, var(--hc-surface) 0 50%) 0 / 18px 18px; box-shadow: 0 8px 24px rgb(0 30 55 / 10%); }
 .housecam-qr-placeholder span { display: grid; width: 42px; height: 42px; place-items: center; border-radius: 8px; background: var(--hc-surface); color: var(--hc-blue-700); font-size: .72rem; font-weight: 900; }
-.housecam-store-badges { display: flex; align-items: center; justify-content: center; gap: 22px; }
-.housecam-store-badges > span { display: inline-flex; align-items: center; gap: 7px; color: var(--hc-text-primary); font-size: .82rem; font-weight: 750; }
-.housecam-store-badges b { color: var(--hc-blue-500); font-size: .78rem; }
+.housecam-store-badges { display: flex; align-items: center; justify-content: center; gap: 12px; }
+.housecam-store-badges > span { width: 142px; display: block; overflow: hidden; border-radius: 10px; line-height: 0; }
+.housecam-store-badges img { width: 100%; height: auto; display: block; }
 @keyframes housecam-app-enter { from { opacity: 0; transform: translateY(20px); } }
 @keyframes housecam-phone-float { 50% { transform: translateY(-3px); } }
 @media (max-width: 980px) {

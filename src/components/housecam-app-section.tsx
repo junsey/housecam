@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 const benefits = [
   "Compatible con todos los dispositivos HouseCam",
   "Visualización en tiempo real desde cualquier lugar",
@@ -41,8 +43,8 @@ export function HouseCamAppSection() {
           <div className="housecam-qr-placeholder" role="img" aria-label="Código QR de descarga próximamente disponible"><span>HC</span></div>
           <p>Disponible para</p>
           <div className="housecam-store-badges" aria-label="Plataformas próximamente disponibles">
-            <span aria-label="App Store"><b aria-hidden="true">●</b> App Store</span>
-            <span aria-label="Google Play"><b aria-hidden="true">▶</b> Google Play</span>
+            <span aria-label="Próximamente disponible en App Store"><Image src="/app-store-badge.png" alt="Consíguelo en el App Store" width={150} height={45} /></span>
+            <span aria-label="Próximamente disponible en Google Play"><Image src="/google-play-badge.png" alt="Disponible en Google Play" width={150} height={45} /></span>
           </div>
         </div>
       </div>
