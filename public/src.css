@@ -436,7 +436,7 @@ h1 {
 .housecam-app-benefits { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 34px; margin: 40px 0 42px; padding: 0; list-style: none; color: var(--hc-text-secondary); font-size: .9rem; line-height: 1.5; }
 .housecam-app-benefits li { display: flex; gap: 8px; }
 .housecam-app-benefits li::before { content: "✓"; flex: none; color: var(--hc-success); font-weight: 800; }
-.housecam-app-visual { min-width: 0; position: relative; display: grid; justify-items: center; animation: housecam-app-enter .8s .08s cubic-bezier(.22, 1, .36, 1) both; }
+.housecam-app-visual { min-width: 0; position: relative; display: grid; justify-items: center; scroll-margin-top: 120px; animation: housecam-app-enter .8s .08s cubic-bezier(.22, 1, .36, 1) both; }
 .housecam-app-orbit { width: min(600px, 122%); aspect-ratio: 1; position: absolute; top: 1%; border-radius: 44% 56% 60% 40% / 48% 44% 56% 52%; background: var(--hc-blue-100); }
 .housecam-phone { width: 330px; position: relative; z-index: 1; padding: 12px; border: 1px solid color-mix(in srgb, var(--hc-border-strong) 80%, transparent); border-radius: 50px; background: #091a28; box-shadow: 0 38px 80px rgb(0 29 50 / 24%), inset 0 0 0 2px rgb(255 255 255 / 8%); animation: housecam-phone-float 5s ease-in-out infinite; }
 .housecam-phone-speaker { width: 76px; height: 21px; position: absolute; z-index: 3; top: 19px; left: 50%; border-radius: 999px; background: #07131d; transform: translateX(-50%); }
@@ -466,12 +466,13 @@ h1 {
 .housecam-phone-activity strong { margin-top: 3px; font-size: .66rem; }
 .housecam-phone-pulse { width: 28px; height: 28px; border-radius: 50%; background: #dff2fb; box-shadow: inset 0 0 0 8px #eef8fc; }
 .housecam-phone-screen button { width: 100%; min-height: 40px; border: 0; border-radius: 12px; background: #0d6fab; color: #fff; font: inherit; font-size: .7rem; font-weight: 750; }
-.housecam-app-download { z-index: 1; display: grid; justify-items: center; min-width: 310px; margin-top: 58px; padding: 28px 30px 26px; border: 1px solid var(--hc-border); border-radius: 22px; background: var(--hc-surface); box-shadow: 0 16px 44px rgb(0 30 55 / 9%); scroll-margin-top: 120px; }
-.housecam-app-download h3 { margin: 0 0 18px; color: var(--hc-text-primary); font-size: 1.05rem; }
-.housecam-app-download > p { margin: 17px 0 10px; color: var(--hc-text-secondary); font-size: .72rem; }
+.housecam-app-download { width: min(100%, 570px); display: grid; grid-template-columns: 104px minmax(0, 1fr); align-items: center; gap: 22px 26px; margin-top: 38px; padding: 26px 28px; border: 1px solid color-mix(in srgb, var(--hc-border) 75%, transparent); border-radius: 20px; background: var(--hc-surface); box-shadow: 0 12px 32px rgb(0 30 55 / 6%); scroll-margin-top: 120px; }
+.housecam-app-download-copy { grid-column: 1 / -1; }
+.housecam-app-download h3 { margin: 0; color: var(--hc-text-primary); font-size: 1.1rem; letter-spacing: -.02em; }
+.housecam-app-download-copy p { margin: 7px 0 0; color: var(--hc-text-secondary); font-size: .82rem; line-height: 1.5; }
 .housecam-qr-placeholder { width: 104px; height: 104px; display: grid; place-items: center; border: 9px solid var(--hc-surface); border-radius: 15px; background: repeating-conic-gradient(var(--hc-text-primary) 0 25%, var(--hc-surface) 0 50%) 0 / 18px 18px; box-shadow: 0 8px 24px rgb(0 30 55 / 10%); }
 .housecam-qr-placeholder span { display: grid; width: 42px; height: 42px; place-items: center; border-radius: 8px; background: var(--hc-surface); color: var(--hc-blue-700); font-size: .72rem; font-weight: 900; }
-.housecam-store-badges { display: flex; align-items: center; justify-content: center; gap: 12px; }
+.housecam-store-badges { display: flex; align-items: center; justify-content: flex-start; flex-wrap: wrap; gap: 14px; }
 .housecam-store-badges > span { width: 142px; display: block; overflow: hidden; border-radius: 10px; line-height: 0; }
 .housecam-store-badges img { width: 100%; height: auto; display: block; }
 @keyframes housecam-app-enter { from { opacity: 0; transform: translateY(20px); } }
@@ -487,13 +488,15 @@ h1 {
   .housecam-app-copy .eyebrow, .housecam-app-copy .button { margin-inline: auto; }
   .housecam-app-copy h2, .housecam-app-lead { margin-left: auto; margin-right: auto; }
   .housecam-app-benefits { max-width: 520px; margin-left: auto; margin-right: auto; text-align: left; }
-  .housecam-app-visual { margin-top: 25px; }
+  .housecam-app-download { grid-template-columns: 1fr; justify-items: center; margin: 38px auto 0; text-align: center; }
+  .housecam-app-download-copy { grid-column: auto; }
+  .housecam-app-visual { margin-top: 56px; }
   .housecam-qr-placeholder { display: none; }
-  .housecam-app-download > p { margin-top: 0; }
+  .housecam-store-badges { justify-content: center; }
 }
 @media (max-width: 420px) {
   .housecam-phone { width: min(310px, 88vw); }
-  .housecam-app-download { min-width: 0; width: min(100%, 320px); margin-top: 44px; padding: 24px 20px; }
+  .housecam-app-download { width: min(100%, 340px); padding: 24px 20px; }
   .housecam-store-badges { flex-wrap: wrap; gap: 16px; }
 }
 

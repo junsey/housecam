@@ -15,10 +15,23 @@ export function HouseCamAppSection() {
         <h2 id="housecam-app-title">Salí tranquilo.<br />HouseCam se queda cuidando.</h2>
         <p className="housecam-app-lead">Controlá tus cámaras, recibí alertas y verificá que todo esté bien desde cualquier lugar. Todo desde una única aplicación diseñada para darte tranquilidad.</p>
         <ul className="housecam-app-benefits">{benefits.map((benefit) => <li key={benefit}>{benefit}</li>)}</ul>
-        <a className="button button-primary" href="#descargar-housecam" aria-label="Ir a las opciones de descarga de la aplicación HouseCam">Descargar aplicación</a>
+        <a className="button button-primary" href="#housecam-app-demo">Ver cómo funciona</a>
+
+        <div className="housecam-app-download" id="descargar-housecam">
+          <div className="housecam-app-download-copy">
+            <h3>Descargá HouseCam</h3>
+            <p>Disponible para Android y iPhone.</p>
+          </div>
+          {/* TODO: reemplazar por QR definitivo antes de producción. */}
+          <div className="housecam-qr-placeholder" role="img" aria-label="Código QR de descarga próximamente disponible"><span>HC</span></div>
+          <div className="housecam-store-badges" aria-label="Plataformas próximamente disponibles">
+            <span aria-label="Próximamente disponible en App Store"><Image src="/app-store-badge.png" alt="Consíguelo en el App Store" width={150} height={45} /></span>
+            <span aria-label="Próximamente disponible en Google Play"><Image src="/google-play-badge.png" alt="Disponible en Google Play" width={150} height={45} /></span>
+          </div>
+        </div>
       </div>
 
-      <div className="housecam-app-visual">
+      <div className="housecam-app-visual" id="housecam-app-demo">
         <div className="housecam-app-orbit" aria-hidden="true" />
         <div className="housecam-phone" role="img" aria-label="Vista conceptual de la aplicación móvil HouseCam">
           <div className="housecam-phone-speaker" aria-hidden="true" />
@@ -34,17 +47,6 @@ export function HouseCamAppSection() {
             </ul>
             <div className="housecam-phone-activity"><span><small>Última actividad</small><strong>Hace 14 segundos</strong></span><span className="housecam-phone-pulse" /></div>
             <button type="button" tabIndex={-1}>Ver cámaras</button>
-          </div>
-        </div>
-
-        <div className="housecam-app-download" id="descargar-housecam">
-          <h3>Descargá HouseCam</h3>
-          {/* TODO: reemplazar por QR definitivo antes de producción. */}
-          <div className="housecam-qr-placeholder" role="img" aria-label="Código QR de descarga próximamente disponible"><span>HC</span></div>
-          <p>Disponible para</p>
-          <div className="housecam-store-badges" aria-label="Plataformas próximamente disponibles">
-            <span aria-label="Próximamente disponible en App Store"><Image src="/app-store-badge.png" alt="Consíguelo en el App Store" width={150} height={45} /></span>
-            <span aria-label="Próximamente disponible en Google Play"><Image src="/google-play-badge.png" alt="Disponible en Google Play" width={150} height={45} /></span>
           </div>
         </div>
       </div>
