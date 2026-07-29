@@ -13,12 +13,17 @@ import {
 import { requireAdmin } from "@/features/auth/require-admin";
 
 import {
-  categoryInputSchema, kitComponentInputSchema, productInputSchema, productSpecInputSchema, stockAdjustmentSchema,
+  categoryInputSchema, homeAppSettingsSchema, kitComponentInputSchema, productInputSchema, productSpecInputSchema, stockAdjustmentSchema,
   whatsappSettingsSchema,
 } from "./catalog.schemas";
 import { validateCatalogImage } from "./catalog-image.domain";
 
 export type ImageUploadState = {
+  success: boolean;
+  error: string | null;
+};
+
+export type HomeAppSettingsState = {
   success: boolean;
   error: string | null;
 };
@@ -437,4 +442,74 @@ export async function updateHomeAppSectionAction(formData: FormData) {
   revalidatePath("/desarrollo");
   revalidatePath("/admin/configuracion");
   redirect(`/admin/configuracion?guardado=aplicacion&estado=${enabled ? "activo" : "inactivo"}` as Route);
+}
+
+export async function updateHomeAppSettingsAction(
+  _previousState: HomeAppSettingsState,
+  formData: FormData,
+): Promise<HomeAppSettingsState> {
+  let previousQrPathname: string | null = null;
+  let nextQrPathname: string | null = null;
+  try {
+    const admin = await authorizeMutation();
+    const input = homeAppSettingsSchema.parse({
+      appStoreUrl: formData.get("appStoreUrl"),
+      googlePlayUrl: formData.get("googlePlayUrl"),
+    });
+    const file = formData.get("qrFile");
+    const hasNewQr = file instanceof File && file.size > 0;
+    let nextQrUrl: string | undefined;
+
+    const [current] = await getDb().select({
+      qrPathname: siteSettings.homeAppQrPathname,
+    }).from(siteSettings).where(eq(siteSettings.id, "global")).limit(1);
+    previousQrPathname = current?.qrPathname ?? null;
+
+    if (hasNewQr) {
+      if (!process.env.BLOB_READ_WRITE_TOKEN) throw new Error("El almacenamiento de imágenes no está configurado.");
+      validateCatalogImage({ type: file.type, size: file.size, alt: "Código QR de descarga de HouseCam" });
+      const blob = await put(`settings/housecam-app-qr/${file.name}`, file, { access: "public", addRandomSuffix: true });
+      nextQrUrl = blob.url;
+      nextQrPathname = blob.pathname;
+    }
+
+    await getDb().insert(siteSettings).values({
+      id: "global",
+      whatsappNumber: "",
+      homeAppQrUrl: nextQrUrl ?? null,
+      homeAppQrPathname: nextQrPathname,
+      homeAppStoreUrl: input.appStoreUrl || null,
+      homeGooglePlayUrl: input.googlePlayUrl || null,
+    }).onConflictDoUpdate({
+      target: siteSettings.id,
+      set: {
+        ...(hasNewQr ? { homeAppQrUrl: nextQrUrl, homeAppQrPathname: nextQrPathname } : {}),
+        homeAppStoreUrl: input.appStoreUrl || null,
+        homeGooglePlayUrl: input.googlePlayUrl || null,
+        updatedAt: new Date(),
+      },
+    });
+    await writeAudit(
+      admin.clerkUserId,
+      "settings.home_app_download_updated",
+      "site_settings",
+      "global",
+      undefined,
+      { appStoreUrl: input.appStoreUrl, googlePlayUrl: input.googlePlayUrl, qrUpdated: hasNewQr },
+    );
+
+    if (hasNewQr && previousQrPathname && previousQrPathname !== nextQrPathname) {
+      await del(previousQrPathname).catch(() => undefined);
+    }
+    revalidatePath("/desarrollo");
+    revalidatePath("/admin/configuracion");
+  } catch (error) {
+    if (nextQrPathname) await del(nextQrPathname).catch(() => undefined);
+    const message = error instanceof Error ? error.message : "";
+    const safeMessage = /URL|imagen|JPG|PNG|WebP|almacenamiento/i.test(message)
+      ? message
+      : "No pudimos guardar la configuración de la aplicación.";
+    return { success: false, error: safeMessage };
+  }
+  redirect("/admin/configuracion?guardado=aplicacion-config" as Route);
 }

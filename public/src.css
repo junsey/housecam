@@ -472,8 +472,11 @@ h1 {
 .housecam-app-download-copy p { margin: 7px 0 0; color: var(--hc-text-secondary); font-size: .82rem; line-height: 1.5; }
 .housecam-qr-placeholder { width: 104px; height: 104px; display: grid; place-items: center; border: 9px solid var(--hc-surface); border-radius: 15px; background: repeating-conic-gradient(var(--hc-text-primary) 0 25%, var(--hc-surface) 0 50%) 0 / 18px 18px; box-shadow: 0 8px 24px rgb(0 30 55 / 10%); }
 .housecam-qr-placeholder span { display: grid; width: 42px; height: 42px; place-items: center; border-radius: 8px; background: var(--hc-surface); color: var(--hc-blue-700); font-size: .72rem; font-weight: 900; }
+.housecam-qr-image { width: 104px; height: 104px; position: relative; overflow: hidden; border: 9px solid var(--hc-surface); border-radius: 15px; background: #fff; box-shadow: 0 8px 24px rgb(0 30 55 / 10%); }
+.housecam-qr-image img { object-fit: contain; }
 .housecam-store-badges { display: flex; align-items: center; justify-content: flex-start; flex-wrap: wrap; gap: 14px; }
-.housecam-store-badges > span { width: 142px; display: block; overflow: hidden; border-radius: 10px; line-height: 0; }
+.housecam-store-badges > a { width: 142px; display: block; overflow: hidden; border-radius: 10px; line-height: 0; transition: transform .18s ease, box-shadow .18s ease; }
+.housecam-store-badges > a:hover { box-shadow: 0 8px 20px rgb(0 30 55 / 14%); transform: translateY(-2px); }
 .housecam-store-badges img { width: 100%; height: auto; display: block; }
 @keyframes housecam-app-enter { from { opacity: 0; transform: translateY(20px); } }
 @keyframes housecam-phone-float { 50% { transform: translateY(-3px); } }
@@ -491,7 +494,7 @@ h1 {
   .housecam-app-download { grid-template-columns: 1fr; justify-items: center; margin: 38px auto 0; text-align: center; }
   .housecam-app-download-copy { grid-column: auto; }
   .housecam-app-visual { margin-top: 56px; }
-  .housecam-qr-placeholder { display: none; }
+  .housecam-qr-placeholder, .housecam-qr-image { display: none; }
   .housecam-store-badges { justify-content: center; }
 }
 @media (max-width: 420px) {

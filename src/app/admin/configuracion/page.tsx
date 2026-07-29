@@ -1,6 +1,7 @@
 import type { Metadata, Route } from "next";
 import Link from "next/link";
 
+import { HomeAppSettingsEditor } from "@/components/home-app-settings-editor";
 import { updateDevelopmentModeAction, updateHomeAppSectionAction, updateWhatsappSettingsAction } from "@/features/catalog/catalog-admin.actions";
 import { getGeneralSiteSettings } from "@/features/catalog/catalog-admin.data";
 import { getWhatsappHref } from "@/lib/whatsapp";
@@ -24,6 +25,8 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
         ? `Modo de desarrollo ${query.estado === "activo" ? "activado" : "desactivado"}.`
         : query.guardado === "aplicacion"
           ? `Sección de la aplicación ${query.estado === "activo" ? "activada" : "desactivada"}.`
+          : query.guardado === "aplicacion-config"
+            ? "Configuración de descarga de la aplicación guardada."
           : "Configuración de WhatsApp guardada."}
     </p>}
     {!settings.configured && <p className="mt-7 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 text-sm text-[var(--muted)]">Conectá Neon y Clerk para guardar la configuración.</p>}
@@ -45,6 +48,12 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
             <span>{settings.homeAppSectionEnabled ? "Ocultar sección “Aplicación HouseCam”" : "Mostrar sección “Aplicación HouseCam”"}</span>
           </button>
         </form>
+        <HomeAppSettingsEditor
+          configured={settings.configured}
+          qrUrl={settings.homeAppQrUrl}
+          appStoreUrl={settings.homeAppStoreUrl}
+          googlePlayUrl={settings.homeGooglePlayUrl}
+        />
       </section>
 
       <section className="card p-6">

@@ -261,6 +261,32 @@ a {
   resize: vertical;
 }
 
+.admin-field small {
+  color: var(--hc-text-muted);
+  font-size: .72rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.admin-app-qr-preview {
+  width: 96px;
+  height: 96px;
+  position: relative;
+  display: grid;
+  overflow: hidden;
+  place-items: center;
+  border: 1px solid var(--hc-border);
+  border-radius: 16px;
+  background: var(--hc-surface-soft);
+  color: var(--hc-blue-700);
+  font-size: .78rem;
+  font-weight: 850;
+}
+
+.admin-app-qr-preview img {
+  object-fit: contain;
+}
+
 .admin-field input:focus,
 .admin-field select:focus,
 .admin-field textarea:focus {

@@ -51,5 +51,15 @@ export const whatsappSettingsSchema = z.object({
   ),
 });
 
+const optionalStoreUrlSchema = z.string().trim().max(500).refine(
+  (value) => value === "" || z.url().safeParse(value).success,
+  "Ingresá una URL completa válida o dejá el campo vacío.",
+);
+
+export const homeAppSettingsSchema = z.object({
+  appStoreUrl: optionalStoreUrlSchema,
+  googlePlayUrl: optionalStoreUrlSchema,
+});
+
 export type CategoryInput = z.infer<typeof categoryInputSchema>;
 export type ProductInput = z.infer<typeof productInputSchema>;

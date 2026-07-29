@@ -5,7 +5,7 @@ import { PublicFooter } from "@/components/public-footer";
 import { PublicHeader } from "@/components/public-header";
 import { HouseCamAppSection } from "@/components/housecam-app-section";
 import { RecommendedProductsCarousel } from "@/components/recommended-products-carousel";
-import { getDevelopmentMode, getHomeAppSectionEnabled, getWhatsappSettings } from "@/features/catalog/catalog-admin.data";
+import { getDevelopmentMode, getHomeAppSectionSettings, getWhatsappSettings } from "@/features/catalog/catalog-admin.data";
 import { getStoreProducts } from "@/features/catalog/catalog-store.data";
 import { getWhatsappHref } from "@/lib/whatsapp";
 
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function DevelopmentPage() {
-  const [whatsapp, catalog, developmentModeEnabled, homeAppSectionEnabled] = await Promise.all([getWhatsappSettings(), getStoreProducts("housecam"), getDevelopmentMode(), getHomeAppSectionEnabled()]);
+  const [whatsapp, catalog, developmentModeEnabled, homeAppSection] = await Promise.all([getWhatsappSettings(), getStoreProducts("housecam"), getDevelopmentMode(), getHomeAppSectionSettings()]);
   const whatsappHref = getWhatsappHref(whatsapp.value, "Hola, quiero recibir asesoramiento sobre las soluciones HouseCam.");
   return (
     <div className="brand-housecam brand-page-enter">
@@ -48,7 +48,7 @@ export default async function DevelopmentPage() {
           </div>
         </section>
         <RecommendedProductsCarousel products={catalog.items.slice(0, 10)} />
-        {homeAppSectionEnabled && <HouseCamAppSection />}
+        {homeAppSection.enabled && <HouseCamAppSection qrUrl={homeAppSection.qrUrl} appStoreUrl={homeAppSection.appStoreUrl} googlePlayUrl={homeAppSection.googlePlayUrl} />}
       </main>
       <PublicFooter />
     </div>

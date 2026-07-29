@@ -121,27 +121,55 @@ export async function getWhatsappSettings() {
 
 export async function getGeneralSiteSettings() {
   if (!process.env.DATABASE_URL) {
-    return { configured: false as const, whatsappNumber: "", developmentModeEnabled: true, homeAppSectionEnabled: true };
+    return {
+      configured: false as const,
+      whatsappNumber: "",
+      developmentModeEnabled: true,
+      homeAppSectionEnabled: true,
+      homeAppQrUrl: null,
+      homeAppStoreUrl: "",
+      homeGooglePlayUrl: "",
+    };
   }
   const [settings] = await getDb().select({
     whatsappNumber: siteSettings.whatsappNumber,
     developmentModeEnabled: siteSettings.developmentModeEnabled,
     homeAppSectionEnabled: siteSettings.homeAppSectionEnabled,
+    homeAppQrUrl: siteSettings.homeAppQrUrl,
+    homeAppStoreUrl: siteSettings.homeAppStoreUrl,
+    homeGooglePlayUrl: siteSettings.homeGooglePlayUrl,
   }).from(siteSettings).where(eq(siteSettings.id, "global")).limit(1);
   return {
     configured: true as const,
     whatsappNumber: settings?.whatsappNumber ?? "",
     developmentModeEnabled: settings?.developmentModeEnabled ?? true,
     homeAppSectionEnabled: settings?.homeAppSectionEnabled ?? true,
+    homeAppQrUrl: settings?.homeAppQrUrl ?? null,
+    homeAppStoreUrl: settings?.homeAppStoreUrl ?? "",
+    homeGooglePlayUrl: settings?.homeGooglePlayUrl ?? "",
+  };
+}
+
+export async function getHomeAppSectionSettings() {
+  if (!process.env.DATABASE_URL) {
+    return { enabled: true, qrUrl: null, appStoreUrl: "", googlePlayUrl: "" };
+  }
+  const [settings] = await getDb().select({
+    enabled: siteSettings.homeAppSectionEnabled,
+    qrUrl: siteSettings.homeAppQrUrl,
+    appStoreUrl: siteSettings.homeAppStoreUrl,
+    googlePlayUrl: siteSettings.homeGooglePlayUrl,
+  }).from(siteSettings).where(eq(siteSettings.id, "global")).limit(1);
+  return {
+    enabled: settings?.enabled ?? true,
+    qrUrl: settings?.qrUrl ?? null,
+    appStoreUrl: settings?.appStoreUrl ?? "",
+    googlePlayUrl: settings?.googlePlayUrl ?? "",
   };
 }
 
 export async function getHomeAppSectionEnabled() {
-  if (!process.env.DATABASE_URL) return true;
-  const [settings] = await getDb().select({
-    enabled: siteSettings.homeAppSectionEnabled,
-  }).from(siteSettings).where(eq(siteSettings.id, "global")).limit(1);
-  return settings?.enabled ?? true;
+  return (await getHomeAppSectionSettings()).enabled;
 }
 
 export async function getDevelopmentMode() {

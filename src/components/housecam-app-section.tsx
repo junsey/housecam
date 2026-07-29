@@ -7,7 +7,16 @@ const benefits = [
   "Soporte prioritario desde la app",
 ];
 
-export function HouseCamAppSection() {
+type HouseCamAppSectionProps = {
+  qrUrl?: string | null;
+  appStoreUrl?: string;
+  googlePlayUrl?: string;
+};
+
+export function HouseCamAppSection({ qrUrl = null, appStoreUrl = "", googlePlayUrl = "" }: HouseCamAppSectionProps) {
+  const appStoreHref = appStoreUrl || "/";
+  const googlePlayHref = googlePlayUrl || "/";
+
   return <section className="housecam-app-section" aria-labelledby="housecam-app-title">
     <div className="container housecam-app-grid">
       <div className="housecam-app-copy">
@@ -22,11 +31,12 @@ export function HouseCamAppSection() {
             <h3>Descargá HouseCam</h3>
             <p>Disponible para Android y iPhone.</p>
           </div>
-          {/* TODO: reemplazar por QR definitivo antes de producción. */}
-          <div className="housecam-qr-placeholder" role="img" aria-label="Código QR de descarga próximamente disponible"><span>HC</span></div>
-          <div className="housecam-store-badges" aria-label="Plataformas próximamente disponibles">
-            <span aria-label="Próximamente disponible en App Store"><Image src="/app-store-badge.png" alt="Consíguelo en el App Store" width={150} height={45} /></span>
-            <span aria-label="Próximamente disponible en Google Play"><Image src="/google-play-badge.png" alt="Disponible en Google Play" width={150} height={45} /></span>
+          {qrUrl
+            ? <div className="housecam-qr-image"><Image src={qrUrl} alt="Código QR para descargar HouseCam" fill sizes="104px" /></div>
+            : <div className="housecam-qr-placeholder" role="img" aria-label="Código QR de descarga próximamente disponible"><span>HC</span></div>}
+          <div className="housecam-store-badges" aria-label="Descargas de HouseCam">
+            <a href={appStoreHref} target={appStoreUrl ? "_blank" : undefined} rel={appStoreUrl ? "noopener noreferrer" : undefined} aria-label="Abrir HouseCam en App Store"><Image src="/app-store-badge.png" alt="Consíguelo en el App Store" width={150} height={45} /></a>
+            <a href={googlePlayHref} target={googlePlayUrl ? "_blank" : undefined} rel={googlePlayUrl ? "noopener noreferrer" : undefined} aria-label="Abrir HouseCam en Google Play"><Image src="/google-play-badge.png" alt="Disponible en Google Play" width={150} height={45} /></a>
           </div>
         </div>
       </div>
