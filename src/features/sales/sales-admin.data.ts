@@ -37,7 +37,49 @@ export async function getAdminSale(id: string) {
   const components = items.length
     ? await db.select().from(saleItemComponents).where(sql`${saleItemComponents.saleItemId} in (${sql.join(items.map((item) => sql`${item.id}`), sql`, `)})`)
     : [];
-  return { sale, items, expenses, charges, components };
+  const required = new Map<string, number>();
+  const componentsByItem = new Map<string, typeof components>();
+  for (const component of components) {
+    componentsByItem.set(component.saleItemId, [...(componentsByItem.get(component.saleItemId) ?? []), component]);
+  }
+  for (const item of items) {
+    const itemComponents = componentsByItem.get(item.id) ?? [];
+    if (itemComponents.length) {
+      for (const component of itemComponents) {
+        if (component.componentProductId) {
+          required.set(component.componentProductId, (required.get(component.componentProductId) ?? 0) + component.physicalUnits);
+        }
+      }
+    } else {
+      required.set(item.productId, (required.get(item.productId) ?? 0) + item.physicalUnits);
+    }
+  }
+  const requiredIds = [...required.keys()];
+  const stockProducts = requiredIds.length
+    ? await db.select({
+      id: products.id,
+      name: products.name,
+      sku: products.sku,
+      stockOnHand: products.stockOnHand,
+    }).from(products).where(sql`${products.id} in (${sql.join(requiredIds.map((productId) => sql`${productId}`), sql`, `)})`)
+    : [];
+  const stockByProduct = new Map(stockProducts.map((product) => [product.id, product]));
+  const stockShortages = requiredIds.flatMap((productId) => {
+    const product = stockByProduct.get(productId);
+    const requiredUnits = required.get(productId) ?? 0;
+    const availableUnits = product?.stockOnHand ?? 0;
+    return availableUnits < requiredUnits
+      ? [{
+        productId,
+        name: product?.name ?? "Producto no disponible",
+        sku: product?.sku ?? "",
+        requiredUnits,
+        availableUnits,
+        missingUnits: requiredUnits - availableUnits,
+      }]
+      : [];
+  });
+  return { sale, items, expenses, charges, components, stockShortages };
 }
 
 export async function getSaleProductOptions() {

@@ -228,10 +228,12 @@ export async function removeSaleExpenseAction(formData: FormData) {
 }
 
 export async function confirmSaleAction(formData: FormData) {
-  const admin = await authorize();
   const saleId = String(formData.get("saleId") ?? "");
-  const db = getDb();
-  await db.transaction(async (tx) => {
+  let confirmationError = "";
+  try {
+    const admin = await authorize();
+    const db = getDb();
+    await db.transaction(async (tx) => {
     const lockedSale = await tx.execute(sql`select id, status, sale_number from sales where id = ${saleId} for update`);
     const sale = lockedSale.rows[0] as { id: string; status: string; sale_number?: number } | undefined;
     if (!sale || sale.status !== "draft") throw new Error("La venta ya fue procesada.");
@@ -250,12 +252,19 @@ export async function confirmSaleAction(formData: FormData) {
       else required.set(item.productId, (required.get(item.productId) ?? 0) + item.physicalUnits);
     }
     const ids = [...required.keys()].sort();
-    const lockedProducts = await tx.execute(sql`select id, stock_on_hand, commercial_cost_cents from products where id in (${sql.join(ids.map((id) => sql`${id}`), sql`, `)}) order by id for update`);
-    const productMap = new Map((lockedProducts.rows as Array<{ id: string; stock_on_hand: number; commercial_cost_cents: number }>).map((product) => [product.id, product]));
+    const lockedProducts = await tx.execute(sql`select id, name, sku, stock_on_hand, commercial_cost_cents from products where id in (${sql.join(ids.map((id) => sql`${id}`), sql`, `)}) order by id for update`);
+    const productMap = new Map((lockedProducts.rows as Array<{ id: string; name: string; sku: string; stock_on_hand: number; commercial_cost_cents: number }>).map((product) => [product.id, product]));
+    const shortages = [];
     for (const id of ids) {
       const product = productMap.get(id);
       const units = required.get(id)!;
-      if (!product || Number(product.stock_on_hand) < units) throw new Error("Stock insuficiente para confirmar la venta.");
+      const available = product ? Number(product.stock_on_hand) : 0;
+      if (available < units) shortages.push(`${product?.name ?? "Producto no disponible"}: requiere ${units}, disponible ${available}`);
+    }
+    if (shortages.length) throw new Error(`Stock insuficiente. ${shortages.join(" · ")}`);
+    for (const id of ids) {
+      const product = productMap.get(id)!;
+      const units = required.get(id)!;
       const before = Number(product.stock_on_hand);
       const after = before - units;
       await tx.update(products).set({ stockOnHand: after, updatedAt: new Date(), updatedByClerkId: admin.clerkUserId }).where(eq(products.id, id));
@@ -277,7 +286,13 @@ export async function confirmSaleAction(formData: FormData) {
     const totals = await refreshTotals(tx, saleId);
     await tx.update(sales).set({ code: saleCode, status: "confirmed", confirmedAt: new Date(), confirmedByClerkId: admin.clerkUserId, ...totals }).where(eq(sales.id, saleId));
     await tx.insert(auditLogs).values({ actorClerkId: admin.clerkUserId, action: "sale.confirmed", entityType: "sale", entityId: saleId, after: totals });
-  });
+    });
+  } catch (error) {
+    confirmationError = error instanceof Error ? error.message : "No pudimos confirmar la venta.";
+  }
+  if (confirmationError) {
+    redirect(`/admin/ventas/${saleId}?confirmError=${encodeURIComponent(confirmationError)}` as Route);
+  }
   revalidatePath("/admin/ventas");
   revalidatePath(`/admin/ventas/${saleId}`);
 }

@@ -12,8 +12,9 @@ export const metadata: Metadata = { title: "Detalle de venta" };
 const field = "min-h-11 rounded-xl border border-[var(--border)] bg-[var(--background)] px-3";
 const money = new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0, maximumFractionDigits: 2 });
 
-export default async function SaleDetailPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function SaleDetailPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ confirmError?: string }> }) {
   const { id } = await params;
+  const query = await searchParams;
   const [data, productOptions] = await Promise.all([getAdminSale(id), getSaleProductOptions()]);
   if (!data) notFound();
   const { sale, items, expenses, components } = data;
@@ -26,9 +27,17 @@ export default async function SaleDetailPage({ params }: { params: Promise<{ id:
           <input name="saleId" type="hidden" value={sale.id} />
           <ConfirmSubmitButton className="rounded-xl border border-red-500/50 px-5 py-3 font-bold text-red-700" message="¿Querés descartar este borrador? La venta quedará cancelada y no se descontará stock.">Descartar borrador</ConfirmSubmitButton>
         </form>
-        <form action={confirmSaleAction}><input name="saleId" type="hidden" value={sale.id} /><button className="rounded-xl bg-emerald-600 px-5 py-3 font-bold text-white">Confirmar y descontar stock</button></form>
+        <form action={confirmSaleAction}><input name="saleId" type="hidden" value={sale.id} /><button className="rounded-xl bg-emerald-600 px-5 py-3 font-bold text-white disabled:cursor-not-allowed disabled:opacity-50" disabled={data.stockShortages.length > 0}>Confirmar y descontar stock</button></form>
       </div>}
     </div>
+    {query.confirmError && <p className="admin-alert admin-alert-error mt-6">{query.confirmError}</p>}
+    {editable && data.stockShortages.length > 0 && <section className="admin-alert admin-alert-error mt-6">
+      <strong>No hay stock suficiente para confirmar esta venta.</strong>
+      <p className="mt-1 font-normal">El borrador se conserva y podrá confirmarse cuando se reponga el inventario o se ajusten las cantidades:</p>
+      <ul className="mt-2 list-disc space-y-1 pl-5 font-normal">
+        {data.stockShortages.map((shortage) => <li key={shortage.productId}>{shortage.name}{shortage.sku && ` (${shortage.sku})`}: requiere {shortage.requiredUnits}, disponible {shortage.availableUnits}, faltan {shortage.missingUnits}.</li>)}
+      </ul>
+    </section>}
 
     <section className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
       <Metric label="Listado" value={money.format(sale.listedTotalCents / 100)} /><Metric label="Descuento" value={money.format(sale.discountTotalCents / 100)} /><Metric label="Costo productos" value={money.format(sale.productCostTotalCents / 100)} /><Metric label="Gastos" value={money.format(sale.expenseTotalCents / 100)} /><Metric label="Margen" value={money.format(sale.profitCents / 100)} />
