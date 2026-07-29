@@ -24,7 +24,6 @@ export function HouseCamAppSection({ qrUrl = null, appStoreUrl = "", googlePlayU
         <h2 id="housecam-app-title">Salí tranquilo.<br />HouseCam se queda cuidando.</h2>
         <p className="housecam-app-lead">Controlá tus cámaras, recibí alertas y verificá que todo esté bien desde cualquier lugar. Todo desde una única aplicación diseñada para darte tranquilidad.</p>
         <ul className="housecam-app-benefits">{benefits.map((benefit) => <li key={benefit}>{benefit}</li>)}</ul>
-        <a className="button button-primary" href="#housecam-app-demo">Ver cómo funciona</a>
 
         <div className="housecam-app-download" id="descargar-housecam">
           <div className="housecam-app-download-copy">
@@ -33,7 +32,7 @@ export function HouseCamAppSection({ qrUrl = null, appStoreUrl = "", googlePlayU
           </div>
           <div className="housecam-app-download-options">
             {qrUrl
-              ? <div className="housecam-qr-image"><Image src={qrUrl} alt="Código QR para descargar HouseCam" fill sizes="104px" /></div>
+              ? <div className="housecam-qr-image"><Image src={qrUrl} alt="Código QR para descargar HouseCam" fill sizes="124px" /></div>
               : <div className="housecam-qr-placeholder" role="img" aria-label="Código QR de descarga próximamente disponible"><span>HC</span></div>}
             <div className="housecam-store-badges" aria-label="Descargas de HouseCam">
               <a href={appStoreHref} target={appStoreUrl ? "_blank" : undefined} rel={appStoreUrl ? "noopener noreferrer" : undefined} aria-label="Abrir HouseCam en App Store"><Image src="/app-store-badge.png" alt="Consíguelo en el App Store" width={150} height={45} /></a>
