@@ -466,16 +466,16 @@ h1 {
 .housecam-phone-activity strong { margin-top: 3px; font-size: .66rem; }
 .housecam-phone-pulse { width: 28px; height: 28px; border-radius: 50%; background: #dff2fb; box-shadow: inset 0 0 0 8px #eef8fc; }
 .housecam-phone-screen button { width: 100%; min-height: 40px; border: 0; border-radius: 12px; background: #0d6fab; color: #fff; font: inherit; font-size: .7rem; font-weight: 750; }
-.housecam-app-download { width: min(100%, 570px); display: grid; grid-template-columns: 104px minmax(0, 1fr); align-items: center; gap: 22px 26px; margin-top: 38px; padding: 26px 28px; border: 1px solid color-mix(in srgb, var(--hc-border) 75%, transparent); border-radius: 20px; background: var(--hc-surface); box-shadow: 0 12px 32px rgb(0 30 55 / 6%); scroll-margin-top: 120px; }
+.housecam-app-download { width: min(100%, 570px); display: grid; grid-template-columns: 104px 150px; align-items: center; justify-content: center; gap: 30px 32px; margin-top: 38px; padding: 36px; border: 1px solid color-mix(in srgb, var(--hc-border) 75%, transparent); border-radius: 20px; background: var(--hc-surface); box-shadow: 0 12px 32px rgb(0 30 55 / 6%); scroll-margin-top: 120px; }
 .housecam-app-download-copy { grid-column: 1 / -1; }
 .housecam-app-download h3 { margin: 0; color: var(--hc-text-primary); font-size: 1.1rem; letter-spacing: -.02em; }
-.housecam-app-download-copy p { margin: 7px 0 0; color: var(--hc-text-secondary); font-size: .82rem; line-height: 1.5; }
+.housecam-app-download-copy p { margin: 10px 0 0; color: var(--hc-text-secondary); font-size: .82rem; line-height: 1.55; }
 .housecam-qr-placeholder { width: 104px; height: 104px; display: grid; place-items: center; border: 9px solid var(--hc-surface); border-radius: 15px; background: repeating-conic-gradient(var(--hc-text-primary) 0 25%, var(--hc-surface) 0 50%) 0 / 18px 18px; box-shadow: 0 8px 24px rgb(0 30 55 / 10%); }
 .housecam-qr-placeholder span { display: grid; width: 42px; height: 42px; place-items: center; border-radius: 8px; background: var(--hc-surface); color: var(--hc-blue-700); font-size: .72rem; font-weight: 900; }
 .housecam-qr-image { width: 104px; height: 104px; position: relative; overflow: hidden; border: 9px solid var(--hc-surface); border-radius: 15px; background: #fff; box-shadow: 0 8px 24px rgb(0 30 55 / 10%); }
 .housecam-qr-image img { object-fit: contain; }
-.housecam-store-badges { display: flex; align-items: center; justify-content: flex-start; flex-wrap: wrap; gap: 14px; }
-.housecam-store-badges > a { width: 142px; display: block; overflow: hidden; border-radius: 10px; line-height: 0; transition: transform .18s ease, box-shadow .18s ease; }
+.housecam-store-badges { display: flex; align-items: stretch; justify-content: center; flex-direction: column; gap: 14px; }
+.housecam-store-badges > a { width: 150px; display: block; overflow: hidden; border-radius: 10px; line-height: 0; transition: transform .18s ease, box-shadow .18s ease; }
 .housecam-store-badges > a:hover { box-shadow: 0 8px 20px rgb(0 30 55 / 14%); transform: translateY(-2px); }
 .housecam-store-badges img { width: 100%; height: auto; display: block; }
 @keyframes housecam-app-enter { from { opacity: 0; transform: translateY(20px); } }
@@ -491,16 +491,16 @@ h1 {
   .housecam-app-copy .eyebrow, .housecam-app-copy .button { margin-inline: auto; }
   .housecam-app-copy h2, .housecam-app-lead { margin-left: auto; margin-right: auto; }
   .housecam-app-benefits { max-width: 520px; margin-left: auto; margin-right: auto; text-align: left; }
-  .housecam-app-download { grid-template-columns: 1fr; justify-items: center; margin: 38px auto 0; text-align: center; }
+  .housecam-app-download { grid-template-columns: 1fr; justify-items: center; margin: 38px auto 0; padding: 32px; text-align: center; }
   .housecam-app-download-copy { grid-column: auto; }
   .housecam-app-visual { margin-top: 56px; }
   .housecam-qr-placeholder, .housecam-qr-image { display: none; }
-  .housecam-store-badges { justify-content: center; }
+  .housecam-store-badges { align-items: center; }
 }
 @media (max-width: 420px) {
   .housecam-phone { width: min(310px, 88vw); }
-  .housecam-app-download { width: min(100%, 340px); padding: 24px 20px; }
-  .housecam-store-badges { flex-wrap: wrap; gap: 16px; }
+  .housecam-app-download { width: min(100%, 340px); padding: 28px 20px; }
+  .housecam-store-badges { gap: 14px; }
 }
 
 .recommended-products { padding: 72px 0 96px; overflow: hidden; background: var(--hc-features); }
