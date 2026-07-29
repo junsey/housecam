@@ -1,10 +1,8 @@
 const benefits = [
-  "Compatible con todos los productos HouseCam",
+  "Compatible con todos los dispositivos HouseCam",
   "Visualización en tiempo real desde cualquier lugar",
   "Alertas importantes directamente en tu celular",
   "Soporte prioritario desde la aplicación",
-  "Configuración rápida de nuevos dispositivos",
-  "Diseñada para darte tranquilidad todos los días",
 ];
 
 export function HouseCamAppSection() {
@@ -15,10 +13,6 @@ export function HouseCamAppSection() {
         <h2 id="housecam-app-title">Toda la tranquilidad de tu hogar, en la palma de tu mano.</h2>
         <p className="housecam-app-lead">Con la aplicación de HouseCam podés supervisar tu hogar desde cualquier lugar, acceder rápidamente al soporte y controlar todos tus dispositivos desde una única plataforma. Todo pensado para que salgas de casa con la tranquilidad de saber que siempre vas a estar conectado.</p>
         <ul className="housecam-app-benefits">{benefits.map((benefit) => <li key={benefit}>{benefit}</li>)}</ul>
-        <aside className="housecam-app-message">
-          <strong>No vuelvas a preguntarte si tu casa quedó segura.</strong>
-          <p>Abrí la aplicación y comprobalo en segundos, estés donde estés.</p>
-        </aside>
         <a className="button button-primary" href="#descargar-housecam" aria-label="Ir a las opciones de descarga de la aplicación HouseCam">Descargar aplicación</a>
       </div>
 
@@ -42,12 +36,13 @@ export function HouseCamAppSection() {
         </div>
 
         <div className="housecam-app-download" id="descargar-housecam">
-          <h3>Descargá la aplicación</h3>
+          <h3>Descargá HouseCam</h3>
           {/* TODO: reemplazar por QR definitivo antes de producción. */}
           <div className="housecam-qr-placeholder" role="img" aria-label="Código QR de descarga próximamente disponible"><span>HC</span></div>
+          <p>Disponible para</p>
           <div className="housecam-store-badges" aria-label="Plataformas próximamente disponibles">
-            <span aria-label="Próximamente en App Store">◆ <small>Próximamente en</small><strong>App Store</strong></span>
-            <span aria-label="Próximamente en Google Play">▶ <small>Próximamente en</small><strong>Google Play</strong></span>
+            <span aria-label="App Store"><b aria-hidden="true">●</b> App Store</span>
+            <span aria-label="Google Play"><b aria-hidden="true">▶</b> Google Play</span>
           </div>
         </div>
       </div>
