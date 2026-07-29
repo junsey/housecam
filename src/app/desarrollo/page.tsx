@@ -8,7 +8,8 @@ import { getStoreProducts } from "@/features/catalog/catalog-store.data";
 import { getWhatsappHref } from "@/lib/whatsapp";
 
 export const metadata: Metadata = {
-  title: "Sitio en desarrollo",
+  title: "Tu hogar, siempre cerca",
+  alternates: { canonical: "/desarrollo" },
   description: "HouseCam: seguridad simple para todos los días.",
 };
 export const dynamic = "force-dynamic";

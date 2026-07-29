@@ -2,12 +2,38 @@ import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Analytics } from "@vercel/analytics/next";
 
+import { defaultSocialImage, siteUrl } from "@/lib/seo";
+
 import "./globals.css";
 import "../../public/src.css";
 
 export const metadata: Metadata = {
+  metadataBase: siteUrl,
   title: { default: "HouseCam", template: "%s | HouseCam" },
-  description: "Seguridad y tranquilidad para tu hogar.",
+  description: "Cámaras y soluciones inteligentes para cuidar tu hogar con mayor control y tranquilidad.",
+  applicationName: "HouseCam",
+  authors: [{ name: "HouseCam" }],
+  creator: "HouseCam",
+  publisher: "HouseCam",
+  category: "Tecnología para el hogar",
+  keywords: ["cámaras de seguridad", "seguridad para el hogar", "cámaras Wi-Fi", "hogar inteligente", "HouseCam"],
+  alternates: { canonical: "/desarrollo" },
+  openGraph: {
+    type: "website",
+    locale: "es_AR",
+    url: "/desarrollo",
+    siteName: "HouseCam",
+    title: "HouseCam | Tu hogar, siempre cerca",
+    description: "Cámaras y soluciones inteligentes para cuidar tu hogar con mayor control y tranquilidad.",
+    images: [defaultSocialImage],
+  },
+  twitter: {
+    card: "summary",
+    title: "HouseCam | Tu hogar, siempre cerca",
+    description: "Cámaras y soluciones inteligentes para cuidar tu hogar con mayor control y tranquilidad.",
+    images: [defaultSocialImage.url],
+  },
+  robots: { index: true, follow: true },
   manifest: "/manifest.json",
   icons: {
     icon: [

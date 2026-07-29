@@ -4,6 +4,7 @@ import { StorefrontPage } from "@/components/storefront-page";
 
 export const metadata: Metadata = {
   title: "Tienda HousePet",
+  alternates: { canonical: "/housepet/productos" },
   description: "Monitoreo, alimentación y bienestar conectado para tus mascotas.",
 };
 

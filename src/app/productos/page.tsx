@@ -4,6 +4,7 @@ import { StorefrontPage } from "@/components/storefront-page";
 
 export const metadata: Metadata = {
   title: "Tienda",
+  alternates: { canonical: "/productos" },
   description: "Tienda HouseCam: cámaras, kits y accesorios para cuidar tu hogar.",
 };
 

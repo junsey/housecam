@@ -6,7 +6,19 @@ import { PublicHeader } from "@/components/public-header";
 import { getWhatsappSettings } from "@/features/catalog/catalog-admin.data";
 import { getWhatsappHref } from "@/lib/whatsapp";
 
-export const metadata: Metadata = { title: "HousePet" };
+export const metadata: Metadata = {
+  title: "HousePet",
+  description: "Tecnología simple para acompañar el cuidado cotidiano de tus mascotas.",
+  alternates: { canonical: "/housepet" },
+  openGraph: {
+    title: "HousePet | Tecnología para quienes son familia",
+    description: "Soluciones conectadas para el monitoreo, la alimentación y el bienestar de tus mascotas.",
+    url: "/housepet",
+    siteName: "HousePet",
+    locale: "es_AR",
+    type: "website",
+  },
+};
 
 export default async function HousePetPage() {
   const whatsapp = await getWhatsappSettings();
