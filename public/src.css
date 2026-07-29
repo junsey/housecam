@@ -786,14 +786,6 @@ h1 {
   top: 94px;
   padding: 26px;
 }
-.product-buy-kicker {
-  margin: 0 0 10px;
-  color: var(--hc-blue-500);
-  font-size: .74rem;
-  font-weight: 800;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-}
 .product-buy-panel h1 { margin: 0 0 12px; font-size: clamp(1.8rem, 3vw, 2.5rem); line-height: 1.08; }
 .product-availability { display: flex; align-items: center; gap: 8px; margin: 0 0 18px; font-size: .88rem; font-weight: 650; }
 .product-availability span { width: 9px; height: 9px; border-radius: 50%; background: currentColor; box-shadow: 0 0 0 5px currentColor; opacity: .78; }
@@ -851,7 +843,7 @@ h1 {
 .product-stock-request { margin-top: 12px; padding: 14px; border: 1px solid color-mix(in srgb, var(--hc-blue-500) 30%, var(--hc-border)); border-radius: 11px; background: var(--hc-blue-100); }
 .product-stock-request p { margin: 0 0 10px; color: var(--hc-text-secondary); font-size: .82rem; line-height: 1.45; }
 .product-stock-request a { color: var(--hc-blue-500); font-size: .85rem; font-weight: 750; }
-.product-buy-panel small { display: block; margin-top: 16px; color: var(--hc-text-muted); line-height: 1.45; }
+.product-buy-note { margin: 20px 0 0; padding-top: 18px; border-top: 1px solid var(--hc-border); color: var(--hc-text-muted); font-size: .78rem; line-height: 1.55; }
 .recommended-product-body h3 a { color: inherit; text-decoration: none; }
 
 /* Persistent public cart */

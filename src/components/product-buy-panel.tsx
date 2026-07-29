@@ -62,7 +62,6 @@ export function ProductBuyPanel({ product, whatsappNumber }: ProductBuyPanelProp
 
   return (
     <aside className="product-buy-panel" aria-label="Opciones de compra">
-      <p className="product-buy-kicker">Compra asistida</p>
       <h1>{product.name}</h1>
       <p className={`product-availability ${product.availableUnits > 0 ? "is-available" : "is-unavailable"}`}>
         <span />{product.availableUnits > 0 ? "Disponible" : "Agotado"}
@@ -86,7 +85,7 @@ export function ProductBuyPanel({ product, whatsappNumber }: ProductBuyPanelProp
         <p>Podemos ayudarte a conseguirlo o informarte cuándo vuelve a ingresar.</p>
         <a href={requestHref} target="_blank" rel="noopener noreferrer">Consultar disponibilidad</a>
       </div>}
-      <small>Coordinamos pago, retiro o envío personalmente.</small>
+      <p className="product-buy-note">Posterior a la compra, podrás coordinar medios de pago, envío u organizar el retiro en Córdoba Capital.</p>
     </aside>
   );
 }
