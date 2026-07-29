@@ -159,3 +159,39 @@ export async function convertQuoteToSaleAction(formData: FormData) {
   revalidatePath("/admin/ventas");
   redirect(`/admin/ventas/${saleId}` as Route);
 }
+
+export async function deleteQuoteAction(formData: FormData) {
+  const admin = await requireAdmin();
+  const quoteId = z.string().uuid().parse(String(formData.get("quoteId") ?? ""));
+  const result = await getDb().transaction(async (tx) => {
+    const locked = await tx.execute(sql`select * from quotes where id = ${quoteId} for update`);
+    const quote = locked.rows[0] as Record<string, unknown> | undefined;
+    if (!quote) return "missing" as const;
+    if (quote.status === "converted" || quote.converted_sale_id) return "converted" as const;
+
+    await tx.delete(quoteItems).where(eq(quoteItems.quoteId, quoteId));
+    await tx.delete(quotes).where(eq(quotes.id, quoteId));
+    await tx.insert(auditLogs).values({
+      actorClerkId: admin.clerkUserId,
+      action: "quote.deleted",
+      entityType: "quote",
+      entityId: quoteId,
+      metadata: {
+        code: quote.code,
+        customerName: quote.customer_name,
+        status: quote.status,
+        totalCents: quote.total_cents,
+      },
+    });
+    return "deleted" as const;
+  });
+
+  if (result === "converted") {
+    redirect(`/admin/presupuestos/${quoteId}?error=converted` as Route);
+  }
+  if (result === "missing") {
+    redirect("/admin/presupuestos?error=missing" as Route);
+  }
+  revalidatePath("/admin/presupuestos");
+  redirect("/admin/presupuestos?eliminado=1" as Route);
+}
