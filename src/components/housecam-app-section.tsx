@@ -20,7 +20,7 @@ export function HouseCamAppSection({ qrUrl = null, appStoreUrl = "", googlePlayU
   return <section className="housecam-app-section" aria-labelledby="housecam-app-title">
     <div className="container housecam-app-grid">
       <div className="housecam-app-copy">
-        <p className="eyebrow">📱 Aplicación oficial HouseCam</p>
+        <p className="eyebrow">Aplicación oficial HouseCam</p>
         <h2 id="housecam-app-title">Salí tranquilo.<br />HouseCam se queda cuidando.</h2>
         <p className="housecam-app-lead">Controlá tus cámaras, recibí alertas y verificá que todo esté bien desde cualquier lugar. Todo desde una única aplicación diseñada para darte tranquilidad.</p>
         <ul className="housecam-app-benefits">{benefits.map((benefit) => <li key={benefit}>{benefit}</li>)}</ul>
