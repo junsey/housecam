@@ -1,6 +1,6 @@
 import "server-only";
 
-import { and, asc, count, desc, eq, isNotNull, isNull } from "drizzle-orm";
+import { and, asc, count, desc, eq, inArray, isNotNull, isNull } from "drizzle-orm";
 
 import { getDb } from "@/db";
 import { categories, kitComponents, productImages, productSpecs, products, siteSettings, stockMovements } from "@/db/schema";
@@ -29,7 +29,8 @@ export async function getArchivedCategories() {
 
 export async function getAdminProducts() {
   if (!process.env.DATABASE_URL) return { configured: false as const, items: [] };
-  const items = await getDb()
+  const db = getDb();
+  const items = await db
     .select({
       id: products.id,
       name: products.name,
@@ -46,7 +47,24 @@ export async function getAdminProducts() {
     .innerJoin(categories, eq(products.categoryId, categories.id))
     .where(isNull(products.archivedAt))
     .orderBy(desc(products.updatedAt));
-  return { configured: true as const, items };
+  const images = items.length
+    ? await db.select({
+      productId: productImages.productId,
+      url: productImages.url,
+      alt: productImages.alt,
+      isCover: productImages.isCover,
+      sortOrder: productImages.sortOrder,
+    }).from(productImages)
+      .where(inArray(productImages.productId, items.map((item) => item.id)))
+      .orderBy(desc(productImages.isCover), asc(productImages.sortOrder))
+    : [];
+  return {
+    configured: true as const,
+    items: items.map((item) => {
+      const image = images.find((candidate) => candidate.productId === item.id);
+      return { ...item, imageUrl: image?.url ?? null, imageAlt: image?.alt ?? item.name };
+    }),
+  };
 }
 
 export async function getAdminCategory(id: string) {

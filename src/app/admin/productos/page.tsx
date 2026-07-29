@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 
 import { archiveProductAction, toggleProductPublicationAction } from "@/features/catalog/catalog-admin.actions";
@@ -42,7 +43,7 @@ export default async function AdminProductsPage() {
             <tbody className="divide-y divide-[var(--border)]">
               {result.items.map((product) => (
                 <tr key={product.id}>
-                  <td className="p-4"><Link className="font-bold hover:text-[var(--brand)]" href={`/admin/productos/${product.id}`}>{product.name}</Link><span className="mt-1 block text-xs text-[var(--muted)]">{product.sku} · {product.categoryName}</span></td>
+                  <td className="p-4"><div className="admin-product-cell"><Link className="admin-product-thumbnail" href={`/admin/productos/${product.id}`} aria-label={`Ver ${product.name}`}>{product.imageUrl ? <Image src={product.imageUrl} alt={product.imageAlt} fill sizes="52px" /> : <span aria-hidden="true">HC</span>}</Link><div><Link className="font-bold hover:text-[var(--brand)]" href={`/admin/productos/${product.id}`}>{product.name}</Link><span className="mt-1 block text-xs text-[var(--muted)]">{product.sku} · {product.categoryName}</span></div></div></td>
                   <td className="p-4 capitalize">{product.storefront}</td>
                   <td className="p-4">{currency.format(product.unitPriceCents / 100)}</td>
                   <td className="p-4">{product.type === "kit" ? "Por componentes" : product.stockOnHand}</td>
