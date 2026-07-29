@@ -382,6 +382,87 @@ a {
   transform: translateX(20px);
 }
 
+.admin-category-created {
+  min-height: 430px;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 18px;
+  text-align: center;
+  animation: admin-category-success-in .45s cubic-bezier(.22, 1, .36, 1) both;
+}
+
+.admin-category-created-icon {
+  width: 76px;
+  height: 76px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--hc-success-light);
+  color: var(--hc-success);
+  box-shadow: 0 0 0 10px color-mix(in srgb, var(--hc-success) 8%, transparent);
+  animation: admin-category-success-pop .55s .08s cubic-bezier(.22, 1.4, .36, 1) both;
+}
+
+.admin-category-created-icon svg {
+  width: 38px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.admin-category-created h2 {
+  margin: 4px 0 0;
+  color: var(--hc-text-primary);
+  font-size: 1.35rem;
+}
+
+.admin-category-created p {
+  max-width: 270px;
+  margin: 0;
+  color: var(--hc-text-secondary);
+  font-size: .9rem;
+  line-height: 1.55;
+}
+
+.admin-category-created button {
+  min-height: 42px;
+  margin-top: 6px;
+  border: 1px solid var(--hc-border-strong);
+  border-radius: 11px;
+  padding: 0 16px;
+  background: var(--hc-surface-raised);
+  color: var(--hc-text-primary);
+  font: inherit;
+  font-size: .82rem;
+  font-weight: 750;
+  cursor: pointer;
+  transition: border-color .18s ease, color .18s ease, transform .18s ease;
+}
+
+.admin-category-created button:hover {
+  border-color: var(--hc-success);
+  color: var(--hc-success);
+  transform: translateY(-1px);
+}
+
+@keyframes admin-category-success-in {
+  from { opacity: 0; transform: translateY(10px); }
+}
+
+@keyframes admin-category-success-pop {
+  from { opacity: 0; transform: scale(.65); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .admin-category-created,
+  .admin-category-created-icon {
+    animation: none;
+  }
+}
+
 .admin-primary-button:focus-visible,
 .admin-secondary-button:focus-visible,
 .admin-back-link:focus-visible {

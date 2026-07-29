@@ -106,7 +106,7 @@ export async function createCategoryAction(formData: FormData) {
   const [created] = await getDb().insert(categories).values(input).returning({ id: categories.id });
   await writeAudit(admin.clerkUserId, "category.created", "category", created.id, undefined, input);
   revalidatePath("/admin/categorias");
-  redirect("/admin/categorias");
+  redirect(`/admin/categorias?creada=${encodeURIComponent(input.name)}` as Route);
 }
 
 export async function updateCategoryAction(formData: FormData) {

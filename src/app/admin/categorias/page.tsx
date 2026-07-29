@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { CategoryCreateSuccess } from "@/components/category-create-success";
 import { CategoryIdentityFields } from "@/components/category-identity-fields";
 import { archiveCategoryAction, createCategoryAction, restoreCategoryAction } from "@/features/catalog/catalog-admin.actions";
 import { getAdminCategories, getArchivedCategories } from "@/features/catalog/catalog-admin.data";
@@ -11,7 +12,7 @@ const fieldClass = "min-h-11 rounded-xl border border-[var(--border)] bg-[var(--
 export default async function AdminCategoriesPage({
   searchParams,
 }: {
-  searchParams: Promise<{ archivadas?: string; error?: string; restaurada?: string }>;
+  searchParams: Promise<{ archivadas?: string; creada?: string; error?: string; restaurada?: string }>;
 }) {
   const query = await searchParams;
   const showingArchived = query.archivadas === "1";
@@ -86,21 +87,23 @@ export default async function AdminCategoriesPage({
         </section>
 
         <section className="card p-6" aria-labelledby="new-category-title">
-          <h2 className="font-bold" id="new-category-title">Nueva categoría</h2>
-          <form action={createCategoryAction} className="mt-5 grid gap-4">
-            <label className="grid gap-2 text-sm font-semibold">Marca
-              <select className={fieldClass} name="storefront" disabled={!result.configured}>
-                <option value="housecam">HouseCam</option>
-                <option value="housepet">HousePet</option>
-              </select>
-            </label>
-            <CategoryIdentityFields fieldClass={fieldClass} disabled={!result.configured} />
-            <label className="grid gap-2 text-sm font-semibold">Descripción
-              <textarea className="min-h-24 rounded-xl border border-[var(--border)] bg-[var(--background)] p-3" name="description" disabled={!result.configured} />
-            </label>
-            <label className="flex items-center gap-2 text-sm"><input defaultChecked name="isActive" type="checkbox" disabled={!result.configured} /> Publicada</label>
-            <button className="min-h-11 rounded-xl bg-[var(--brand)] px-4 font-bold text-white disabled:opacity-40" type="submit" disabled={!result.configured}>Crear categoría</button>
-          </form>
+          {query.creada ? <CategoryCreateSuccess name={query.creada} /> : <>
+            <h2 className="font-bold" id="new-category-title">Nueva categoría</h2>
+            <form action={createCategoryAction} className="mt-5 grid gap-4">
+              <label className="grid gap-2 text-sm font-semibold">Marca
+                <select className={fieldClass} name="storefront" disabled={!result.configured}>
+                  <option value="housecam">HouseCam</option>
+                  <option value="housepet">HousePet</option>
+                </select>
+              </label>
+              <CategoryIdentityFields fieldClass={fieldClass} disabled={!result.configured} />
+              <label className="grid gap-2 text-sm font-semibold">Descripción
+                <textarea className="min-h-24 rounded-xl border border-[var(--border)] bg-[var(--background)] p-3" name="description" disabled={!result.configured} />
+              </label>
+              <label className="flex items-center gap-2 text-sm"><input defaultChecked name="isActive" type="checkbox" disabled={!result.configured} /> Publicada</label>
+              <button className="min-h-11 rounded-xl bg-[var(--brand)] px-4 font-bold text-white disabled:opacity-40" type="submit" disabled={!result.configured}>Crear categoría</button>
+            </form>
+          </>}
         </section>
       </div>
     </main>
