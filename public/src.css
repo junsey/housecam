@@ -414,7 +414,7 @@ h1 {
 .store-product-badge { position: absolute; top: 15px; left: 15px; padding: 7px 10px; border-radius: 999px; background: rgb(5 24 38 / .78); color: #fff; font-size: .72rem; font-weight: 800; backdrop-filter: blur(8px); }
 .store-product-body { padding: 22px; }
 .store-product-body h3 { margin: 8px 0 9px; color: var(--hc-text-primary); font-size: 1.27rem; letter-spacing: -.02em; }
-.store-product-body > p:not(.store-product-category) { min-height: 48px; margin: 0; color: var(--hc-text-secondary); font-size: .91rem; line-height: 1.55; }
+.store-product-body > p:not(.store-product-category) { height: 4.25rem; display: -webkit-box; overflow: hidden; margin: 0; color: var(--hc-text-secondary); font-size: .91rem; line-height: 1.55; text-overflow: ellipsis; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
 .store-product-footer { display: flex; align-items: end; justify-content: space-between; gap: 16px; margin-top: 24px; padding-top: 19px; border-top: 1px solid var(--hc-border); }
 .store-product-footer div { display: grid; gap: 3px; }
 .store-product-footer span, .store-product-body small { color: var(--hc-text-secondary); font-size: .75rem; }
