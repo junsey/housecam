@@ -121,17 +121,27 @@ export async function getWhatsappSettings() {
 
 export async function getGeneralSiteSettings() {
   if (!process.env.DATABASE_URL) {
-    return { configured: false as const, whatsappNumber: "", developmentModeEnabled: true };
+    return { configured: false as const, whatsappNumber: "", developmentModeEnabled: true, homeAppSectionEnabled: true };
   }
   const [settings] = await getDb().select({
     whatsappNumber: siteSettings.whatsappNumber,
     developmentModeEnabled: siteSettings.developmentModeEnabled,
+    homeAppSectionEnabled: siteSettings.homeAppSectionEnabled,
   }).from(siteSettings).where(eq(siteSettings.id, "global")).limit(1);
   return {
     configured: true as const,
     whatsappNumber: settings?.whatsappNumber ?? "",
     developmentModeEnabled: settings?.developmentModeEnabled ?? true,
+    homeAppSectionEnabled: settings?.homeAppSectionEnabled ?? true,
   };
+}
+
+export async function getHomeAppSectionEnabled() {
+  if (!process.env.DATABASE_URL) return true;
+  const [settings] = await getDb().select({
+    enabled: siteSettings.homeAppSectionEnabled,
+  }).from(siteSettings).where(eq(siteSettings.id, "global")).limit(1);
+  return settings?.enabled ?? true;
 }
 
 export async function getDevelopmentMode() {

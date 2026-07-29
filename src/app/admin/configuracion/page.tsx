@@ -1,7 +1,7 @@
 import type { Metadata, Route } from "next";
 import Link from "next/link";
 
-import { updateDevelopmentModeAction, updateWhatsappSettingsAction } from "@/features/catalog/catalog-admin.actions";
+import { updateDevelopmentModeAction, updateHomeAppSectionAction, updateWhatsappSettingsAction } from "@/features/catalog/catalog-admin.actions";
 import { getGeneralSiteSettings } from "@/features/catalog/catalog-admin.data";
 import { getWhatsappHref } from "@/lib/whatsapp";
 
@@ -22,11 +22,31 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
     {query.guardado && <p className="mt-6 rounded-2xl border border-[var(--hc-success)]/40 bg-[var(--hc-success-light)] p-4 text-sm font-semibold text-[var(--hc-success)]">
       {query.guardado === "desarrollo"
         ? `Modo de desarrollo ${query.estado === "activo" ? "activado" : "desactivado"}.`
-        : "Configuración de WhatsApp guardada."}
+        : query.guardado === "aplicacion"
+          ? `Sección de la aplicación ${query.estado === "activo" ? "activada" : "desactivada"}.`
+          : "Configuración de WhatsApp guardada."}
     </p>}
     {!settings.configured && <p className="mt-7 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 text-sm text-[var(--muted)]">Conectá Neon y Clerk para guardar la configuración.</p>}
 
     <div className="mt-8 grid gap-5 lg:grid-cols-2">
+      <section className="card p-6">
+        <div className="flex items-start justify-between gap-5">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-wider text-[var(--brand)]">Página principal</p>
+            <h2 className="mt-2 text-2xl font-bold">Aplicación HouseCam</h2>
+            <p className="mt-3 text-sm leading-6 text-[var(--muted)]">Controlá si la Home muestra la sección dedicada a la aplicación móvil.</p>
+          </div>
+          <span className={`admin-setting-status ${settings.homeAppSectionEnabled ? "is-enabled" : ""}`}>{settings.homeAppSectionEnabled ? "Activo" : "Inactivo"}</span>
+        </div>
+        <form action={updateHomeAppSectionAction} className="mt-7">
+          <input name="enabled" type="hidden" value={settings.homeAppSectionEnabled ? "false" : "true"} />
+          <button className="admin-setting-toggle" disabled={!settings.configured} type="submit" aria-label={settings.homeAppSectionEnabled ? "Ocultar sección Aplicación HouseCam" : "Mostrar sección Aplicación HouseCam"}>
+            <span className={`admin-setting-switch ${settings.homeAppSectionEnabled ? "is-enabled" : ""}`} aria-hidden="true"><span /></span>
+            <span>{settings.homeAppSectionEnabled ? "Ocultar sección “Aplicación HouseCam”" : "Mostrar sección “Aplicación HouseCam”"}</span>
+          </button>
+        </form>
+      </section>
+
       <section className="card p-6">
         <div className="flex items-start justify-between gap-5">
           <div>

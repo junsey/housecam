@@ -414,3 +414,27 @@ export async function updateDevelopmentModeAction(formData: FormData) {
   revalidatePath("/admin/configuracion");
   redirect(`/admin/configuracion?guardado=desarrollo&estado=${enabled ? "activo" : "inactivo"}` as Route);
 }
+
+export async function updateHomeAppSectionAction(formData: FormData) {
+  const admin = await authorizeMutation();
+  const enabled = String(formData.get("enabled") ?? "") === "true";
+  await getDb().insert(siteSettings).values({
+    id: "global",
+    whatsappNumber: "",
+    homeAppSectionEnabled: enabled,
+  }).onConflictDoUpdate({
+    target: siteSettings.id,
+    set: { homeAppSectionEnabled: enabled, updatedAt: new Date() },
+  });
+  await writeAudit(
+    admin.clerkUserId,
+    "settings.home_app_section_updated",
+    "site_settings",
+    "global",
+    undefined,
+    { homeAppSectionEnabled: enabled },
+  );
+  revalidatePath("/desarrollo");
+  revalidatePath("/admin/configuracion");
+  redirect(`/admin/configuracion?guardado=aplicacion&estado=${enabled ? "activo" : "inactivo"}` as Route);
+}

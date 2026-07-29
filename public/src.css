@@ -422,6 +422,83 @@ h1 {
 .store-product-footer .button { min-height: 40px; padding: 0 15px; font-size: .84rem; }
 .store-product-body small { display: block; margin-top: 12px; }
 
+.housecam-app-section {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(110px, 11vw, 156px) 0;
+  border-top: 1px solid var(--hc-border);
+  background: color-mix(in srgb, var(--hc-features) 86%, var(--hc-blue-100));
+}
+.housecam-app-grid { display: grid; grid-template-columns: minmax(0, 1.02fr) minmax(430px, .98fr); align-items: center; gap: clamp(64px, 8vw, 112px); }
+.housecam-app-copy { position: relative; z-index: 1; animation: housecam-app-enter .7s cubic-bezier(.22, 1, .36, 1) both; }
+.housecam-app-copy h2 { max-width: 690px; margin: 25px 0 0; color: var(--hc-text-primary); font-size: clamp(2.7rem, 5vw, 4.6rem); line-height: .98; letter-spacing: -.055em; }
+.housecam-app-lead { max-width: 650px; margin: 27px 0 0; color: var(--hc-text-secondary); font-size: 1.08rem; line-height: 1.75; }
+.housecam-app-benefits { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 26px; margin: 30px 0 0; padding: 0; list-style: none; color: var(--hc-text-secondary); font-size: .9rem; line-height: 1.45; }
+.housecam-app-benefits li { display: flex; gap: 8px; }
+.housecam-app-benefits li::before { content: "✓"; flex: none; color: var(--hc-success); font-weight: 800; }
+.housecam-app-message { max-width: 610px; margin: 34px 0 27px; padding: 21px 23px; border: 1px solid var(--hc-border); border-radius: 18px; background: color-mix(in srgb, var(--hc-surface) 91%, transparent); box-shadow: 0 12px 34px rgb(0 35 65 / 7%); }
+.housecam-app-message strong { color: var(--hc-text-primary); font-size: 1.04rem; }
+.housecam-app-message p { margin: 7px 0 0; color: var(--hc-text-secondary); line-height: 1.55; }
+.housecam-app-visual { min-width: 0; position: relative; display: grid; justify-items: center; animation: housecam-app-enter .8s .08s cubic-bezier(.22, 1, .36, 1) both; }
+.housecam-app-orbit { width: min(560px, 115%); aspect-ratio: 1; position: absolute; top: 2%; border-radius: 44% 56% 60% 40% / 48% 44% 56% 52%; background: var(--hc-blue-100); }
+.housecam-phone { width: 282px; position: relative; z-index: 1; padding: 12px; border: 1px solid color-mix(in srgb, var(--hc-border-strong) 80%, transparent); border-radius: 46px; background: #091a28; box-shadow: 0 38px 80px rgb(0 29 50 / 24%), inset 0 0 0 2px rgb(255 255 255 / 8%); animation: housecam-phone-float 5s ease-in-out infinite; }
+.housecam-phone-speaker { width: 76px; height: 21px; position: absolute; z-index: 3; top: 19px; left: 50%; border-radius: 999px; background: #07131d; transform: translateX(-50%); }
+.housecam-phone-screen { min-height: 562px; overflow: hidden; padding: 38px 18px 19px; border-radius: 35px; background: linear-gradient(180deg, #f9fcfe, #eef6fb); color: #102f49; }
+.housecam-phone-screen header, .housecam-phone-heading, .housecam-phone-activity { display: flex; align-items: center; justify-content: space-between; }
+.housecam-phone-screen header > span:first-child { font-size: 1.02rem; font-weight: 850; letter-spacing: -.03em; }
+.housecam-phone-avatar { width: 29px; height: 29px; display: grid; place-items: center; border-radius: 50%; background: #dceefa; color: #0967a6; font-size: .61rem; font-weight: 800; }
+.housecam-phone-kicker { margin: 24px 0 9px; color: #46657c; font-size: .68rem; font-weight: 750; text-transform: uppercase; letter-spacing: .08em; }
+.housecam-phone-status { display: grid; padding: 18px; border-radius: 20px; background: linear-gradient(135deg, #0c6eae, #155681); color: #fff; box-shadow: 0 13px 24px rgb(15 97 151 / 20%); }
+.housecam-phone-status small { opacity: .72; font-size: .62rem; }
+.housecam-phone-status strong { margin-top: 7px; font-size: 1.18rem; }
+.housecam-phone-status span { display: flex; align-items: center; gap: 7px; margin-top: 14px; font-size: .67rem; }
+.housecam-phone-status i, .housecam-device-list li > i { width: 7px; height: 7px; border-radius: 50%; background: #38d398; }
+.housecam-phone-heading { margin: 22px 2px 9px; }
+.housecam-phone-heading strong { font-size: .78rem; }
+.housecam-phone-heading small { color: #6d8799; font-size: .61rem; }
+.housecam-device-list { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.housecam-device-list li { display: grid; grid-template-columns: 35px 1fr auto; align-items: center; gap: 10px; padding: 11px; border: 1px solid #dce9f1; border-radius: 15px; background: #fff; box-shadow: 0 5px 14px rgb(11 54 83 / 5%); }
+.housecam-device-icon { width: 35px; height: 35px; display: grid; place-items: center; border-radius: 11px; background: #e8f4fb; color: #1676b5; }
+.housecam-device-list strong, .housecam-device-list small { display: block; }
+.housecam-device-list strong { font-size: .67rem; }
+.housecam-device-list small { margin-top: 3px; color: #6d8799; font-size: .57rem; }
+.housecam-device-list li > i { background: #28ad7d; }
+.housecam-phone-activity { margin: 14px 2px; }
+.housecam-phone-activity small, .housecam-phone-activity strong { display: block; }
+.housecam-phone-activity small { color: #6d8799; font-size: .57rem; }
+.housecam-phone-activity strong { margin-top: 3px; font-size: .66rem; }
+.housecam-phone-pulse { width: 28px; height: 28px; border-radius: 50%; background: #dff2fb; box-shadow: inset 0 0 0 8px #eef8fc; }
+.housecam-phone-screen button { width: 100%; min-height: 40px; border: 0; border-radius: 12px; background: #0d6fab; color: #fff; font: inherit; font-size: .7rem; font-weight: 750; }
+.housecam-app-download { z-index: 1; display: grid; justify-items: center; margin-top: 54px; scroll-margin-top: 120px; }
+.housecam-app-download h3 { margin: 0 0 15px; color: var(--hc-text-primary); font-size: 1rem; }
+.housecam-qr-placeholder { width: 112px; height: 112px; display: grid; place-items: center; border: 9px solid var(--hc-surface); border-radius: 15px; background: repeating-conic-gradient(var(--hc-text-primary) 0 25%, var(--hc-surface) 0 50%) 0 / 18px 18px; box-shadow: 0 10px 28px rgb(0 30 55 / 12%); }
+.housecam-qr-placeholder span { display: grid; width: 42px; height: 42px; place-items: center; border-radius: 8px; background: var(--hc-surface); color: var(--hc-blue-700); font-size: .72rem; font-weight: 900; }
+.housecam-store-badges { display: flex; justify-content: center; gap: 10px; margin-top: 17px; }
+.housecam-store-badges > span { min-width: 132px; display: grid; grid-template-columns: 26px 1fr; grid-template-rows: auto auto; align-items: center; padding: 8px 12px; border: 1px solid var(--hc-border); border-radius: 11px; background: var(--hc-surface); color: var(--hc-text-primary); box-shadow: var(--hc-shadow-sm); font-size: 1.2rem; }
+.housecam-store-badges small, .housecam-store-badges strong { grid-column: 2; line-height: 1.05; }
+.housecam-store-badges small { color: var(--hc-text-secondary); font-size: .48rem; }
+.housecam-store-badges strong { font-size: .72rem; }
+@keyframes housecam-app-enter { from { opacity: 0; transform: translateY(20px); } }
+@keyframes housecam-phone-float { 50% { transform: translateY(-3px); } }
+@media (max-width: 980px) {
+  .housecam-app-grid { grid-template-columns: minmax(0, 1fr) minmax(340px, .8fr); gap: 40px; }
+  .housecam-app-benefits { grid-template-columns: 1fr; }
+}
+@media (max-width: 760px) {
+  .housecam-app-section { padding: 88px 0; }
+  .housecam-app-grid { grid-template-columns: 1fr; }
+  .housecam-app-copy { text-align: center; }
+  .housecam-app-copy .eyebrow, .housecam-app-copy .button { margin-inline: auto; }
+  .housecam-app-copy h2, .housecam-app-lead, .housecam-app-message { margin-left: auto; margin-right: auto; }
+  .housecam-app-benefits { max-width: 520px; margin-left: auto; margin-right: auto; text-align: left; }
+  .housecam-app-visual { margin-top: 25px; }
+}
+@media (max-width: 420px) {
+  .housecam-phone { width: min(282px, 88vw); }
+  .housecam-store-badges { width: 100%; flex-direction: column; align-items: center; }
+  .housecam-store-badges > span { width: 164px; }
+}
+
 .recommended-products { padding: 72px 0 96px; overflow: hidden; background: var(--hc-features); }
 .recommended-products-heading { display: flex; align-items: end; justify-content: space-between; gap: 28px; margin-bottom: 26px; }
 .recommended-products-heading h2 { margin: 7px 0 0; color: var(--hc-text-primary); font-size: clamp(2rem, 4vw, 3rem); letter-spacing: -.04em; }
