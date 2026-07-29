@@ -29,14 +29,16 @@ export function HouseCamAppSection({ qrUrl = null, appStoreUrl = "", googlePlayU
         <div className="housecam-app-download" id="descargar-housecam">
           <div className="housecam-app-download-copy">
             <h3>Descargá HouseCam</h3>
-            <p>Disponible para Android y iPhone.</p>
+            <p>Disponible para Android e iPhone.</p>
           </div>
-          {qrUrl
-            ? <div className="housecam-qr-image"><Image src={qrUrl} alt="Código QR para descargar HouseCam" fill sizes="104px" /></div>
-            : <div className="housecam-qr-placeholder" role="img" aria-label="Código QR de descarga próximamente disponible"><span>HC</span></div>}
-          <div className="housecam-store-badges" aria-label="Descargas de HouseCam">
-            <a href={appStoreHref} target={appStoreUrl ? "_blank" : undefined} rel={appStoreUrl ? "noopener noreferrer" : undefined} aria-label="Abrir HouseCam en App Store"><Image src="/app-store-badge.png" alt="Consíguelo en el App Store" width={150} height={45} /></a>
-            <a href={googlePlayHref} target={googlePlayUrl ? "_blank" : undefined} rel={googlePlayUrl ? "noopener noreferrer" : undefined} aria-label="Abrir HouseCam en Google Play"><Image src="/google-play-badge.png" alt="Disponible en Google Play" width={150} height={45} /></a>
+          <div className="housecam-app-download-options">
+            {qrUrl
+              ? <div className="housecam-qr-image"><Image src={qrUrl} alt="Código QR para descargar HouseCam" fill sizes="104px" /></div>
+              : <div className="housecam-qr-placeholder" role="img" aria-label="Código QR de descarga próximamente disponible"><span>HC</span></div>}
+            <div className="housecam-store-badges" aria-label="Descargas de HouseCam">
+              <a href={appStoreHref} target={appStoreUrl ? "_blank" : undefined} rel={appStoreUrl ? "noopener noreferrer" : undefined} aria-label="Abrir HouseCam en App Store"><Image src="/app-store-badge.png" alt="Consíguelo en el App Store" width={150} height={45} /></a>
+              <a href={googlePlayHref} target={googlePlayUrl ? "_blank" : undefined} rel={googlePlayUrl ? "noopener noreferrer" : undefined} aria-label="Abrir HouseCam en Google Play"><Image src="/google-play-badge.png" alt="Disponible en Google Play" width={150} height={45} /></a>
+            </div>
           </div>
         </div>
       </div>
