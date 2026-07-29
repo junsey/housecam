@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 
 import { getDb } from "@/db";
-import { auditLogs, kitComponents, products, quoteItems, quotes, saleCharges, saleItemComponents, saleItems, sales } from "@/db/schema";
+import { auditLogs, kitComponents, products, quoteItems, quotes, saleCharges, saleExpenses, saleItemComponents, saleItems, sales } from "@/db/schema";
 import { requireAdmin } from "@/features/auth/require-admin";
 
 export type QuoteActionState = { ok: boolean; error?: string };
@@ -142,14 +142,27 @@ export async function convertQuoteToSaleAction(formData: FormData) {
       costTotal += historicalCost * line.quantity;
     }
     let charges = 0;
+    let expenses = 0;
     for (const line of lines.filter((item) => item.kind === "additional")) {
+      const expenseType = line.additionalType === "installation"
+        ? "outsourced_installation"
+        : line.additionalType === "shipping"
+          ? "shipping"
+          : "other";
       await tx.insert(saleCharges).values({ saleId: sale.id, type: line.additionalType ?? "other", description: line.label, amountCents: line.subtotalCents });
+      await tx.insert(saleExpenses).values({
+        saleId: sale.id,
+        type: expenseType,
+        description: line.description ? `${line.label} · ${line.description}` : line.label,
+        amountCents: line.subtotalCents,
+      });
       charges += line.subtotalCents;
+      expenses += line.subtotalCents;
     }
     await tx.update(sales).set({
       listedTotalCents: listedTotal, discountTotalCents: Math.max(0, listedTotal - finalTotal),
-      finalTotalCents: finalTotal + charges, productCostTotalCents: costTotal, expenseTotalCents: 0,
-      profitCents: finalTotal + charges - costTotal, updatedAt: new Date(),
+      finalTotalCents: finalTotal + charges, productCostTotalCents: costTotal, expenseTotalCents: expenses,
+      profitCents: finalTotal + charges - costTotal - expenses, updatedAt: new Date(),
     }).where(eq(sales.id, sale.id));
     await tx.update(quotes).set({ status: "converted", convertedSaleId: sale.id, convertedAt: new Date(), updatedAt: new Date() }).where(eq(quotes.id, quoteId));
     await tx.insert(auditLogs).values({ actorClerkId: admin.clerkUserId, action: "quote.converted", entityType: "quote", entityId: quoteId, metadata: { saleId: sale.id } });
