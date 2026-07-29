@@ -1,10 +1,10 @@
 import Image from "next/image";
 
 const benefits = [
-  "Compatible con todos los dispositivos HouseCam",
-  "Visualización en tiempo real desde cualquier lugar",
-  "Alertas importantes directamente en tu celular",
-  "Soporte prioritario desde la aplicación",
+  "Todos tus dispositivos, en un solo lugar",
+  "Visualización en tiempo real",
+  "Alertas importantes en tu celular",
+  "Soporte prioritario desde la app",
 ];
 
 export function HouseCamAppSection() {
@@ -12,8 +12,8 @@ export function HouseCamAppSection() {
     <div className="container housecam-app-grid">
       <div className="housecam-app-copy">
         <p className="eyebrow">📱 Aplicación oficial HouseCam</p>
-        <h2 id="housecam-app-title">Toda la tranquilidad de tu hogar, en la palma de tu mano.</h2>
-        <p className="housecam-app-lead">Con la aplicación de HouseCam podés supervisar tu hogar desde cualquier lugar, acceder rápidamente al soporte y controlar todos tus dispositivos desde una única plataforma. Todo pensado para que salgas de casa con la tranquilidad de saber que siempre vas a estar conectado.</p>
+        <h2 id="housecam-app-title">Salí tranquilo.<br />HouseCam se queda cuidando.</h2>
+        <p className="housecam-app-lead">Controlá tus cámaras, recibí alertas y verificá que todo esté bien desde cualquier lugar. Todo desde una única aplicación diseñada para darte tranquilidad.</p>
         <ul className="housecam-app-benefits">{benefits.map((benefit) => <li key={benefit}>{benefit}</li>)}</ul>
         <a className="button button-primary" href="#descargar-housecam" aria-label="Ir a las opciones de descarga de la aplicación HouseCam">Descargar aplicación</a>
       </div>

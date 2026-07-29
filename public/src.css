@@ -431,9 +431,9 @@ h1 {
 }
 .housecam-app-grid { display: grid; grid-template-columns: minmax(0, 1.02fr) minmax(430px, .98fr); align-items: center; gap: clamp(64px, 8vw, 112px); }
 .housecam-app-copy { position: relative; z-index: 1; animation: housecam-app-enter .7s cubic-bezier(.22, 1, .36, 1) both; }
-.housecam-app-copy h2 { max-width: 690px; margin: 25px 0 0; color: var(--hc-text-primary); font-size: clamp(2.7rem, 5vw, 4.6rem); line-height: .98; letter-spacing: -.055em; }
-.housecam-app-lead { max-width: 550px; margin: 30px 0 0; color: var(--hc-text-secondary); font-size: 1.08rem; line-height: 1.75; }
-.housecam-app-benefits { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 28px; margin: 38px 0 38px; padding: 0; list-style: none; color: var(--hc-text-secondary); font-size: .9rem; line-height: 1.5; }
+.housecam-app-copy h2 { max-width: 620px; margin: 30px 0 0; color: var(--hc-text-primary); font-size: clamp(2.55rem, 4.25vw, 3.85rem); font-weight: 650; line-height: 1.02; letter-spacing: -.045em; }
+.housecam-app-lead { max-width: 540px; margin: 28px 0 0; color: var(--hc-text-secondary); font-size: 1.05rem; line-height: 1.7; }
+.housecam-app-benefits { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 34px; margin: 40px 0 42px; padding: 0; list-style: none; color: var(--hc-text-secondary); font-size: .9rem; line-height: 1.5; }
 .housecam-app-benefits li { display: flex; gap: 8px; }
 .housecam-app-benefits li::before { content: "✓"; flex: none; color: var(--hc-success); font-weight: 800; }
 .housecam-app-visual { min-width: 0; position: relative; display: grid; justify-items: center; animation: housecam-app-enter .8s .08s cubic-bezier(.22, 1, .36, 1) both; }
