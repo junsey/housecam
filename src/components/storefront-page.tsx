@@ -54,7 +54,6 @@ export async function StorefrontPage({ brand, selectedCategory = "" }: { brand: 
               </div>
               {adviceHref ? <a className="button button-secondary" href={adviceHref} target="_blank" rel="noopener noreferrer">¿No sabés cuál elegir? Te asesoramos</a> : <button className="button button-secondary contact-disabled" type="button" disabled title="La función de contacto está temporalmente deshabilitada. Probá más tarde.">Contacto no disponible. Probá más tarde.</button>}
             </div>
-            <div className="store-benefits"><span>✓ Asistencia local</span><span>✓ Productos seleccionados</span><span>✓ Acompañamiento real</span></div>
           </div>
         </section>
         <section className="store-catalog" id="catalogo" aria-labelledby="catalog-title">
