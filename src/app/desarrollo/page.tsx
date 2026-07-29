@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { PublicFooter } from "@/components/public-footer";
 import { PublicHeader } from "@/components/public-header";
@@ -28,7 +29,7 @@ export default async function DevelopmentPage() {
               <h1>Tu hogar, siempre cerca.</h1>
               <p className="lead">Cámaras y soluciones inteligentes para cuidar lo que más te importa con mayor control y tranquilidad.</p>
               <div className="actions">
-                <a className="button button-primary" href="#beneficios">Explorar soluciones</a>
+                <Link className="button button-primary" href="/productos#tienda">Explorar soluciones</Link>
                 {whatsappHref ? <a className="button button-secondary" href={whatsappHref} target="_blank" rel="noopener noreferrer">Hablar con un asesor</a> : <button className="button button-secondary contact-disabled" type="button" disabled title="La función de contacto está temporalmente deshabilitada. Probá más tarde.">Contacto no disponible. Probá más tarde.</button>}
               </div>
               <ul className="trust-list"><li>Instalación simple</li><li>Asesoramiento personalizado</li><li>Control desde tu celular</li></ul>
