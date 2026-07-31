@@ -82,11 +82,11 @@ export async function StorefrontPage({ brand, selectedCategory = "" }: { brand: 
                   <div className="store-product-body">
                     <p className="store-product-category">{product.categoryName}</p>
                     <h3><Link className="store-product-detail-link" href={`${storePath}/${product.slug}` as Route}>{product.name}</Link></h3><p>{product.shortDescription}</p>
+                    {product.pack10PriceCents && <small>Pack de 10: {money.format(product.pack10PriceCents / 100)}</small>}
                     <div className="store-product-footer">
                       <div><span>Desde</span><strong>{money.format(product.unitPriceCents / 100)}</strong></div>
                       <Link className="button button-primary" href={`${storePath}/${product.slug}` as Route}>Ver detalle</Link>
                     </div>
-                    {product.pack10PriceCents && <small>Pack de 10: {money.format(product.pack10PriceCents / 100)}</small>}
                   </div>
                 </article>
               ))}

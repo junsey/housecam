@@ -55,6 +55,11 @@ export function ProductBuyPanel({ product, whatsappNumber }: ProductBuyPanelProp
   }
 
   function buyNow() {
+    if (product.availableUnits === 0) {
+      if (!requestHref) return setFeedback("La consulta por WhatsApp está temporalmente deshabilitada.");
+      window.open(requestHref, "_blank", "noopener,noreferrer");
+      return;
+    }
     if (!available) return setFeedback("No hay suficientes unidades disponibles.");
     if (!whatsappHref) return setFeedback("La compra por WhatsApp está temporalmente deshabilitada.");
     window.open(whatsappHref, "_blank", "noopener,noreferrer");
@@ -78,7 +83,7 @@ export function ProductBuyPanel({ product, whatsappNumber }: ProductBuyPanelProp
         <div><button type="button" aria-label="Restar uno" onClick={() => setQuantity((value) => Math.max(1, value - 1))}>−</button><input type="number" min="1" value={quantity} onChange={(event) => setQuantity(Math.max(1, Number.parseInt(event.target.value || "1", 10)))} /><button type="button" aria-label="Sumar uno" onClick={() => setQuantity((value) => value + 1)}>+</button></div>
       </label>
 
-      <button className="product-buy-primary" type="button" onClick={buyNow}>Comprar ahora</button>
+      <button className="product-buy-primary" type="button" onClick={buyNow}>{product.availableUnits === 0 ? "Pedir por encargo" : "Comprar ahora"}</button>
       <button className="product-buy-secondary" type="button" disabled={product.availableUnits === 0} onClick={addToCart}>Agregar al carrito</button>
       {feedback && <p className="product-buy-feedback" role="status">{feedback}</p>}
       {!available && feedback && requestHref && <div className="product-stock-request">
